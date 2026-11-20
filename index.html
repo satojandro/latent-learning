@@ -1,0 +1,594 @@
+<title>Latent Learning</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="A storybook about what happens inside AI models, told one discovery at a time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a storybook column of "scenes" (~65ch prose) that widens for each interactive "toy"; a horizontal timeline strip is the book's table of contents. */
+:root{
+  --paper:#F2F0FA; --card:#FFFFFF; --ink:#1E1B3A; --ink-soft:#57537C; --line:#DAD6EF; --wash:#E7E3F6;
+  --tomato:#DE5236; --marigold:#D9980F; --teal:#128A78; --plum:#7447BD; --sky:#2C78D2; --pink:#CF3F86;
+  --bad:#C9302C; --good:#128A78;
+  --f-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Literata", Georgia, "Times New Roman", serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#14122A; --card:#1F1C3D; --ink:#EEEBFF; --ink-soft:#ABA6D4; --line:#37325F; --wash:#26224A;
+  --tomato:#FF7A5C; --marigold:#FFC447; --teal:#3CCBB4; --plum:#AD86F2; --sky:#64A9FF; --pink:#FF78B6;
+  --bad:#FF6B66; --good:#3CCBB4; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#14122A; --card:#1F1C3D; --ink:#EEEBFF; --ink-soft:#ABA6D4; --line:#37325F; --wash:#26224A;
+  --tomato:#FF7A5C; --marigold:#FFC447; --teal:#3CCBB4; --plum:#AD86F2; --sky:#64A9FF; --pink:#FF78B6;
+  --bad:#FF6B66; --good:#3CCBB4; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:18px;line-height:1.65;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 4rem}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.1;text-wrap:balance;margin:0}
+p{margin:0}
+a{color:var(--sky)}
+:focus-visible{outline:3px solid var(--marigold);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1040px;margin:0 auto}
+.prose{max-width:66ch;margin:0 auto;display:grid;gap:1.1rem}
+.label{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+em{font-style:italic}
+strong{font-weight:600}
+.term{font-family:var(--f-display);font-weight:600;background:linear-gradient(transparent 62%, color-mix(in srgb, var(--marigold) 38%, transparent) 62%);padding:0 .1em}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:2rem;align-items:center;padding-block:3.5rem 2rem}
+.hero h1{font-size:clamp(3rem, 8vw, 6rem);font-weight:800;letter-spacing:-.03em}
+.hero h1 span{display:block}
+.hero h1 .l2{color:var(--plum)}
+.hero p.lede{font-size:1.2rem;color:var(--ink-soft);max-width:34ch;margin-top:1.2rem}
+.hero .disclaim{font-family:var(--f-mono);font-size:.78rem;color:var(--ink-soft);margin-top:1.4rem;max-width:44ch;line-height:1.5}
+.hero canvas{width:100%;max-width:440px;aspect-ratio:1;justify-self:center}
+@media (max-width:760px){.hero{grid-template-columns:1fr;padding-block:2rem 1rem}.hero canvas{max-width:300px;order:-1}}
+
+/* timeline */
+.toc{margin-block:1rem 3rem}
+.toc h2{font-size:1.5rem;margin-bottom:.4rem}
+.toc .hint{color:var(--ink-soft);font-size:1rem;margin-bottom:1rem}
+.strip{display:flex;gap:14px;overflow-x:auto;padding:8px 4px 18px;scroll-snap-type:x mandatory}
+.chap{flex:0 0 200px;scroll-snap-align:start;border:2px solid var(--line);border-radius:var(--r);padding:14px 16px;background:var(--card);display:flex;flex-direction:column;gap:.35rem;text-decoration:none;color:inherit;position:relative}
+.chap .yr{font-family:var(--f-mono);font-size:.78rem;color:var(--ink-soft)}
+.chap h3{font-size:1.08rem}
+.chap p{font-size:.88rem;color:var(--ink-soft);line-height:1.45}
+.chap .status{margin-top:auto;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.chap.open{border-color:var(--plum);box-shadow:5px 5px 0 var(--plum)}
+.chap.open .status{color:var(--plum);font-weight:600}
+.chap.open:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--plum)}
+.chap.soon{opacity:.72}
+
+/* chapter title */
+.chapter-head{text-align:left;padding:3rem 0 2rem;border-top:3px dashed var(--line)}
+.chapter-head .num{font-family:var(--f-display);font-weight:800;font-size:1rem;color:#fff;background:var(--plum);display:inline-block;padding:.25rem .8rem;border-radius:999px}
+.chapter-head h2{font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;letter-spacing:-.02em;margin-top:.8rem}
+.chapter-head .based{color:var(--ink-soft);margin-top:.8rem;font-size:1rem}
+
+/* cast */
+.cast{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:1.5rem 0 1rem}
+.who{background:var(--card);border-radius:var(--r);padding:16px;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start}
+.who svg{width:44px;height:44px}
+.who h4{font-size:1.02rem}
+.who p{font-size:.9rem;color:var(--ink-soft);line-height:1.45}
+
+/* scenes */
+.scene{padding-block:2.6rem}
+.scene-tag{font-family:var(--f-display);font-weight:600;color:var(--tomato);font-size:1rem}
+.scene h3{font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:-.01em}
+.toy{background:var(--card);border-radius:24px;padding:clamp(16px,3vw,28px);margin:1.8rem auto 0;max-width:960px;border:2px solid var(--line)}
+.toy-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem 1rem;align-items:baseline;margin-bottom:1rem}
+.toy-head h4{font-size:1.2rem}
+.toy-head .label{color:var(--teal)}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;margin-top:1rem}
+.ctl{display:grid;gap:4px;min-width:0;flex:1 1 240px}
+.ctl label{font-family:var(--f-display);font-weight:600;font-size:.95rem}
+.ctl output{font-family:var(--f-mono);font-size:.85rem;color:var(--plum)}
+input[type=range]{width:100%;accent-color:var(--plum)}
+button{font-family:var(--f-display);font-weight:600;font-size:.95rem;border:2px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:.45rem 1.1rem;cursor:pointer}
+button:hover{background:var(--wash)}
+button.primary{background:var(--ink);color:var(--paper)}
+button.primary:hover{opacity:.88}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.caption{font-size:.95rem;color:var(--ink-soft);margin-top:1rem;line-height:1.55}
+
+/* neuron toy */
+.neuron{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:center}
+.neuron svg{width:120px;height:120px}
+.rows{display:grid;gap:10px;min-width:0}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:12px;align-items:center}
+.row code{font-family:var(--f-mono);font-size:.85rem;background:var(--wash);padding:.35rem .6rem;border-radius:8px;overflow-wrap:anywhere}
+.row .meter{height:14px;border-radius:99px;background:var(--wash);overflow:hidden}
+.row .meter i{display:block;height:100%;width:0;border-radius:99px;background:var(--marigold);transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.row .meter i.low{background:var(--line)}
+@media (max-width:560px){.neuron{grid-template-columns:1fr}.neuron svg{justify-self:center}.row{grid-template-columns:minmax(0,1fr) 70px}}
+
+/* office toy */
+.office{display:grid;gap:1rem}
+.zone{border-radius:16px;padding:12px;min-height:72px}
+.zone .label{margin-bottom:8px}
+.zone.desks{background:color-mix(in srgb, var(--teal) 12%, var(--card))}
+.zone.hall{background:color-mix(in srgb, var(--bad) 10%, var(--card))}
+.zone.home{background:var(--wash)}
+.slots{display:flex;flex-wrap:wrap;gap:10px;min-height:44px;align-items:center}
+.desk{width:64px;height:44px;border-radius:10px;border:2px dashed color-mix(in srgb, var(--teal) 60%, transparent);display:grid;place-items:center}
+.p{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:.9rem;color:#fff;transition:transform .3s}
+.p.pop{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.tally{display:flex;flex-wrap:wrap;gap:8px 22px;font-family:var(--f-mono);font-size:.88rem}
+.tally b{font-family:var(--f-display);font-size:1.3rem;font-variant-numeric:tabular-nums}
+.tally .bad b{color:var(--bad)}
+.days{display:flex;flex-wrap:wrap;gap:4px;margin-top:.6rem}
+.days i{width:12px;height:12px;border-radius:3px;background:var(--good);opacity:.75}
+.days i.x{background:var(--bad);opacity:1}
+
+/* canvases */
+.canvas-box{width:100%;overflow:hidden}
+.canvas-box canvas{width:100%;display:block}
+.model-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:1.5rem;align-items:center}
+.model-grid canvas{width:100%;max-width:440px;aspect-ratio:1;margin:0 auto}
+@media (max-width:720px){.model-grid{grid-template-columns:1fr}}
+.legend{display:grid;gap:8px}
+.leg{display:grid;grid-template-columns:18px minmax(0,1fr) 92px;gap:10px;align-items:center;font-size:.92rem}
+.leg .dot{width:16px;height:16px;border-radius:50%}
+.leg .bar{height:10px;border-radius:99px;background:var(--wash);overflow:hidden}
+.leg .bar i{display:block;height:100%;border-radius:99px}
+.leg small{font-family:var(--f-mono);color:var(--ink-soft);font-size:.75rem;display:block}
+.verdict{font-family:var(--f-display);font-weight:600;font-size:1.15rem;margin-top:.6rem}
+.verdict span{color:var(--plum)}
+.stat{font-family:var(--f-mono);font-size:.82rem;color:var(--ink-soft)}
+.presets{display:flex;flex-wrap:wrap;gap:8px}
+.presets button{font-size:.85rem;padding:.3rem .8rem;border-width:1.5px}
+
+/* callouts */
+.aside{background:var(--wash);border-radius:var(--r);padding:18px 20px;font-size:1rem}
+.aside .label{color:var(--plum);margin-bottom:.4rem}
+.learned{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:1.5rem}
+.card{background:var(--card);border-radius:var(--r);padding:18px}
+.card h4{font-size:1.05rem;margin-bottom:.35rem}
+.card p{font-size:.95rem;color:var(--ink-soft);line-height:1.5}
+.card.k{border-top:6px solid var(--teal)}
+.card.u{border-top:6px solid var(--marigold)}
+.next{margin-top:3rem;border:2px dashed var(--line);border-radius:24px;padding:24px;display:grid;gap:.6rem}
+.next h4{font-size:1.4rem}
+footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-size:.9rem;color:var(--ink-soft);display:grid;gap:.6rem}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="hero">
+  <div>
+    <p class="label">A storybook about the inside of AI</p>
+    <h1><span>Latent</span><span class="l2">Learning</span></h1>
+    <p class="lede">Nobody wrote the rules inside an AI model. They grew on their own. This is the story of the people trying to read them, told one discovery at a time.</p>
+    <p class="disclaim">An independent, unofficial companion to the research published at transformer-circuits.pub. Every chapter links to the original paper.</p>
+  </div>
+  <canvas id="heroCanvas" width="880" height="880" aria-label="Colourful arrows radiating from a centre point, each one a concept inside a model" role="img"></canvas>
+</header>
+
+<section class="toc" aria-labelledby="toc-h">
+  <h2 id="toc-h">The story so far</h2>
+  <p class="hint">Ten years of discoveries, in order. We're opening the book in the middle, at the most visual chapter. The rest are on their way.</p>
+  <nav class="strip" aria-label="Chapters">
+    <div class="chap soon"><span class="yr">2013 – 2020</span><h3>Prologue: Words Become Arrows</h3><p>Meaning turns out to live in directions. Then, bigger models get predictably better.</p><span class="status">Coming soon</span></div>
+    <div class="chap soon"><span class="yr">2021</span><h3>1. The Clerks and the Case File</h3><p>What actually happens inside a model, layer by layer.</p><span class="status">Coming soon</span></div>
+    <div class="chap soon"><span class="yr">2022</span><h3>2. The Copycat Trick</h3><p>How a model learns new things in the middle of a conversation.</p><span class="status">Coming soon</span></div>
+    <a class="chap open" href="#crowded-office"><span class="yr">2022</span><h3>3. The Crowded Office</h3><p>How a model fits millions of ideas into a few thousand directions.</p><span class="status">Read now ↓</span></a>
+    <div class="chap soon"><span class="yr">2023</span><h3>4. Untangling the Desks</h3><p>A tool for pulling the squeezed ideas back apart.</p><span class="status">Coming soon</span></div>
+    <div class="chap soon"><span class="yr">2024</span><h3>5. The Golden Gate Bridge</h3><p>Finding real concepts inside a real, large model, and turning one up.</p><span class="status">Coming soon</span></div>
+    <div class="chap soon"><span class="yr">2025</span><h3>6. Watching It Think</h3><p>Rhymes planned ahead, and maths done differently than the model claims.</p><span class="status">Coming soon</span></div>
+    <div class="chap soon"><span class="yr">Today</span><h3>Epilogue: The Blank Spaces on the Map</h3><p>What nobody knows yet.</p><span class="status">Coming soon</span></div>
+  </nav>
+</section>
+
+<article id="crowded-office">
+  <div class="chapter-head">
+    <span class="num">Chapter 3</span>
+    <h2>The Crowded Office</h2>
+    <p class="based">Based on <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener"><em>Toy Models of Superposition</em></a> (Elhage et al., Anthropic, 2022)</p>
+  </div>
+
+  <div class="prose">
+    <p>Before we start, here are the characters you'll meet in every chapter. Inside a language model, every idea it can think about is stored as an <span class="term">arrow</span>: a direction in a vast space. The space is the model's private filing system. Researchers call it <span class="term">latent space</span>, which just means "hidden space", because nobody labelled any of its directions.</p>
+  </div>
+
+  <div class="cast" role="list">
+    <div class="who" role="listitem">
+      <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="7" y="5" width="30" height="34" rx="4" fill="var(--marigold)"/><rect x="12" y="13" width="20" height="3" rx="1.5" fill="var(--card)"/><rect x="12" y="20" width="16" height="3" rx="1.5" fill="var(--card)"/><rect x="12" y="27" width="18" height="3" rx="1.5" fill="var(--card)"/></svg>
+      <div><h4>The case file</h4><p>What the model is thinking about right now. It's passed from clerk to clerk as the model reads your words.</p></div>
+    </div>
+    <div class="who" role="listitem">
+      <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="14" r="8" fill="var(--sky)"/><rect x="9" y="25" width="26" height="15" rx="7" fill="var(--sky)"/></svg>
+      <div><h4>The clerks</h4><p>The model's layers. Each one reads the file, adds a few notes, and passes it on.</p></div>
+    </div>
+    <div class="who" role="listitem">
+      <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="15" cy="16" r="7" fill="var(--tomato)"/><circle cx="30" cy="20" r="7" fill="var(--teal)"/><circle cx="20" cy="31" r="7" fill="var(--pink)"/></svg>
+      <div><h4>The concepts</h4><p>Ideas like "French", "a legal term" or "octopus". There are millions of them.</p></div>
+    </div>
+    <div class="who" role="listitem">
+      <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="5" y="20" width="34" height="6" rx="2" fill="var(--plum)"/><rect x="9" y="26" width="4" height="13" fill="var(--plum)"/><rect x="31" y="26" width="4" height="13" fill="var(--plum)"/></svg>
+      <div><h4>The desks</h4><p>The directions available to store concepts in. There are only a few thousand.</p></div>
+    </div>
+  </div>
+
+  <!-- Scene 1 -->
+  <section class="scene" aria-labelledby="s1">
+    <div class="prose">
+      <p class="scene-tag">Scene 1</p>
+      <h3 id="s1">The neuron that couldn't make up its mind</h3>
+      <p>Early researchers had a hopeful plan. A model is made of tiny parts called <span class="term">neurons</span>. If each neuron stood for one idea, you could read a model like a dictionary: here's the "French" neuron, here's the "angry" neuron.</p>
+      <p>Sometimes it worked. But again and again, they found neurons like this one, which lights up for things that have nothing to do with each other.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Meet one jumbled neuron</h4><span class="label">Try it</span></div>
+      <div class="neuron">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle id="nGlow" cx="60" cy="60" r="52" fill="var(--marigold)" opacity=".15"/>
+          <circle cx="60" cy="60" r="34" fill="var(--marigold)"/>
+          <circle cx="50" cy="55" r="4" fill="var(--ink)"/><circle cx="70" cy="55" r="4" fill="var(--ink)"/>
+          <path d="M48 72 q6 -5 12 0 q6 5 12 0" stroke="var(--ink)" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="rows" id="neuronRows"></div>
+      </div>
+      <div class="btns" style="margin-top:1rem"><button class="primary" id="neuronBtn">Show the neuron some text</button></div>
+      <p class="caption">This pattern is a real one: a 2023 Anthropic study found a single neuron in a small language model that responded to academic citations, English dialogue, web requests and Korean text. Researchers call neurons like this <strong>polysemantic</strong>, meaning "many meanings". For years, they were one of the field's biggest puzzles.</p>
+    </div>
+  </section>
+
+  <!-- Scene 2 -->
+  <section class="scene" aria-labelledby="s2">
+    <div class="prose">
+      <p class="scene-tag">Scene 2</p>
+      <h3 id="s2">Too many people, too few desks</h3>
+      <p>Here's the problem. A model knows about millions of concepts, but it only has a few thousand directions to store them in. That's like an office with a thousand employees and a dozen desks.</p>
+      <p>Offices solve this with <span class="term">hot-desking</span>. If most people only come in occasionally, they can share. The rarer the visits, the less often two people want the same desk on the same day.</p>
+      <p>Below, twelve people share four desks. Drag the slider to change how often each of them comes in, and watch how often the office overflows.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>The hot-desk office</h4><span class="label">12 people · 4 desks</span></div>
+      <div class="office">
+        <div class="zone desks"><div class="label">At a desk</div><div class="slots" id="deskSlots"></div></div>
+        <div class="zone hall"><div class="label">No desk free</div><div class="slots" id="hallSlots"></div></div>
+        <div class="zone home"><div class="label">Working from home today</div><div class="slots" id="homeSlots"></div></div>
+      </div>
+      <div class="controls">
+        <div class="ctl"><label for="freq">How often does each person come in?</label><input type="range" id="freq" min="0" max="4" step="1" value="1"><output id="freqOut" for="freq"></output></div>
+        <div class="btns"><button class="primary" id="officePlay">Pause</button><button id="officeStep">Next day</button><button id="officeReset">Reset</button></div>
+      </div>
+      <div class="tally" style="margin-top:1rem"><span>Days so far <b id="tDays">0</b></span><span class="bad">Days someone had no desk <b id="tClash">0</b></span><span>Overflow rate <b id="tRate">0%</b></span></div>
+      <div class="days" id="dayStrip" aria-hidden="true"></div>
+      <p class="caption">When everyone comes in every day, the office overflows constantly. At once a month, overflow almost never happens. A model faces the same trade-off. Most concepts are rare (you can read a lot of text before anyone mentions octopus anatomy), so they can share space and rarely get in each other's way.</p>
+    </div>
+  </section>
+
+  <!-- Scene 3 -->
+  <section class="scene" aria-labelledby="s3">
+    <div class="prose">
+      <p class="scene-tag">Scene 3</p>
+      <h3 id="s3">A room that's much bigger than it looks</h3>
+      <p>For a model, a "desk" is a direction. Two concepts stay completely out of each other's way when their arrows are at a right angle. On a flat page, you can only fit two arrows at right angles: one across, one up.</p>
+      <p>But a model's space doesn't have two directions. It has thousands. And in a space like that, something strange happens: if you pick arrows completely at random, almost every pair ends up <em>nearly</em> at a right angle. There's room for vastly more "almost separate" concepts than there are directions.</p>
+      <p>Don't take my word for it. The chart below really does pick 150 random arrows and measures the angle between every pair.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Angles between random arrows</h4><span class="label">Real calculation</span></div>
+      <div class="canvas-box"><canvas id="angleCanvas" width="1800" height="700" aria-label="Histogram of angles between random arrows" role="img"></canvas></div>
+      <div class="controls">
+        <div class="ctl"><label for="dims">How many directions does the space have?</label><input type="range" id="dims" min="0" max="5" step="1" value="0"><output id="dimsOut" for="dims"></output></div>
+        <div class="btns"><button id="angleRedo">Pick new arrows</button></div>
+      </div>
+      <p class="verdict" id="angleVerdict"></p>
+      <p class="caption">In 2 directions, the angles are spread out evenly, and arrows constantly overlap. By 1,000 directions, nearly every pair is within a few degrees of a right angle. Real models have thousands of directions. Our flat-page intuition badly underestimates how roomy that is.</p>
+    </div>
+  </section>
+
+  <!-- Scene 4 -->
+  <section class="scene" aria-labelledby="s4">
+    <div class="prose">
+      <p class="scene-tag">Scene 4</p>
+      <h3 id="s4">Watch a real tiny model learn</h3>
+      <p>This is the experiment at the heart of the paper. The researchers built the smallest possible model: it has to store <strong>5 concepts</strong> in a space with only <strong>2 directions</strong>. Then they asked what it does when the concepts are common, and what it does when they're rare.</p>
+      <p>The model below isn't an animation. It's a real neural network training live in your browser, using the same setup. Each coloured arrow is where it chose to store one concept. Concept 1 matters most to its score, concept 5 matters least.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>5 concepts, 2 directions</h4><span class="label" id="trainStatus">Training…</span></div>
+      <div class="model-grid">
+        <canvas id="modelCanvas" width="880" height="880" aria-label="Arrows showing where the model stores each of five concepts" role="img"></canvas>
+        <div>
+          <div class="legend" id="legend"></div>
+          <p class="verdict" id="modelVerdict"></p>
+          <p class="stat" id="modelStat"></p>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="ctl"><label for="sparsity">How often does each concept show up?</label><input type="range" id="sparsity" min="0" max="5" step="1" value="0"><output id="sparsityOut" for="sparsity"></output></div>
+        <div class="btns"><button class="primary" id="trainPlay">Pause</button><button id="trainReset">Start from scratch</button></div>
+      </div>
+      <p class="caption"><strong>Try this:</strong> start at "every time" and wait a few seconds. Then slide towards "very rarely", one notch at a time, and watch the arrows rearrange themselves.</p>
+    </div>
+    <div class="prose" style="margin-top:2rem">
+      <p>Here's what you should see, and it's what the researchers saw.</p>
+      <p><strong>When concepts are common</strong>, the model behaves like a cautious filing clerk. It keeps only the two most important concepts, gives each a private direction at a right angle, and simply gives up on the other three. Sharing would cause too many clashes.</p>
+      <p><strong>As concepts get rarer</strong>, the model starts squeezing more in. First three. Then four, arranged as two pairs pointing in opposite directions. Finally all five, spread into a perfect <strong>pentagon</strong>. Nobody told it to make a pentagon. It found that shape on its own, because it's the fairest way to give five rare concepts as much room as possible.</p>
+      <p>That squeezing is <span class="term">superposition</span>: more concepts than directions, sharing the space because they seldom appear at the same time.</p>
+    </div>
+  </section>
+
+  <!-- Scene 5 -->
+  <section class="scene" aria-labelledby="s5">
+    <div class="prose">
+      <p class="scene-tag">Scene 5</p>
+      <h3 id="s5">Ignoring the whispers</h3>
+      <p>Sharing has a cost. When concepts squeeze together, each one leaks a little into its neighbours. Look at the pentagon: the arrows aren't at right angles, so whenever one concept is active, its neighbours get a faint, false signal too.</p>
+      <p>The model handles this with a simple rule: <em>ignore anything quieter than a certain level</em>. Faint leakage gets thrown away, and only the strong, real signal gets through. This works only because the concepts are rare. If they all showed up at once, the leaks would pile up into a roar.</p>
+      <div class="aside">
+        <p class="label">Two more findings</p>
+        <p><strong>Concepts that appear together get kept apart.</strong> "Lawyer" and "court" turn up in the same sentences all the time, so sharing would mean constant clashes. Models tend to give such pairs separate directions.</p>
+        <p style="margin-top:.6rem"><strong>Opposites make perfect desk-mates.</strong> Concepts that never appear together can point in exactly opposite directions, like the two ends of a see-saw. Only one can be up at a time. You may have spotted these pairs in the toy model above.</p>
+      </div>
+      <p>And now the jumbled neuron from Scene 1 makes sense. A neuron is a single, fixed spot in the model. When many concepts share the space, a single neuron catches a little of several of them. It isn't confused. It's a shared desk.</p>
+    </div>
+  </section>
+
+  <!-- Wrap-up -->
+  <section class="scene" aria-labelledby="s6">
+    <div class="prose">
+      <p class="scene-tag">The end of the chapter</p>
+      <h3 id="s6">What we know, and what we don't</h3>
+    </div>
+    <div class="learned">
+      <div class="card k"><h4>Known: important, common ideas get their own direction</h4><p>When space is tight, models prioritise. The ideas that matter most and come up most often get private directions.</p></div>
+      <div class="card k"><h4>Known: rare ideas share space</h4><p>Superposition lets a model store far more concepts than it has directions, as long as those concepts seldom appear together.</p></div>
+      <div class="card k"><h4>Known: it makes neat shapes on its own</h4><p>In toy models, shared concepts settle into pairs, triangles, pentagons and other tidy geometric arrangements.</p></div>
+      <div class="card u"><h4>Unknown: how much of this happens in big models?</h4><p>The paper studied tiny toy models. Whether giant models use superposition in exactly the same way was an open question in 2022.</p></div>
+      <div class="card u"><h4>Unknown: can we untangle it?</h4><p>If concepts are squeezed together, reading a model means pulling them back apart. In 2022, nobody had shown how to do that at scale.</p></div>
+      <div class="card u"><h4>Unknown: what does the leakage cost?</h4><p>Researchers suspect that some model mistakes come from concepts leaking into each other at the wrong moment. That's still a hypothesis.</p></div>
+    </div>
+    <div class="next">
+      <p class="label">Next in the story</p>
+      <h4>Chapter 4: Untangling the Desks</h4>
+      <p>In 2023, researchers built a tool that finds the shared desks and separates the concepts sitting at them. For the first time, they could read thousands of clean, single-meaning concepts out of a real model.</p>
+      <p class="label">Coming soon</p>
+    </div>
+  </section>
+</article>
+
+<footer>
+  <p><strong>Latent Learning</strong> is an independent learning project. It isn't affiliated with or endorsed by Anthropic or the authors of the papers it explains. All illustrations and explanations are original. The research belongs to its authors, so please read the originals.</p>
+  <p>Source paper for this chapter: Nelson Elhage, Tristan Hume, Catherine Olsson, Nicholas Schiefer, Tom Henighan, Shauna Kravec, Zac Hatfield-Dodds, Robert Lasenby, Dawn Drain, Carol Chen, Roger Grosse, Sam McCandlish, Jared Kaplan, Dario Amodei, Martin Wattenberg and Christopher Olah. <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener">Toy Models of Superposition</a>, Transformer Circuits Thread, 2022.</p>
+</footer>
+</div>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  let C = {};
+  const readColors = () => { C = {ink:css('--ink'), soft:css('--ink-soft'), line:css('--line'), wash:css('--wash'), card:css('--card'),
+    feats:[css('--tomato'), css('--sky'), css('--teal'), css('--marigold'), css('--pink'), css('--plum')], plum:css('--plum'), bad:css('--bad')}; };
+  readColors();
+  const redrawers = [];
+  const onTheme = () => { readColors(); redrawers.forEach(f => f()); };
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onTheme);
+  new MutationObserver(onTheme).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+
+  function arrow(ctx, x0, y0, x1, y1, color, w) {
+    const a = Math.atan2(y1 - y0, x1 - x0), L = Math.hypot(x1 - x0, y1 - y0);
+    if (L < 2) return;
+    const hl = Math.min(w * 4.2, L * 0.45);
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - Math.cos(a) * hl * .6, y1 - Math.sin(a) * hl * .6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y1);
+    ctx.lineTo(x1 - hl * Math.cos(a - .45), y1 - hl * Math.sin(a - .45));
+    ctx.lineTo(x1 - hl * Math.cos(a + .45), y1 - hl * Math.sin(a + .45));
+    ctx.closePath(); ctx.fill();
+  }
+
+  /* ---------- hero ---------- */
+  {
+    const cv = document.getElementById('heroCanvas'), ctx = cv.getContext('2d');
+    const N = 11, seeds = [...Array(N)].map((_, i) => ({a: i / N * Math.PI * 2 + (i % 2) * .2, l: .55 + ((i * 37) % 10) / 25, s: .4 + (i % 4) * .15}));
+    let t = 0;
+    const draw = () => {
+      const S = cv.width, c = S / 2; ctx.clearRect(0, 0, S, S);
+      ctx.strokeStyle = C.line; ctx.lineWidth = 3; ctx.setLineDash([10, 14]);
+      ctx.beginPath(); ctx.arc(c, c, S * .43, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+      seeds.forEach((s, i) => {
+        const a = s.a + Math.sin(t * s.s * .02 + i) * .08 + t * .0015;
+        const L = S * .4 * s.l;
+        arrow(ctx, c, c, c + Math.cos(a) * L, c + Math.sin(a) * L, C.feats[i % 6], 13);
+      });
+      ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(c, c, 14, 0, Math.PI * 2); ctx.fill();
+    };
+    redrawers.push(draw); draw();
+    if (!reduce) { const loop = () => { t++; draw(); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
+  }
+
+  /* ---------- scene 1: jumbled neuron ---------- */
+  {
+    const examples = [
+      {t: '(Smith & Lee, 2019, p. 42)', v: .92},
+      {t: '"Where were you last night?" she asked.', v: .81},
+      {t: 'GET /index.html HTTP/1.1', v: .88},
+      {t: '안녕하세요, 만나서 반갑습니다', v: .85},
+      {t: 'Preheat the oven to 180 degrees.', v: .04},
+    ];
+    const rows = document.getElementById('neuronRows');
+    rows.innerHTML = examples.map((e, i) => `<div class="row"><code>${e.t}</code><div class="meter" aria-label="How strongly the neuron responds"><i id="m${i}" class="${e.v < .2 ? 'low' : ''}"></i></div></div>`).join('');
+    const glow = document.getElementById('nGlow');
+    let shown = false;
+    const show = () => {
+      shown = !shown;
+      examples.forEach((e, i) => setTimeout(() => { document.getElementById('m' + i).style.width = shown ? (e.v * 100) + '%' : '0'; }, reduce ? 0 : i * 260));
+      glow.setAttribute('opacity', shown ? '.45' : '.15');
+      document.getElementById('neuronBtn').textContent = shown ? 'Reset' : 'Show the neuron some text';
+    };
+    document.getElementById('neuronBtn').addEventListener('click', show);
+    show();
+  }
+
+  /* ---------- scene 2: hot-desk office ---------- */
+  {
+    const P = 12, DESKS = 4;
+    const freqs = [{p: 1, l: 'Every day'}, {p: .6, l: 'Three days a week'}, {p: .2, l: 'Once a week'}, {p: .1, l: 'Twice a month'}, {p: .045, l: 'Once a month'}];
+    const names = 'ABCDEFGHJKLM'.split('');
+    const fr = document.getElementById('freq'), fo = document.getElementById('freqOut');
+    const deskEl = document.getElementById('deskSlots'), hallEl = document.getElementById('hallSlots'), homeEl = document.getElementById('homeSlots');
+    let days = 0, clashes = 0, hist = [], playing = !reduce, timer = null;
+    const colorFor = i => ['--tomato', '--sky', '--teal', '--marigold', '--pink', '--plum'][i % 6];
+    const person = i => `<span class="p pop" style="background:var(${colorFor(i)})" aria-label="Person ${names[i]}">${names[i]}</span>`;
+    const day = () => {
+      const p = freqs[+fr.value].p;
+      const present = [], away = [];
+      for (let i = 0; i < P; i++) (Math.random() < p ? present : away).push(i);
+      const seated = present.slice(0, DESKS), hall = present.slice(DESKS);
+      deskEl.innerHTML = [...Array(DESKS)].map((_, d) => `<span class="desk">${seated[d] !== undefined ? person(seated[d]) : ''}</span>`).join('');
+      hallEl.innerHTML = hall.map(person).join('') || '<span class="stat">Nobody. Everyone who came in found a desk.</span>';
+      homeEl.innerHTML = away.map(i => person(i)).join('');
+      days++; if (hall.length) clashes++;
+      hist.push(!!hall.length); if (hist.length > 60) hist.shift();
+      document.getElementById('tDays').textContent = days;
+      document.getElementById('tClash').textContent = clashes;
+      document.getElementById('tRate').textContent = Math.round(clashes / days * 100) + '%';
+      document.getElementById('dayStrip').innerHTML = hist.map(x => `<i class="${x ? 'x' : ''}"></i>`).join('');
+    };
+    const reset = () => { days = 0; clashes = 0; hist = []; day(); };
+    const setPlay = v => { playing = v; document.getElementById('officePlay').textContent = v ? 'Pause' : 'Play'; clearInterval(timer); if (v) timer = setInterval(day, 900); };
+    fr.addEventListener('input', () => { fo.textContent = freqs[+fr.value].l; reset(); });
+    document.getElementById('officePlay').addEventListener('click', () => setPlay(!playing));
+    document.getElementById('officeStep').addEventListener('click', () => { setPlay(false); day(); });
+    document.getElementById('officeReset').addEventListener('click', reset);
+    fo.textContent = freqs[+fr.value].l;
+    // warm start so the tally is meaningful at first glance
+    for (let i = 0; i < 11; i++) day();
+    setPlay(playing);
+  }
+
+  /* ---------- scene 3: angles between random arrows ---------- */
+  {
+    const dimsList = [2, 3, 10, 100, 1000, 5000], K = 150;
+    const cv = document.getElementById('angleCanvas'), ctx = cv.getContext('2d');
+    const dr = document.getElementById('dims'), dout = document.getElementById('dimsOut');
+    let bins = new Array(36).fill(0), near = 0, total = 0;
+    const gauss = () => { let u = 0, v = 0; while (!u) u = Math.random(); v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+    const compute = () => {
+      const d = dimsList[+dr.value];
+      const V = [];
+      for (let k = 0; k < K; k++) { const v = new Float64Array(d); let s = 0; for (let i = 0; i < d; i++) { v[i] = gauss(); s += v[i] * v[i]; } s = Math.sqrt(s); for (let i = 0; i < d; i++) v[i] /= s; V.push(v); }
+      bins = new Array(36).fill(0); near = 0; total = 0;
+      for (let a = 0; a < K; a++) for (let b = a + 1; b < K; b++) {
+        let dot = 0; const x = V[a], y = V[b]; for (let i = 0; i < d; i++) dot += x[i] * y[i];
+        const ang = Math.acos(Math.max(-1, Math.min(1, dot))) * 180 / Math.PI;
+        bins[Math.min(35, Math.floor(ang / 5))]++; total++; if (Math.abs(ang - 90) <= 5) near++;
+      }
+      dout.textContent = d.toLocaleString() + ' directions' + (d === 2 ? ' (a flat page)' : d === 3 ? ' (a room)' : '');
+      const pct = Math.round(near / total * 100);
+      document.getElementById('angleVerdict').innerHTML = `<span>${pct}%</span> of arrow pairs are within 5° of a right angle.`;
+      draw();
+    };
+    const draw = () => {
+      const W = cv.width, H = cv.height, padL = 40, padB = 90, padT = 30, cw = W - padL * 2, ch = H - padB - padT;
+      ctx.clearRect(0, 0, W, H);
+      const mx = Math.max(...bins, 1), bw = cw / 36;
+      ctx.fillStyle = C.wash; ctx.fillRect(padL + 17 * bw, padT, bw * 2, ch);
+      bins.forEach((v, i) => {
+        const h = v / mx * ch, x = padL + i * bw;
+        ctx.fillStyle = (i === 17 || i === 18) ? C.plum : C.feats[1];
+        ctx.globalAlpha = (i === 17 || i === 18) ? 1 : .8;
+        ctx.beginPath(); ctx.roundRect(x + 3, padT + ch - h, bw - 6, h, [8, 8, 0, 0]); ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = C.line; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(padL, padT + ch); ctx.lineTo(W - padL, padT + ch); ctx.stroke();
+      ctx.fillStyle = C.soft; ctx.font = '600 34px "JetBrains Mono", monospace'; ctx.textAlign = 'center';
+      [[0, '0°  same'], [45, '45°'], [90, '90°  right angle'], [135, '135°'], [180, '180°  opposite']].forEach(([a, l]) => {
+        const x = padL + a / 180 * cw;
+        ctx.textAlign = a === 0 ? 'left' : a === 180 ? 'right' : 'center';
+        ctx.fillText(l, x, padT + ch + 50);
+      });
+    };
+    redrawers.push(draw);
+    dr.addEventListener('input', compute);
+    document.getElementById('angleRedo').addEventListener('click', compute);
+    compute();
+  }
+
+  /* ---------- scene 4: live toy model (Elhage et al. 2022 setup) ----------
+     x in R^5, each entry 0 with prob S else U(0,1); h = W x (2-d);
+     y = ReLU(W^T h + b); loss = sum_i I_i (x_i - y_i)^2, I_i = 0.8^i. Trained with Adam. */
+  {
+    const n = 5, m = 2, B = 128, LR = 0.012, STEPS_PER_FRAME = 12;
+    const imp = [...Array(n)].map((_, i) => Math.pow(0.8, i));
+    const sparsities = [{S: 0, l: 'Every time (always present)'}, {S: .5, l: 'Half the time'}, {S: .8, l: 'One time in five'}, {S: .9, l: 'One time in ten'}, {S: .95, l: 'One time in twenty'}, {S: .99, l: 'Very rarely (1 in 100)'}];
+    const sr = document.getElementById('sparsity'), so = document.getElementById('sparsityOut');
+    const cv = document.getElementById('modelCanvas'), ctx = cv.getContext('2d');
+    let W, b, mW, vW, mb, vb, t, loss = 0, playing = true, steps = 0;
+    const init = () => {
+      W = new Float64Array(m * n); b = new Float64Array(n);
+      for (let i = 0; i < m * n; i++) W[i] = (Math.random() * 2 - 1) * .5;
+      mW = new Float64Array(m * n); vW = new Float64Array(m * n); mb = new Float64Array(n); vb = new Float64Array(n); t = 0; steps = 0;
+    };
+    const x = new Float64Array(n), h = new Float64Array(m), g = new Float64Array(n), Wg = new Float64Array(m);
+    const gW = new Float64Array(m * n), gb = new Float64Array(n);
+    const step = () => {
+      const S = sparsities[+sr.value].S;
+      gW.fill(0); gb.fill(0); let L = 0;
+      for (let k = 0; k < B; k++) {
+        for (let i = 0; i < n; i++) x[i] = Math.random() < 1 - S ? Math.random() : 0;
+        for (let j = 0; j < m; j++) { let a = 0; for (let i = 0; i < n; i++) a += W[j * n + i] * x[i]; h[j] = a; }
+        for (let i = 0; i < n; i++) { let z = b[i]; for (let j = 0; j < m; j++) z += W[j * n + i] * h[j]; const y = z > 0 ? z : 0, d = x[i] - y; L += imp[i] * d * d / B; g[i] = z > 0 ? -2 * imp[i] * d / B : 0; }
+        for (let j = 0; j < m; j++) { let a = 0; for (let i = 0; i < n; i++) a += W[j * n + i] * g[i]; Wg[j] = a; }
+        for (let j = 0; j < m; j++) for (let i = 0; i < n; i++) gW[j * n + i] += h[j] * g[i] + Wg[j] * x[i];
+        for (let i = 0; i < n; i++) gb[i] += g[i];
+      }
+      t++; const b1 = .9, b2 = .999, c1 = 1 - b1 ** t, c2 = 1 - b2 ** t;
+      for (let i = 0; i < m * n; i++) { mW[i] = b1 * mW[i] + (1 - b1) * gW[i]; vW[i] = b2 * vW[i] + (1 - b2) * gW[i] ** 2; W[i] -= LR * (mW[i] / c1) / (Math.sqrt(vW[i] / c2) + 1e-8); }
+      for (let i = 0; i < n; i++) { mb[i] = b1 * mb[i] + (1 - b1) * gb[i]; vb[i] = b2 * vb[i] + (1 - b2) * gb[i] ** 2; b[i] -= LR * (mb[i] / c1) / (Math.sqrt(vb[i] / c2) + 1e-8); }
+      loss = loss ? loss * .95 + L * .05 : L; steps++;
+    };
+    const legend = document.getElementById('legend');
+    legend.innerHTML = [...Array(n)].map((_, i) => `<div class="leg"><span class="dot" style="background:var(${['--tomato', '--sky', '--teal', '--marigold', '--pink'][i]})"></span><span>Concept ${i + 1}<small>${'★'.repeat(5 - i)}${'☆'.repeat(i)} importance</small></span><span class="bar"><i id="lb${i}" style="background:var(${['--tomato', '--sky', '--teal', '--marigold', '--pink'][i]})"></i></span></div>`).join('');
+    const shapeName = k => ['none', 'one concept', 'two concepts, at a right angle', 'three concepts sharing the space', 'four concepts, as two opposite pairs', 'all five, in a pentagon'][k];
+    const draw = () => {
+      const S = cv.width, c = S / 2, R = S * .36;
+      ctx.clearRect(0, 0, S, S);
+      ctx.strokeStyle = C.line; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(c - S * .46, c); ctx.lineTo(c + S * .46, c); ctx.moveTo(c, c - S * .46); ctx.lineTo(c, c + S * .46); ctx.stroke();
+      ctx.setLineDash([10, 14]); ctx.beginPath(); ctx.arc(c, c, R, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = C.soft; ctx.font = '600 28px "JetBrains Mono", monospace'; ctx.textAlign = 'left';
+      ctx.fillText('direction 1', c + S * .3, c - 14); ctx.save(); ctx.translate(c + 14, c - S * .3); ctx.fillText('direction 2', 0, 0); ctx.restore();
+      let shown = 0;
+      for (let i = n - 1; i >= 0; i--) {
+        const a = W[i], d = W[n + i], len = Math.hypot(a, d);
+        if (len > .5 && i >= 0) shown++;
+        arrow(ctx, c, c, c + a * R, c - d * R, C.feats[i], 14);
+        const el = document.getElementById('lb' + i); if (el) el.style.width = Math.min(100, len / 1.2 * 100) + '%';
+      }
+      ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(c, c, 12, 0, Math.PI * 2); ctx.fill();
+      document.getElementById('modelVerdict').innerHTML = `The model is storing <span>${shapeName(shown)}</span>.`;
+      document.getElementById('modelStat').textContent = `Training steps: ${steps.toLocaleString()} · error: ${loss.toFixed(4)}`;
+      document.getElementById('trainStatus').textContent = playing ? (steps < 4000 ? 'Training…' : 'Settled, still training') : 'Paused';
+    };
+    redrawers.push(draw);
+    const setPlay = v => { playing = v; document.getElementById('trainPlay').textContent = v ? 'Pause' : 'Train'; draw(); };
+    sr.addEventListener('input', () => { so.textContent = sparsities[+sr.value].l; steps = Math.min(steps, 1); });
+    document.getElementById('trainPlay').addEventListener('click', () => setPlay(!playing));
+    document.getElementById('trainReset').addEventListener('click', () => { init(); draw(); });
+    so.textContent = sparsities[+sr.value].l;
+    init();
+    // pre-train so the first frame already shows a settled result
+    for (let i = 0; i < 2500; i++) step();
+    draw();
+    let visible = true;
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(cv);
+    const loop = () => { if (playing && visible) { for (let i = 0; i < STEPS_PER_FRAME; i++) step(); draw(); } requestAnimationFrame(loop); };
+    if (reduce) setPlay(true);
+    requestAnimationFrame(loop);
+  }
+})();
+</script>
