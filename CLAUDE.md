@@ -3,6 +3,12 @@
 ## What this is
 An interactive storybook that retells the Transformer Circuits papers (transformer-circuits.pub) for curious adults and ambitious teenagers with no maths background. It's colourful, animated, and told as one continuous story of discovery over time. Chapters are listed in README.md.
 
+## Depth and tone (the owner's brief)
+Don't dumb things down to the lowest common denominator. Aim to awe and impress, and draw people in deeper and deeper, slowly, so there's real learning. Readers should feel challenged and rewarded as they learn new things.
+- Every scene opens accessibly, then climbs: story layer → "Go deeper" layers with the real mechanism, the paper's own terms, numbers and (once, translated into plain words) its notation.
+- Stay close to the papers: their actual question, experiments, key figures (redrawn in our own style, ideally as live toys), short attributed quotes, and how strong the authors judged each piece of evidence. Point to the section of the paper so people can read alongside.
+- Challenge the reader: "predict before you press" moments, puzzles, and a reveal that rewards them.
+
 ## Ground rules
 - **Accuracy first.** The style is a children's book; the facts are not simplified into wrong ones. Check every claim against the paper. Label what's established ("Known") and what's open or speculative ("Unknown").
 - **Clearly unofficial.** Use our own name and look. Never imitate Anthropic's branding or the site's design. Credit and link the original paper in every chapter.
@@ -29,6 +35,13 @@ Story hook (the puzzle researchers faced), scenes with interactive toys, "Known 
 
 ## About the author
 The project owner is a lawyer with a crypto background who now works with AI agents, and is learning mechanistic interpretability from scratch. Analogies from law and crypto land well.
+
+## Editing chapters in parallel
+Several chapters may be edited at once on separate branches, all in `index.html`. To keep merges clean:
+- Edit only inside your chapter's `<article id="…">…</article>` and your chapter's existing JS blocks in the shared script. Leave every `/* ---------- … ---------- */` marker line where it is.
+- Put new CSS in a `<style>` at the top of your article, with selectors scoped to `#your-article-id`.
+- Put new JS in a `<script>` at the bottom of your article, inside `document.addEventListener('DOMContentLoaded', () => { … })`, using `window.LL` (`LL.C` colours, `LL.css`, `LL.arrow`, `LL.redrawers`, `LL.shared`, `LL.reduce`).
+- Don't edit the timeline strip, the hero, the footer, README.md or CLAUDE.md; suggest changes in the PR description instead. Keep `LL.shared.court` (Chapter 1) working: Chapters 2, 5 and 6 use it.
 
 ## Workflow
 - **One commit per chapter.** When a chapter is finished and checked, commit it on its own (index.html plus any README/CLAUDE.md updates for it) and push to `main`. Don't bundle two chapters in one commit. Small fixes to an existing chapter get their own commit too.

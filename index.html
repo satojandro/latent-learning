@@ -1401,6 +1401,9 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
   readColors();
   const redrawers = [];
   const shared = {};
+  // Helpers for chapter-local scripts (each chapter may add a <script> inside its own <article>,
+  // wrapped in DOMContentLoaded, and use window.LL instead of editing this shared script).
+  window.LL = {get C() { return C; }, css, arrow, redrawers, shared, reduce};
   const onTheme = () => { readColors(); redrawers.forEach(f => f()); };
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onTheme);
   new MutationObserver(onTheme).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
