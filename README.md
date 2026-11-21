@@ -17,7 +17,7 @@ This is an independent, unofficial project. It isn't affiliated with or endorsed
 | 4 | Untangling the Desks | Towards Monosemanticity (2023) | **Draft** |
 | 5 | The Golden Gate Bridge | Scaling Monosemanticity (2024) | **Draft** |
 | 6 | Watching It Think | On the Biology of a Large Language Model (2025) | **Draft** |
-| Epilogue | The Blank Spaces on the Map | Open problems | Planned |
+| Epilogue | The Blank Spaces on the Map | Open problems | **Draft** |
 
 ## Running it
 

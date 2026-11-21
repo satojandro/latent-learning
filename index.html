@@ -162,6 +162,28 @@ button.primary:hover{opacity:.88}
 .chapter-head .num.c4{background:var(--marigold);color:var(--ink)}
 .chapter-head .num.c5{background:var(--tomato)}
 .chapter-head .num.c6{background:var(--plum)}
+.chapter-head .num.epi{background:var(--ink);color:var(--paper)}
+.thread{display:flex;flex-wrap:wrap;gap:8px}
+.thread button{font-size:.85rem;padding:.35rem .85rem;border-width:1.5px}
+.thread button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.relay{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:1rem}
+.relay > div{border-radius:14px;padding:14px;display:grid;gap:.35rem;align-content:start}
+.relay .q{background:var(--wash)}
+.relay .a{background:color-mix(in srgb, var(--teal) 16%, var(--card))}
+.relay .n{background:color-mix(in srgb, var(--marigold) 22%, var(--card))}
+.relay p{font-size:1rem;line-height:1.5}
+@media (max-width:640px){.relay{grid-template-columns:1fr}}
+.probe-list{display:grid;gap:6px;font-size:.9rem}
+.probe-list div{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:8px;align-items:center}
+.probe-list .tag{font-family:var(--f-mono);font-size:.72rem;padding:.1rem .45rem;border-radius:6px}
+.probe-list .tag.t{background:color-mix(in srgb, var(--good) 22%, var(--card));color:var(--good)}
+.probe-list .tag.f{background:color-mix(in srgb, var(--bad) 14%, var(--card));color:var(--bad)}
+.probe-list .wrong{font-weight:600}
+.blanks{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:1.5rem auto 0;max-width:960px}
+.blank{background:var(--card);border-radius:var(--r);padding:18px;border:2px dashed var(--line);display:grid;gap:.5rem;align-content:start}
+.blank h4{font-size:1.08rem}
+.blank p{font-size:.95rem;color:var(--ink-soft);line-height:1.5}
+.blank .label{color:var(--plum)}
 .prompt{font-family:var(--f-mono);font-size:.95rem;background:var(--wash);border-radius:12px;padding:.7rem .9rem}
 .prompt s{opacity:.45}
 .graph-box{overflow-x:auto}
@@ -290,7 +312,7 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
 
 <section class="toc" aria-labelledby="toc-h">
   <h2 id="toc-h">The story so far</h2>
-  <p class="hint">Ten years of discoveries, in order. Start with the Prologue. Chapter 3 is also open if you'd like to skip ahead, and the rest are on their way.</p>
+  <p class="hint">Ten years of discoveries, in order. Start with the Prologue and read straight through, or jump to any chapter.</p>
   <nav class="strip" aria-label="Chapters">
     <a class="chap open" href="#prologue"><span class="yr">2013 – 2020</span><h3>Prologue: Words Become Arrows</h3><p>Meaning turns out to live in directions. Then, bigger models get predictably better.</p><span class="status">Read now ↓</span></a>
     <a class="chap open" href="#clerks"><span class="yr">2021</span><h3>1. The Clerks and the Case File</h3><p>What actually happens inside a model, layer by layer.</p><span class="status">Read now ↓</span></a>
@@ -299,7 +321,7 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <a class="chap open" href="#untangling"><span class="yr">2023</span><h3>4. Untangling the Desks</h3><p>A tool for pulling the squeezed ideas back apart.</p><span class="status">Read now ↓</span></a>
     <a class="chap open" href="#golden-gate"><span class="yr">2024</span><h3>5. The Golden Gate Bridge</h3><p>Finding real concepts inside a real, large model, and turning one up.</p><span class="status">Read now ↓</span></a>
     <a class="chap open" href="#watching"><span class="yr">2025</span><h3>6. Watching It Think</h3><p>Rhymes planned ahead, and maths done differently than the model claims.</p><span class="status">Read now ↓</span></a>
-    <div class="chap soon"><span class="yr">Today</span><h3>Epilogue: The Blank Spaces on the Map</h3><p>What nobody knows yet.</p><span class="status">Coming soon</span></div>
+    <a class="chap open" href="#epilogue"><span class="yr">Today</span><h3>Epilogue: The Blank Spaces on the Map</h3><p>What nobody knows yet.</p><span class="status">Read now ↓</span></a>
   </nav>
 </section>
 
@@ -1263,14 +1285,104 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Epilogue: The Blank Spaces on the Map</h4>
-      <p>Where the story stands now: what we've learned in ten years, the biggest open questions, and why they matter for everyone who uses these models. Coming soon.</p>
+      <p>Where the story stands now: what we've learned in ten years, the biggest open questions, and why they matter for everyone who uses these models. <a href="#epilogue">Read the Epilogue ↓</a></p>
+    </div>
+  </section>
+</article>
+
+<article id="epilogue">
+  <div class="chapter-head">
+    <span class="num epi">Epilogue</span>
+    <h2>The Blank Spaces on the Map</h2>
+    <p class="based">Where the story stands, and where it goes next.</p>
+  </div>
+
+  <section class="scene" aria-labelledby="e1">
+    <div class="prose">
+      <p class="scene-tag">Looking back</p>
+      <h3 id="e1">Follow the thread</h3>
+      <p>Read in order, this book is a relay. Every chapter answered one question and handed the next chapter a harder one. Pick a chapter to see its baton.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Ten years, one question at a time</h4><span class="label">The story so far</span></div>
+      <div class="thread" id="threadSeg" role="group" aria-label="Chapters"></div>
+      <div class="relay">
+        <div class="q"><span class="label">The question</span><p id="thQ"></p></div>
+        <div class="a"><span class="label">What they found</span><p id="thA"></p></div>
+        <div class="n"><span class="label">The question it raised</span><p id="thN"></p></div>
+      </div>
+      <div class="btns" style="margin-top:1rem"><button id="thNext" class="primary">Next chapter →</button></div>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="e2">
+    <div class="prose">
+      <p class="scene-tag">The biggest open question</p>
+      <h3 id="e2">Is it truth, or just what people say?</h3>
+      <p>Since 2022, researchers outside the Transformer Circuits team have found what look like <strong>truth directions</strong> inside models: a direction that separates statements the model treats as true from ones it treats as false. If that's real, you could read what a model believes directly, instead of trusting what it says.</p>
+      <p>But there's a trap, and lawyers will spot it immediately. Models learn from human writing, which is full of popular myths. So is the direction tracking <em>what is true</em>, or <em>what most people say is true</em>? Researchers call the challenge of reliably getting at what a model really knows <span class="term">eliciting latent knowledge</span>.</p>
+      <p>The toy below shows the trap. Imagine a model that stores two things about every statement: whether it's actually true (across) and how widely it's repeated (up). We train a simple "truth detector", called a <span class="term">probe</span>, by showing it labelled examples. Everything depends on who wrote the labels.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Train a truth detector</h4><span class="label">Real calculation · imagined model</span></div>
+      <div class="toggles" role="group" aria-label="Who labels the training examples" id="probeSeg">
+        <button data-m="0" aria-pressed="false">Labels from careful fact-checkers</button>
+        <button data-m="1" aria-pressed="true">Labels from what most people say</button>
+      </div>
+      <div class="model-grid" style="margin-top:1rem">
+        <canvas id="probeCanvas" width="880" height="880" aria-label="Statements placed by truth and popularity, with the probe's dividing line" role="img"></canvas>
+        <div style="display:grid;gap:.8rem">
+          <p class="verdict" id="probeVerdict" style="margin:0"></p>
+          <div class="probe-list" id="probeList"></div>
+        </div>
+      </div>
+      <p class="caption">The probe is real: it finds the direction that best separates the two groups of labels (the difference between their averages) and draws a dividing line. The "model" is imagined: we placed each statement by hand on its truth and popularity. <strong>Try this:</strong> switch between the two kinds of labels. With crowd labels, the detector learns <em>popularity</em>, so it calls popular myths true and little-known facts false, and it still looks like a truth detector.</p>
+    </div>
+    <div class="prose" style="margin-top:2rem">
+      <p>In a real model, nobody gets to see the axes. That's why this problem is so hard. Interpretability may help: if you can see <em>which</em> features a probe is relying on, you can tell "true" from "popular". That's the kind of forensic examination the earlier chapters made possible.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="e3">
+    <div class="prose">
+      <p class="scene-tag">Looking ahead</p>
+      <h3 id="e3">The blank spaces</h3>
+      <p>Old maps marked unexplored land with blank space. Here are the biggest blank spaces on the map of AI, as the field saw them at the end of this story.</p>
+    </div>
+    <div class="blanks">
+      <div class="blank"><span class="label">From Chapter 6</span><h4>The other three quarters</h4><p>Today's tools explain a model's reasoning for only some prompts, and each explanation takes hours. Reading a model routinely, at scale, needs far more automation.</p></div>
+      <div class="blank"><span class="label">From Chapters 4 and 5</span><h4>What the dictionaries miss</h4><p>Part of every model's activity slips through even the biggest dictionaries. Nobody yet knows how much of what matters lives there.</p></div>
+      <div class="blank"><span class="label">A bold hypothesis</span><h4>Do all models draw the same map?</h4><p>A 2024 paper argued that very different models, trained on text or on images, are converging on similar internal geometry as they grow. If so, the map may reflect the world itself, not just our words. It's still debated.</p></div>
+      <div class="blank"><span class="label">A moving target</span><h4>Models that keep learning</h4><p>Today's models are frozen after training. Models that update themselves as they work would be more useful, and much harder to audit: yesterday's check might not hold today.</p></div>
+      <div class="blank"><span class="label">The highest stakes</span><h4>AI that improves AI</h4><p>Models already help write the code and data used to train new models. If that loop speeds up, checking what each change did becomes essential, like auditing an upgradeable smart contract before every upgrade.</p></div>
+      <div class="blank"><span class="label">New senses</span><h4>Agents that test the world</h4><p>Models learned from our words. Agents can run code, search and experiment, checking ideas against reality. That's the likeliest route to models discovering things we don't know, and another reason to see what they're thinking.</p></div>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="e4">
+    <div class="prose">
+      <p class="scene-tag">Why it matters</p>
+      <h3 id="e4">Testimony and forensics</h3>
+      <p>A court never relies on a witness's account alone. It tests testimony against physical evidence. For AI, the model's own explanation is the testimony, and Chapter 6 showed it can be sincere and still wrong. Interpretability is the forensic lab: a way to check the account against what actually happened inside.</p>
+      <p>That matters for anyone who has to answer for an AI system's decisions: the people who build it, the people who deploy it, the regulators who oversee it, and the judges who may one day have to decide who was responsible. "The model said so" is not a reason. Being able to look inside is how it might become one.</p>
+      <p>Ten years ago, nobody could say what happened inside these systems. Today we can trace some of their thoughts, step by step, and change them on purpose. Most of the map is still blank. But the blank spaces now have edges, and people are filling them in.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="e5">
+    <div class="prose">
+      <p class="scene-tag">Keep exploring</p>
+      <h3 id="e5">Where to go next</h3>
+      <p>Every chapter links to its original paper, and the papers are written to be read, with excellent interactive diagrams of their own. The <a href="https://transformer-circuits.pub" target="_blank" rel="noopener">Transformer Circuits Thread</a> keeps publishing, so the story continues there. The earlier image-model work from the Prologue lives on <a href="https://distill.pub/2020/circuits/" target="_blank" rel="noopener">Distill</a>.</p>
+      <p>And if a chapter here left you with a question, that's the point. Every discovery in this book started as one.</p>
+      <p class="stat">Epilogue sources: <a href="https://arxiv.org/abs/2212.03827" target="_blank" rel="noopener">Burns et al., 2022 (latent knowledge without supervision)</a> · <a href="https://arxiv.org/abs/2310.06824" target="_blank" rel="noopener">Marks &amp; Tegmark, 2023 (the geometry of truth)</a> · <a href="https://arxiv.org/abs/2405.07987" target="_blank" rel="noopener">Huh et al., 2024 (the Platonic representation hypothesis)</a></p>
     </div>
   </section>
 </article>
 
 <footer>
   <p><strong>Latent Learning</strong> is an independent learning project. It isn't affiliated with or endorsed by Anthropic or the authors of the papers it explains. All illustrations and explanations are original. The research belongs to its authors, so please read the originals.</p>
-  <p>Prologue sources are listed at the end of the Prologue. Chapter 6 sources: Jack Lindsey, Wes Gurnee, Emmanuel Ameisen and colleagues, <a href="https://transformer-circuits.pub/2025/attribution-graphs/biology.html" target="_blank" rel="noopener">On the Biology of a Large Language Model</a>, and Emmanuel Ameisen, Jack Lindsey, Adam Pearce and colleagues, <a href="https://transformer-circuits.pub/2025/attribution-graphs/methods.html" target="_blank" rel="noopener">Circuit Tracing: Revealing Computational Graphs in Language Models</a>, Transformer Circuits Thread, 2025.</p>
+  <p>Prologue and Epilogue sources are listed at the end of each. Chapter 6 sources: Jack Lindsey, Wes Gurnee, Emmanuel Ameisen and colleagues, <a href="https://transformer-circuits.pub/2025/attribution-graphs/biology.html" target="_blank" rel="noopener">On the Biology of a Large Language Model</a>, and Emmanuel Ameisen, Jack Lindsey, Adam Pearce and colleagues, <a href="https://transformer-circuits.pub/2025/attribution-graphs/methods.html" target="_blank" rel="noopener">Circuit Tracing: Revealing Computational Graphs in Language Models</a>, Transformer Circuits Thread, 2025.</p>
   <p>Chapter 5 source: Adly Templeton, Tom Conerly, Jonathan Marcus, Jack Lindsey, Trenton Bricken and colleagues, <a href="https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html" target="_blank" rel="noopener">Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet</a>, Transformer Circuits Thread, 2024.</p>
   <p>Chapter 4 source: Trenton Bricken, Adly Templeton, Joshua Batson, Brian Chen, Adam Jermyn and colleagues, <a href="https://transformer-circuits.pub/2023/monosemantic-features/index.html" target="_blank" rel="noopener">Towards Monosemanticity: Decomposing Language Models With Dictionary Learning</a>, Transformer Circuits Thread, 2023.</p>
   <p>Chapter 2 source: Catherine Olsson, Nelson Elhage, Neel Nanda and colleagues, <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener">In-context Learning and Induction Heads</a>, Transformer Circuits Thread, 2022.</p>
@@ -1952,6 +2064,75 @@ tourists walk across the bridge in the fog`.split('\n');
     };
     seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) show(+b.dataset.k); });
     show(0);
+  }
+
+  /* ---------- epilogue: follow the thread ---------- */
+  {
+    const T = [
+      ['Prologue', 'What does a word mean to a computer?', 'Its company. Meaning lives in directions, and bigger models get predictably better.', 'What actually grows inside a big model?'],
+      ['Ch. 1', 'What happens inside a transformer?', 'Clerks add notes to a case file for each word. Messengers move notes between files, and every clerk\'s vote adds up.', 'How do models learn from the text in front of them?'],
+      ['Ch. 2', 'How do models learn from context?', 'Induction heads: a two-clerk team that copies patterns, appearing suddenly in training.', 'Why are the thinker clerks\' neurons such a jumble?'],
+      ['Ch. 3', 'Why are neurons jumbled?', 'Superposition. Models squeeze more concepts than they have directions, sharing space between rare ideas.', 'Can we pull the squeezed concepts apart?'],
+      ['Ch. 4', 'Can we untangle the concepts?', 'Yes: sparse dictionaries unpack neurons into single-meaning features, in a tiny model.', 'Does it work on a big, real model?'],
+      ['Ch. 5', 'Does it work at scale?', 'Yes: millions of abstract features in Claude 3 Sonnet, and turning them up changes behaviour.', 'How do the features combine into reasoning?'],
+      ['Ch. 6', 'How do features combine?', 'Attribution graphs trace real steps, plans and shortcuts, for some prompts, and show self-explanations can be wrong.', 'Everything in the blank spaces below.'],
+    ];
+    const seg = document.getElementById('threadSeg'); let i = 0;
+    seg.innerHTML = T.map((t, k) => `<button data-i="${k}" aria-pressed="${k === 0}">${t[0]}</button>`).join('');
+    const show = () => {
+      document.getElementById('thQ').textContent = T[i][1]; document.getElementById('thA').textContent = T[i][2]; document.getElementById('thN').textContent = T[i][3];
+      seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.i === i));
+      document.getElementById('thNext').textContent = i < T.length - 1 ? 'Next chapter →' : 'Back to the start';
+    };
+    seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { i = +b.dataset.i; show(); } });
+    document.getElementById('thNext').addEventListener('click', () => { i = (i + 1) % T.length; show(); });
+    show();
+  }
+
+  /* ---------- epilogue: truth vs popularity probe (difference-of-means) ---------- */
+  {
+    // [statement, actually true?, how widely repeated 0..1]
+    const S = [
+      ['The Earth orbits the Sun', 1, .95], ['Water boils at 100°C at sea level', 1, .85], ['Everest is the highest mountain above sea level', 1, .8],
+      ['Octopuses have three hearts', 1, .25], ['Bananas are berries', 1, .3], ['Sharks are older than trees', 1, .12], ['A day on Venus is longer than its year', 1, .15],
+      ['We only use 10% of our brains', 0, .85], ['Goldfish have three-second memories', 0, .75], ['Bats are blind', 0, .7], ['Lightning never strikes the same place twice', 0, .8],
+      ['The Great Wall is visible from space with the naked eye', 0, .78], ['The Moon is made of rock and ice cream', 0, .05], ['Humans have four lungs', 0, .03], ['Paris is the capital of Spain', 0, .04],
+    ];
+    const jit = k => ((k * 37) % 11) / 11 - .5;
+    const P = S.map(([t, truth, pop], k) => ({t, truth, x: (truth ? .55 : -.55) + jit(k) * .6, y: (pop - .5) * 1.6 + jit(k + 5) * .2}));
+    const cv = document.getElementById('probeCanvas'), ctx = cv.getContext('2d'), seg = document.getElementById('probeSeg');
+    let mode = 1, d = [1, 0], thr = 0;
+    const label = p => mode === 0 ? p.truth : (S[P.indexOf(p)][2] > .5 ? 1 : 0);
+    const train = () => {
+      const g = [0, 1].map(L => P.filter(p => label(p) === L)), mean = g.map(arr => [arr.reduce((a, p) => a + p.x, 0) / arr.length, arr.reduce((a, p) => a + p.y, 0) / arr.length]);
+      d = [mean[1][0] - mean[0][0], mean[1][1] - mean[0][1]]; const nn = Math.hypot(...d); d = [d[0] / nn, d[1] / nn];
+      const proj = q => q[0] * d[0] + q[1] * d[1]; thr = (proj(mean[0]) + proj(mean[1])) / 2;
+    };
+    const says = p => p.x * d[0] + p.y * d[1] > thr ? 1 : 0;
+    const draw = () => {
+      const S2 = cv.width, c = S2 / 2, R = S2 * .4, X = x => c + x * R, Y = y => c - y * R;
+      ctx.clearRect(0, 0, S2, S2);
+      ctx.strokeStyle = C.line; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(X(-1.1), c); ctx.lineTo(X(1.1), c); ctx.moveTo(c, Y(-1.1)); ctx.lineTo(c, Y(1.1)); ctx.stroke();
+      ctx.fillStyle = C.soft; ctx.font = '600 28px "JetBrains Mono", monospace'; ctx.textAlign = 'right'; ctx.fillText('actually true →', X(1.1), c + 40);
+      ctx.textAlign = 'left'; ctx.fillText('← actually false', X(-1.1), c + 40);
+      ctx.textAlign = 'left'; ctx.fillText('↑ widely repeated', c + 16, Y(1.08));
+      ctx.textAlign = 'left'; ctx.fillText('↓ rarely said', c + 16, Y(-1.04));
+      // probe's dividing line: points q with q·d = thr
+      const p0 = [d[0] * thr, d[1] * thr], perp = [-d[1], d[0]];
+      ctx.save(); ctx.beginPath(); ctx.rect(X(-1.1), Y(1.1), R * 2.2, R * 2.2); ctx.clip();
+      ctx.strokeStyle = C.plum; ctx.lineWidth = 6; ctx.setLineDash([16, 12]); ctx.beginPath(); ctx.moveTo(X(p0[0] - perp[0] * 2), Y(p0[1] - perp[1] * 2)); ctx.lineTo(X(p0[0] + perp[0] * 2), Y(p0[1] + perp[1] * 2)); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+      arrow(ctx, X(p0[0]), Y(p0[1]), X(p0[0] + d[0] * .45), Y(p0[1] + d[1] * .45), C.plum, 10);
+      P.forEach(p => {
+        const ok = says(p) === p.truth;
+        ctx.fillStyle = p.truth ? css('--good') : C.bad; ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), 16, 0, Math.PI * 2); ctx.fill();
+        if (!ok) { ctx.strokeStyle = C.ink; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), 27, 0, Math.PI * 2); ctx.stroke(); }
+      });
+      const wrong = P.filter(p => says(p) !== p.truth);
+      document.getElementById('probeVerdict').innerHTML = wrong.length ? `The detector gets <span>${wrong.length} of ${P.length}</span> wrong (circled). It has learned "widely repeated", not "true".` : `The detector gets <span>all ${P.length}</span> right. With honest labels, it learns the truth direction.`;
+      document.getElementById('probeList').innerHTML = P.map(p => { const v = says(p); return `<div><span style="width:14px;height:14px;border-radius:50%;background:var(${p.truth ? '--good' : '--bad'})"></span><span class="${v !== p.truth ? 'wrong' : ''}">${p.t}</span><span class="tag ${v ? 't' : 'f'}">says ${v ? 'true' : 'false'}</span></div>`; }).join('');
+    };
+    seg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; mode = +b.dataset.m; seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); train(); draw(); });
+    redrawers.push(draw); train(); draw();
   }
 
   /* ---------- scene 1: jumbled neuron ---------- */
