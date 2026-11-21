@@ -732,14 +732,74 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
 </article>
 
 <article id="crowded-office">
+<style>
+#crowded-office details.deeper{background:var(--card);border:2px solid var(--line);border-left:6px solid var(--plum);border-radius:var(--r);padding:0}
+#crowded-office details.deeper > summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;flex-wrap:wrap;gap:.2rem .8rem;align-items:baseline}
+#crowded-office details.deeper > summary::-webkit-details-marker{display:none}
+#crowded-office details.deeper > summary::before{content:"+";font-family:var(--f-mono);font-weight:600;color:var(--plum);width:1ch}
+#crowded-office details.deeper[open] > summary::before{content:"−"}
+#crowded-office details.deeper > summary .label{color:var(--plum)}
+#crowded-office details.deeper > summary b{font-family:var(--f-display);font-weight:600;font-size:1.05rem}
+#crowded-office details.deeper > .in{padding:0 18px 18px;display:grid;gap:.9rem;font-size:1rem}
+#crowded-office details.deeper.deepest{border-left-color:var(--tomato);background:var(--wash)}
+#crowded-office details.deeper.deepest > summary::before,#crowded-office details.deeper.deepest > summary .label{color:var(--tomato)}
+#crowded-office .paper{font-family:var(--f-mono);font-size:.8rem;color:var(--ink-soft);line-height:1.5}
+#crowded-office .paper a{color:var(--sky)}
+#crowded-office .math{font-family:var(--f-mono);font-size:.92rem;background:var(--wash);border-radius:10px;padding:.55rem .8rem;overflow-x:auto;white-space:nowrap}
+#crowded-office details.deepest .math{background:var(--card)}
+#crowded-office blockquote{margin:0;border-left:4px solid var(--marigold);padding:.2rem 0 .2rem 1rem;font-style:italic}
+#crowded-office blockquote cite{display:block;font-style:normal;font-family:var(--f-mono);font-size:.78rem;color:var(--ink-soft);margin-top:.3rem}
+#crowded-office .quiz{background:color-mix(in srgb, var(--marigold) 14%, var(--card));border-radius:var(--r);padding:16px 18px;display:grid;gap:.7rem}
+#crowded-office .quiz .label{color:var(--ink)}
+#crowded-office .quiz .opts{display:flex;flex-wrap:wrap;gap:8px}
+#crowded-office .quiz .opts button{font-size:.88rem;padding:.35rem .9rem;border-width:1.5px}
+#crowded-office .quiz .opts button.right{background:var(--good);border-color:var(--good);color:#fff}
+#crowded-office .quiz .opts button.wrong{border-color:var(--bad);color:var(--bad)}
+#crowded-office .quiz .reveal{display:none;font-size:.98rem}
+#crowded-office .quiz.done .reveal{display:block}
+#crowded-office .kind{display:inline-block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding:.15rem .5rem;border-radius:6px;background:color-mix(in srgb, var(--teal) 18%, var(--card));color:var(--teal);margin-right:.3rem}
+#crowded-office .kind.sk{background:color-mix(in srgb, var(--marigold) 24%, var(--card));color:var(--ink)}
+#crowded-office .dchips{display:flex;flex-wrap:wrap;gap:6px}
+#crowded-office .dchips span{font-family:var(--f-mono);font-size:.8rem;padding:.2rem .5rem;border-radius:8px;background:var(--wash);display:inline-flex;gap:.35rem;align-items:center}
+#crowded-office .dchips i{width:10px;height:10px;border-radius:50%;display:inline-block}
+#crowded-office .spark{width:100%;height:70px;display:block;margin-top:.6rem}
+#crowded-office .phase-wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:1.4rem;align-items:start}
+@media (max-width:760px){#crowded-office .phase-wrap{grid-template-columns:1fr}}
+#crowded-office .phase-wrap canvas{width:100%;display:block;cursor:crosshair;touch-action:manipulation}
+#crowded-office .keyrow{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.85rem;margin-top:.5rem}
+#crowded-office .keyrow span{display:inline-flex;gap:6px;align-items:center}
+#crowded-office .keyrow i{width:14px;height:14px;border-radius:4px;display:inline-block}
+#crowded-office .lossrow{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr) 4.2em;gap:8px;align-items:center;font-size:.85rem;margin-top:6px}
+#crowded-office .lossrow .bar{height:12px;border-radius:99px;background:var(--wash);overflow:hidden}
+#crowded-office .lossrow .bar i{display:block;height:100%;border-radius:99px}
+#crowded-office .lossrow span:last-child{font-family:var(--f-mono);font-size:.78rem;text-align:right}
+#crowded-office .lossrow.win{font-weight:600}
+#crowded-office .wh{display:grid;gap:8px;margin-top:.8rem}
+#crowded-office .whr{display:grid;grid-template-columns:5.5em minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:center;font-size:.85rem}
+#crowded-office .whr.head{font-family:var(--f-mono);font-size:.72rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em}
+#crowded-office .track{position:relative;height:18px;background:var(--wash);border-radius:6px;overflow:hidden}
+#crowded-office .track i{position:absolute;top:2px;bottom:2px;border-radius:4px}
+#crowded-office .track .zero{position:absolute;top:0;bottom:0;width:2px;background:var(--ink-soft);left:50%}
+#crowded-office .track .cut{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed var(--bad)}
+#crowded-office .absplot{width:100%;max-width:520px;height:auto;display:block;margin:0 auto}
+#crowded-office .cnt{font-family:var(--f-display);font-weight:800;font-size:clamp(1.6rem,5vw,2.4rem);color:var(--plum);overflow-wrap:anywhere;line-height:1.15}
+#crowded-office .grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.4rem;align-items:center}
+@media (max-width:720px){#crowded-office .grid2{grid-template-columns:1fr}}
+#crowded-office .grid2 canvas{width:100%;max-width:420px;aspect-ratio:1;margin:0 auto;display:block;touch-action:none}
+</style>
   <div class="chapter-head">
     <span class="num">Chapter 3</span>
     <h2>The Crowded Office</h2>
-    <p class="based">Based on <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener"><em>Toy Models of Superposition</em></a> (Elhage et al., Anthropic, 2022)</p>
+    <p class="based">Based on <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener"><em>Toy Models of Superposition</em></a> (Elhage, Hume, Olsson, Schiefer et al., Anthropic and Harvard, September 2022)</p>
   </div>
 
   <div class="prose">
-    <p>Here's a reminder of the characters you'll meet in every chapter. Inside a language model, every idea it can think about is stored as an <span class="term">arrow</span>: a direction in a vast space. The space is the model's private filing system. Researchers call it <span class="term">latent space</span>, which just means "hidden space", because nobody labelled any of its directions.</p>
+    <p>By 2022, interpretability researchers had a nagging puzzle. In some models, a single neuron really did mean one thing. Vision models had famous "curve detector" neurons that fired for curves and nothing else. But in language models, neurons like that were rare. Most of them fired for a strange mix of unrelated things.</p>
+    <p>The authors of this chapter's paper put the puzzle in one line:</p>
+    <blockquote>"Why is it that neurons sometimes align with features and sometimes don't?"<cite>Elhage et al., 2022, opening section</cite></blockquote>
+    <p>Their answer has a name, <span class="term">superposition</span>, and a method: build the smallest models anyone could imagine, small enough that you can see every number inside them, and watch what they do. What they found was stranger and more beautiful than they expected: sudden phase changes like water freezing, and concepts arranging themselves into triangles, pentagons and shapes from 3D geometry, all without anyone asking.</p>
+    <p>You'll rerun most of those experiments yourself in this chapter. Each scene starts simply. When you want more, open the <strong>Go deeper</strong> drawers: they hold the paper's real mechanism, its own terms and numbers, and a pointer to the section, so you can read the original alongside.</p>
+    <p>First, a reminder of the characters. Inside a language model, every idea it can think about is stored as an <span class="term">arrow</span>: a direction in a vast space. Researchers call it <span class="term">latent space</span>, "hidden space", because nobody labelled any of its directions.</p>
   </div>
 
   <div class="cast" role="list">
@@ -753,11 +813,11 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     </div>
     <div class="who" role="listitem">
       <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="15" cy="16" r="7" fill="var(--tomato)"/><circle cx="30" cy="20" r="7" fill="var(--teal)"/><circle cx="20" cy="31" r="7" fill="var(--pink)"/></svg>
-      <div><h4>The concepts</h4><p>Ideas like "French", "a legal term" or "octopus". There are millions of them.</p></div>
+      <div><h4>The concepts</h4><p>Ideas like "French", "a legal term" or "octopus". The paper calls them <em>features</em>. There are millions of them.</p></div>
     </div>
     <div class="who" role="listitem">
       <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="5" y="20" width="34" height="6" rx="2" fill="var(--plum)"/><rect x="9" y="26" width="4" height="13" fill="var(--plum)"/><rect x="31" y="26" width="4" height="13" fill="var(--plum)"/></svg>
-      <div><h4>The desks</h4><p>The directions available to store concepts in. There are only a few thousand.</p></div>
+      <div><h4>The desks</h4><p>The directions available to store concepts in: the paper's <em>dimensions</em>. There are only a few thousand.</p></div>
     </div>
   </div>
 
@@ -766,11 +826,11 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="prose">
       <p class="scene-tag">Scene 1</p>
       <h3 id="s1">The neuron that couldn't make up its mind</h3>
-      <p>Early researchers had a hopeful plan. A model is made of tiny parts called <span class="term">neurons</span>. If each neuron stood for one idea, you could read a model like a dictionary: here's the "French" neuron, here's the "angry" neuron.</p>
-      <p>Sometimes it worked. But again and again, they found neurons like this one, which lights up for things that have nothing to do with each other.</p>
+      <p>The hopeful plan went like this. A model is made of tiny parts called <span class="term">neurons</span>. If each neuron stood for one idea, you could read a model like a dictionary: here's the "French" neuron, here's the "angry" neuron.</p>
+      <p>Sometimes it worked. But again and again, researchers found neurons like this one, which lights up for things that have nothing to do with each other.</p>
     </div>
     <div class="toy">
-      <div class="toy-head"><h4>Meet one jumbled neuron</h4><span class="label">Try it</span></div>
+      <div class="toy-head"><h4>Meet one jumbled neuron</h4><span class="label">Illustration of a real finding</span></div>
       <div class="neuron">
         <svg viewBox="0 0 120 120" aria-hidden="true">
           <circle id="nGlow" cx="60" cy="60" r="52" fill="var(--marigold)" opacity=".15"/>
@@ -781,7 +841,19 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
         <div class="rows" id="neuronRows"></div>
       </div>
       <div class="btns" style="margin-top:1rem"><button class="primary" id="neuronBtn">Show the neuron some text</button></div>
-      <p class="caption">This pattern is a real one: a 2023 Anthropic study found a single neuron in a small language model that responded to academic citations, English dialogue, web requests and Korean text. Researchers call neurons like this <strong>polysemantic</strong>, meaning "many meanings". For years, they were one of the field's biggest puzzles.</p>
+      <p class="caption">The pattern is real; the example texts and bar heights are ours. A 2023 Anthropic study (Chapter 4) found a single neuron in a small language model that responded to academic citations, English dialogue, web requests and Korean text. Researchers call neurons like this <strong>polysemantic</strong>, "many meanings". The 2022 paper set out to explain why they exist.</p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span><b>Two forces pulling in opposite directions</b></summary>
+        <div class="in">
+          <p>The paper starts from a working assumption it calls the <span class="term">linear representation hypothesis</span>, which has two parts. <strong>Decomposability</strong>: what a model is thinking can be split into separate concepts, each understandable on its own. <strong>Linearity</strong>: each concept is a direction, and "how much" of it is present is how far the file points that way.</p>
+          <p>Then it names two forces. Some layers have a <span class="term">privileged basis</span>: something in the design (an activation function applied to each neuron separately) makes the neuron directions special, which nudges concepts to line up with single neurons. Pulling the other way is <span class="term">superposition</span>: storing more concepts than there are directions, which pushes concepts <em>off</em> the neurons and smears each one across many of them.</p>
+          <p>What counts as a "feature"? The authors admit it's hard to define. They consider three candidates and lean towards the third: a feature is a property of the input that a <em>large enough</em> model would reliably give its own neuron. In smaller models, the same feature may have to share.</p>
+          <p>A real example from the paper's discussion: the first thinker layer of a language model may need to tell apart the English word "die" from the German article "die" (and the Dutch and Afrikaans words spelled the same way). Each of those meanings is rare, and rare is exactly what the theory says gets squeezed. The authors report that, in their experience, neurons in that first layer are "extremely polysemantic".</p>
+          <p class="paper">In the paper: <a href="https://transformer-circuits.pub/2022/toy_model/index.html#motivation" target="_blank" rel="noopener">Definitions and Motivation: Features, Directions, and Superposition</a>, and Discussion.</p>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -790,12 +862,17 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="prose">
       <p class="scene-tag">Scene 2</p>
       <h3 id="s2">Too many people, too few desks</h3>
-      <p>Here's the problem. A model knows about millions of concepts, but it only has a few thousand directions to store them in. That's like an office with a thousand employees and a dozen desks.</p>
-      <p>Offices solve this with <span class="term">hot-desking</span>. If most people only come in occasionally, they can share. The rarer the visits, the less often two people want the same desk on the same day.</p>
-      <p>Below, twelve people share four desks. Drag the slider to change how often each of them comes in, and watch how often the office overflows.</p>
+      <p>Here's the problem in its plainest form. A model knows about millions of concepts but has only a few thousand directions to store them in. That's an office with a thousand employees and a dozen desks.</p>
+      <p>Offices solve this with <span class="term">hot-desking</span>. If most people come in only occasionally, they can share. The rarer the visits, the less often two people want the same desk on the same day.</p>
+      <div class="quiz" data-quiz>
+        <p class="label">Predict before you press</p>
+        <p>Twelve people share four desks. Each comes in on about one day in five, at random. On roughly what fraction of days will someone arrive and find no desk free?</p>
+        <div class="opts"><button>About half the days</button><button>About one day in four</button><button data-ok>About one day in fourteen</button><button>Never</button></div>
+        <p class="reveal">One day in fourteen: the exact chance is <strong>7.3%</strong>. Twelve people at one in five means 2.4 people on an average day, so it takes an unusually busy day (five or more) to overflow. Set the slider below to "Once a week" and check it against the tally. Then try "Twice a month": the chance falls to 0.4%, about one day in 230.</p>
+      </div>
     </div>
     <div class="toy">
-      <div class="toy-head"><h4>The hot-desk office</h4><span class="label">12 people · 4 desks</span></div>
+      <div class="toy-head"><h4>The hot-desk office</h4><span class="label">12 people · 4 desks · real random draws</span></div>
       <div class="office">
         <div class="zone desks"><div class="label">At a desk</div><div class="slots" id="deskSlots"></div></div>
         <div class="zone hall"><div class="label">No desk free</div><div class="slots" id="hallSlots"></div></div>
@@ -805,9 +882,23 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
         <div class="ctl"><label for="freq">How often does each person come in?</label><input type="range" id="freq" min="0" max="4" step="1" value="1"><output id="freqOut" for="freq"></output></div>
         <div class="btns"><button class="primary" id="officePlay">Pause</button><button id="officeStep">Next day</button><button id="officeReset">Reset</button></div>
       </div>
-      <div class="tally" style="margin-top:1rem"><span>Days so far <b id="tDays">0</b></span><span class="bad">Days someone had no desk <b id="tClash">0</b></span><span>Overflow rate <b id="tRate">0%</b></span></div>
+      <div class="tally" style="margin-top:1rem"><span>Days so far <b id="tDays">0</b></span><span class="bad">Days someone had no desk <b id="tClash">0</b></span><span>Overflow rate <b id="tRate">0%</b></span><span>The maths says <b id="tExp">0%</b></span></div>
       <div class="days" id="dayStrip" aria-hidden="true"></div>
-      <p class="caption">When everyone comes in every day, the office overflows constantly. At once a month, overflow almost never happens. A model faces the same trade-off. Most concepts are rare (you can read a lot of text before anyone mentions octopus anatomy), so they can share space and rarely get in each other's way.</p>
+      <p class="caption">The "maths says" figure is the exact probability that five or more of the twelve come in on the same day. The tally wobbles around it, and gets closer the longer you let it run.</p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <p>A model faces the same trade-off. Most concepts are rare. You can read a great deal of text before anyone mentions octopus anatomy, so "octopus anatomy" can share space with other rare concepts and rarely gets in their way.</p>
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span><b>The paper's three assumptions about concepts</b></summary>
+        <div class="in">
+          <p>To build a toy world, the authors had to decide what concepts are like. They made three assumptions:</p>
+          <p><strong>1. Concepts are sparse.</strong> Most of the time, a given concept is absent. In their words, "most tokens don't refer to Martin Luther King". In the toy, each concept is switched off with probability <em>S</em> (the <span class="term">sparsity</span>), and otherwise takes a random strength between 0 and 1. So 1 − <em>S</em> is how often it shows up.</p>
+          <p><strong>2. There are more concepts than neurons.</strong> A language model could usefully know about every person ever written about. The authors note, with some amusement, that language models know about people of quite modest fame, "such as several of the authors of this paper", who presumably turn up far less than once in a million tokens.</p>
+          <p><strong>3. Concepts differ in importance.</strong> Some help the model's score far more than others. In the toy, each concept gets an <span class="term">importance</span> <em>I</em>, a weight on how much its mistakes count.</p>
+          <p>So every concept has two numbers: how often it appears, and how much it matters. Hold on to those two numbers. The rest of the chapter is about what happens as they change.</p>
+          <p class="paper">In the paper: <a href="https://transformer-circuits.pub/2022/toy_model/index.html#demonstrating-setup-x" target="_blank" rel="noopener">Demonstrating Superposition: Experiment Setup, The Feature Vector</a>.</p>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -816,9 +907,9 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="prose">
       <p class="scene-tag">Scene 3</p>
       <h3 id="s3">A room that's much bigger than it looks</h3>
-      <p>For a model, a "desk" is a direction. Two concepts stay completely out of each other's way when their arrows are at a right angle. On a flat page, you can only fit two arrows at right angles: one across, one up.</p>
-      <p>But a model's space doesn't have two directions. It has thousands. And in a space like that, something strange happens: if you pick arrows completely at random, almost every pair ends up <em>nearly</em> at a right angle. There's room for vastly more "almost separate" concepts than there are directions.</p>
-      <p>Don't take my word for it. The chart below really does pick 150 random arrows and measures the angle between every pair.</p>
+      <p>For a model, a "desk" is a direction. Two concepts stay completely out of each other's way when their arrows are at a right angle (<em>perpendicular</em>, or <em>orthogonal</em>). On a flat page you can only fit two arrows at right angles: one across, one up. In a space with 1,000 directions, you can fit exactly 1,000.</p>
+      <p>But here is the strange part. If you're willing to accept <em>almost</em> perpendicular, the count explodes. To see why, think about how you measure the overlap between two arrows: you multiply them coordinate by coordinate and add up the results. For two random arrows in 1,000 directions, that's 1,000 tiny numbers, each equally likely to be positive or negative. Like 1,000 coin flips, they mostly cancel out. The leftover is typically about 1 divided by the square root of 1,000, roughly 0.03, which corresponds to an angle of about 88°.</p>
+      <p>The more directions, the better the cancelling. The chart below really does pick 150 random arrows and measures the angle between every pair, all 11,175 of them.</p>
     </div>
     <div class="toy">
       <div class="toy-head"><h4>Angles between random arrows</h4><span class="label">Real calculation</span></div>
@@ -828,7 +919,36 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
         <div class="btns"><button id="angleRedo">Pick new arrows</button></div>
       </div>
       <p class="verdict" id="angleVerdict"></p>
-      <p class="caption">In 2 directions, the angles are spread out evenly, and arrows constantly overlap. By 1,000 directions, nearly every pair is within a few degrees of a right angle. Real models have thousands of directions. Our flat-page intuition badly underestimates how roomy that is.</p>
+      <p class="stat" id="angleWorst"></p>
+      <p class="caption">In 2 directions, the angles spread out evenly and arrows constantly overlap. By 1,000 directions, nearly every pair is within a few degrees of a right angle. Watch the "most overlapping pair" line at 100 directions. That's 150 arrows in a space with only 100 directions, more arrows than directions, and even the worst pair is typically still 20° to 30° away from overlapping.</p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <p>How many almost-perpendicular arrows can a space hold? The paper points to a famous result (the Johnson–Lindenstrauss lemma): exactly perpendicular arrows max out at the number of directions, but <em>almost</em> perpendicular ones can grow exponentially with it. Here is a safe lower estimate you can compute.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>How many concepts fit, if "almost" is good enough?</h4><span class="label">Real calculation · a guaranteed minimum</span></div>
+      <div class="controls" style="margin-top:0">
+        <div class="ctl"><label for="c3cD">Directions in the space</label><select id="c3cD"><option value="100">100</option><option value="1000" selected>1,000</option><option value="12288">12,288 (a large model's case file)</option><option value="100000">100,000</option></select></div>
+        <div class="ctl"><label for="c3cE">Every pair must be within…</label><select id="c3cE"><option value="10" selected>10° of a right angle</option><option value="5">5° of a right angle</option><option value="2">2° of a right angle</option></select></div>
+      </div>
+      <p style="margin-top:1rem">You can fit at least</p>
+      <p class="cnt" id="c3cOut">…</p>
+      <p class="stat" id="c3cNote"></p>
+      <p class="caption">How this is computed: pick that many arrows at random. A standard bound says any one pair lands too close with probability at most 2e<sup>−dε²/2</sup>, where d is the number of directions and ε is the overlap allowed. If the expected number of bad pairs is below one, some choice of arrows has no bad pairs at all. That works whenever the count is below e<sup>dε²/4</sup>. The true maximum is higher still.</p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <div class="aside">
+        <p class="label">If you know crypto</p>
+        <p>It's the same reason two people never generate the same private key. A 256-bit key space is so vast that random picks essentially never land on top of each other. High-dimensional space has that property for <em>directions</em>: random arrows almost never land near each other. A model gets that roominess for free.</p>
+      </div>
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span><b>Room isn't the same as free room</b></summary>
+        <div class="in">
+          <p>Almost perpendicular still means slightly overlapping. Whenever one concept is active, every concept that shares its space receives a faint false signal. The paper calls this <span class="term">interference</span>. Pack in more arrows and each one gets noisier. So geometry alone doesn't settle how many concepts a model can usefully hold: it also depends on how often concepts are active at the same time.</p>
+          <p>The paper's related work section connects this to <span class="term">compressed sensing</span>, a branch of mathematics about recovering a signal from fewer measurements than it has entries, which is possible when the signal is sparse. Borrowing a lower bound from that field, the authors estimate the number of concepts their toy can store and conclude that it "is linear in m but modulated by the sparsity": it grows in proportion to the number of directions <em>m</em>, multiplied by a factor that grows as concepts get rarer. That's a more sober figure than the exponential count above, and the toy model is a far weaker decoder than the algorithms compressed sensing uses.</p>
+          <p class="paper">In the paper: <a href="https://transformer-circuits.pub/2022/toy_model/index.html#motivation" target="_blank" rel="noopener">The Superposition Hypothesis</a>, and <a href="https://transformer-circuits.pub/2022/toy_model/index.html#related-work" target="_blank" rel="noopener">Related Work: Compressed Sensing</a>.</p>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -837,30 +957,71 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="prose">
       <p class="scene-tag">Scene 4</p>
       <h3 id="s4">Watch a real tiny model learn</h3>
-      <p>This is the experiment at the heart of the paper. The researchers built the smallest possible model: it has to store <strong>5 concepts</strong> in a space with only <strong>2 directions</strong>. Then they asked what it does when the concepts are common, and what it does when they're rare.</p>
-      <p>The model below isn't an animation. It's a real neural network training live in your browser, using the same setup. Each coloured arrow is where it chose to store one concept. Concept 1 matters most to its score, concept 5 matters least.</p>
+      <p>This is the experiment at the heart of the paper. Take the smallest model you can imagine. It must squeeze <strong>5 concepts</strong> into a space with only <strong>2 directions</strong>, and then rebuild all 5 from those 2 numbers. Its score is how well the rebuilt concepts match the originals, with important concepts counting more.</p>
+      <p>The model below isn't an animation. It's a real neural network training live in your browser, set up like the paper's. Each coloured arrow is where it chose to store one concept.</p>
     </div>
     <div class="toy">
       <div class="toy-head"><h4>5 concepts, 2 directions</h4><span class="label" id="trainStatus">Training…</span></div>
       <div class="model-grid">
         <canvas id="modelCanvas" width="880" height="880" aria-label="Arrows showing where the model stores each of five concepts" role="img"></canvas>
         <div>
+          <p class="label" style="margin-bottom:.4rem">Share of a desk each concept gets</p>
           <div class="legend" id="legend"></div>
           <p class="verdict" id="modelVerdict"></p>
           <p class="stat" id="modelStat"></p>
+          <canvas class="spark" id="modelSpark" width="800" height="140" aria-label="The model's error over recent training steps" role="img"></canvas>
+          <p class="stat">Error over recent training (log scale)</p>
         </div>
       </div>
       <div class="controls">
-        <div class="ctl"><label for="sparsity">How often does each concept show up?</label><input type="range" id="sparsity" min="0" max="5" step="1" value="0"><output id="sparsityOut" for="sparsity"></output></div>
+        <div class="ctl"><label for="sparsity">How often does each concept show up?</label><input type="range" id="sparsity" min="0" max="6" step="1" value="0"><output id="sparsityOut" for="sparsity"></output></div>
+        <div class="ctl"><label for="impSel">How unequal is their importance?</label><select id="impSel"><option value="0.6">Steep: each counts 0.6× the one before</option><option value="0.8" selected>Gentle: each counts 0.8× the one before</option><option value="1">All equally important</option></select></div>
+      </div>
+      <div class="controls">
+        <div class="checks"><label><input type="checkbox" id="reluBox" checked> Filter on the way out (ReLU)</label></div>
         <div class="btns"><button class="primary" id="trainPlay">Pause</button><button id="trainReset">Start from scratch</button></div>
       </div>
-      <p class="caption"><strong>Try this:</strong> start at "every time" and wait a few seconds. Then slide towards "very rarely", one notch at a time, and watch the arrows rearrange themselves.</p>
+      <p class="caption"><strong>Try this:</strong> start at "every time" and wait a few seconds. Then slide towards "very rarely", one notch at a time, and watch the arrows rearrange. The bars show each concept's "share of a desk", computed live with the paper's formula (see Go deeper). Changing settings keeps training the same model, so it can take a few seconds to rearrange, and now and then it settles into a slightly worse arrangement. "Start from scratch" gives it a fresh try.</p>
     </div>
     <div class="prose" style="margin-top:2rem">
       <p>Here's what you should see, and it's what the researchers saw.</p>
       <p><strong>When concepts are common</strong>, the model behaves like a cautious filing clerk. It keeps only the two most important concepts, gives each a private direction at a right angle, and simply gives up on the other three. Sharing would cause too many clashes.</p>
-      <p><strong>As concepts get rarer</strong>, the model starts squeezing more in. First three. Then four, arranged as two pairs pointing in opposite directions. Finally all five, spread into a perfect <strong>pentagon</strong>. Nobody told it to make a pentagon. It found that shape on its own, because it's the fairest way to give five rare concepts as much room as possible.</p>
-      <p>That squeezing is <span class="term">superposition</span>: more concepts than directions, sharing the space because they seldom appear at the same time.</p>
+      <p><strong>As concepts get rarer</strong>, it starts squeezing more in. Often the first step is three: concept 1 keeps a private desk while concepts 2 and 3 share the other one, pointing in opposite directions like the two ends of a <span class="term">see-saw</span>. Then four, as two see-saws. Finally all five, spread into a <strong>pentagon</strong>, each with two-fifths of a desk. Nobody told it to make a pentagon.</p>
+      <p>That squeezing is <span class="term">superposition</span>: more concepts than directions, sharing the space because they seldom appear at the same time. The paper's headline: a model can "represent more features than it has dimensions".</p>
+      <div class="quiz" data-quiz>
+        <p class="label">Predict before you press</p>
+        <p>Untick "Filter on the way out" and slide to "very rarely". With the filter gone, the model is purely linear: it just multiplies and adds. How many concepts will it store?</p>
+        <div class="opts"><button data-ok>Two, always</button><button>Five, in a pentagon</button><button>It depends on how rare they are</button></div>
+        <p class="reveal">Two, at every setting. Without the filter, there's no way to throw away the faint false signals, so sharing always costs more than it gains. The best a linear model can do is keep the two most important concepts at right angles, the same answer as a classic statistics technique called principal component analysis. The paper's surprise is that one small filter, a ReLU, changes the answer completely.</p>
+      </div>
+      <div class="aside">
+        <p class="label">Who gets a desk?</p>
+        <p>Asked to guess which ideas a crowded model would protect, the owner of this book said: the most connected, the ones with the most impact. The maths agrees. What a model loses by dropping a concept is its importance multiplied by how often it shows up. A concept that matters a lot but almost never appears is cheap to drop, and so is one that appears constantly but barely matters. Set importance to "steep" and watch concept 5 struggle to get in at all.</p>
+      </div>
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span><b>The model, in the paper's notation</b></summary>
+        <div class="in">
+          <p>The paper writes the model in one line. Here it is once, then in words.</p>
+          <p class="math">h = Wx &nbsp;&nbsp;&nbsp; x′ = ReLU(Wᵀh + b) = ReLU(WᵀWx + b)</p>
+          <p><strong>x</strong> is the list of 5 concept strengths. <strong>W</strong> is a table that turns them into 2 numbers, <strong>h</strong>: the case file. Each concept's column of W is its arrow, which is exactly what the toy draws. To rebuild, the model reads the file back along each concept's arrow (that's <strong>Wᵀh</strong>), adds a small per-concept offset <strong>b</strong> (the bias), and applies <strong>ReLU</strong>, a filter that turns any negative number into zero.</p>
+          <p class="math">loss = Σ<sub>i</sub> I<sub>i</sub> (x<sub>i</sub> − x′<sub>i</sub>)²</p>
+          <p>The score to minimise: the squared error for each concept, weighted by its importance I<sub>i</sub>. Our toy uses importance 0.8<sup>i</sup> by default; the paper's first experiment used 0.7<sup>i</sup> with 20 concepts and 5 directions, and found the same story.</p>
+          <p>The paper explains the result as a tug of war between two forces. <span class="term">Feature benefit</span>: storing another concept lowers the error on it. <span class="term">Interference</span>: storing it at an angle to others adds false signals to them. In a linear model, the interference always wins once you run out of perpendicular directions. With the ReLU, a negative false signal is simply cut to zero, so it costs nothing when only one concept is active. That's why the shapes it finds favour opposite-pointing arrows.</p>
+          <p class="paper">In the paper: <a href="https://transformer-circuits.pub/2022/toy_model/index.html#demonstrating" target="_blank" rel="noopener">Demonstrating Superposition</a> (Experiment Setup, Basic Results, Mathematical Understanding).</p>
+          <details class="deeper deepest">
+            <summary><span class="label">Deeper still</span><b>Measuring "a share of a desk"</b></summary>
+            <div class="in">
+              <p>The bars in the toy use the paper's <span class="term">feature dimensionality</span>:</p>
+              <p class="math">D<sub>i</sub> = ‖W<sub>i</sub>‖² / Σ<sub>j</sub> (Ŵ<sub>i</sub> · W<sub>j</sub>)²</p>
+              <p>In words: how strongly concept i is stored, divided by how much <em>everyone</em> (itself included) shows up along its arrow. A concept alone on its direction scores 1. Each end of a see-saw scores 1/(1+1) = 1/2. A concept that isn't stored scores 0. Check the pentagon: each gets 2/5.</p>
+              <p>Notice the total. When the model packs efficiently, the shares add up to the number of directions, here 2: 1+1, or 1+½+½, or ½×4, or ⅖×5. The paper observed the same: "the dimensionality of all features add up to the number of embedding dimensions when the features are 'packed efficiently'".</p>
+              <p>The paper also tracks a whole-model version, the "dimensions per feature". In a larger run (400 concepts, 30 directions, all equally important) it found the number doesn't slide smoothly as concepts get rarer. It sticks at 1, then sticks at ½ (see-saws everywhere) over a wide range, before moving on. The authors note it "very vaguely resembles the fractional quantum Hall effect" in physics.</p>
+              <p>And the error line under the toy? The paper saw that training doesn't always improve smoothly. Concepts jump between arrangements, and the error drops in a sudden step each time, like an electron hopping between energy levels. Start from scratch at "one time in twenty" and watch for steps. Chapter 2's induction heads appeared in a sudden jump too.</p>
+              <p class="paper">In the paper: <a href="https://transformer-circuits.pub/2022/toy_model/index.html#geometry-uniform" target="_blank" rel="noopener">Uniform Superposition</a>, <a href="https://transformer-circuits.pub/2022/toy_model/index.html#geometry-dimensionality" target="_blank" rel="noopener">Feature Dimensionality</a>, <a href="https://transformer-circuits.pub/2022/toy_model/index.html#learning-jumps" target="_blank" rel="noopener">Learning Dynamics: Discrete "Energy Level" Jumps</a>.</p>
+            </div>
+          </details>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -868,38 +1029,533 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
   <section class="scene" aria-labelledby="s5">
     <div class="prose">
       <p class="scene-tag">Scene 5</p>
-      <h3 id="s5">Ignoring the whispers</h3>
-      <p>Sharing has a cost. When concepts squeeze together, each one leaks a little into its neighbours. Look at the pentagon: the arrows aren't at right angles, so whenever one concept is active, its neighbours get a faint, false signal too.</p>
-      <p>The model handles this with a simple rule: <em>ignore anything quieter than a certain level</em>. Faint leakage gets thrown away, and only the strong, real signal gets through. This works only because the concepts are rare. If they all showed up at once, the leaks would pile up into a roar.</p>
-      <div class="aside">
-        <p class="label">Two more findings</p>
-        <p><strong>Concepts that appear together get kept apart.</strong> "Lawyer" and "court" turn up in the same sentences all the time, so sharing would mean constant clashes. Models tend to give such pairs separate directions.</p>
-        <p style="margin-top:.6rem"><strong>Opposites make perfect desk-mates.</strong> Concepts that never appear together can point in exactly opposite directions, like the two ends of a see-saw. Only one can be up at a time. You may have spotted these pairs in the toy model above.</p>
+      <h3 id="s5">Ice, water, steam: the phase diagram</h3>
+      <p>The paper noticed that each concept seems to meet one of three fates. It's <strong>left out</strong>. It <strong>shares</strong> a desk (superposition). Or it gets a <strong>desk of its own</strong>. And the switch between fates looked sudden, the way water doesn't become slightly icy: it freezes.</p>
+      <p>To isolate this, they shrank the problem as far as it goes: <strong>2 concepts, 1 desk</strong>. Concept A has importance 1. You choose how important concept B, the newcomer, is, and how often both show up. Then the model has three options: ignore B, give the desk to B and drop A, or put A and B on the two ends of a see-saw.</p>
+      <div class="quiz" data-quiz>
+        <p class="label">Predict before you look</p>
+        <p>Both concepts show up every time, and B is three times as important as A. What does the best model do?</p>
+        <div class="opts"><button>Ignores B</button><button data-ok>Gives the desk to B, drops A</button><button>Puts them on a see-saw</button></div>
+        <p class="reveal">It gives the desk to B. When both are always present, a see-saw would make them cancel each other out constantly, so the only question is which one is worth more. Now look at the right-hand side of the diagram: once they're rare enough, the see-saw wins almost everywhere, even when B is far less important than A.</p>
       </div>
-      <p>And now the jumbled neuron from Scene 1 makes sense. A neuron is a single, fixed spot in the model. When many concepts share the space, a single neuron catches a little of several of them. It isn't confused. It's a shared desk.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Which fate wins? 2 concepts, 1 desk</h4><span class="label" id="c3pStatus">Real calculation</span></div>
+      <div class="phase-wrap">
+        <div>
+          <canvas id="c3Phase" width="900" height="700" aria-label="Phase diagram: which strategy has the lowest error for each combination of importance and rarity" role="img"></canvas>
+          <div class="keyrow"><span><i style="background:var(--line)"></i>B left out</span><span><i style="background:var(--plum)"></i>A and B share (see-saw)</span><span><i style="background:var(--teal)"></i>B gets the desk, A dropped</span></div>
+        </div>
+        <div>
+          <p class="verdict" id="c3pVerdict" style="margin-top:0"></p>
+          <p class="stat" id="c3pWhere"></p>
+          <div id="c3pLoss" style="margin-top:.6rem"></div>
+          <canvas id="c3pLine" width="800" height="150" style="width:100%;display:block;margin-top:.8rem" aria-label="Where the two concepts point along the single desk" role="img"></canvas>
+          <p class="stat" id="c3pLineNote"></p>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="ctl"><label for="c3pY">How important is B, compared with A?</label><input type="range" id="c3pY" min="0" max="13" step="1" value="9"><output id="c3pYOut" for="c3pY"></output></div>
+        <div class="ctl"><label for="c3pX">How often do they show up?</label><input type="range" id="c3pX" min="0" max="15" step="1" value="0"><output id="c3pXOut" for="c3pX"></output></div>
+      </div>
+      <p class="caption">Each square is a real calculation. For every combination we compute the model's exact average error for each of the three strategies, let each one fine-tune its arrow lengths and offsets by gradient descent, and colour the square by the winner. Tap a square, or use the sliders, to see the three errors and the arrows. The paper drew this diagram both by training many models and from a theory; ours follows the same setup.</p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <p>The diagram shows both of your two numbers at work at once. Rarity opens the door to sharing. Importance decides who gets left out when it's closed.</p>
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span><b>Why "phase change" is the right word</b></summary>
+        <div class="in">
+          <p>In the paper's two-concept model the best arrangement doesn't drift from one strategy to another. It jumps. As you cross a boundary, the arrows' lengths and angles change abruptly. The authors confirmed this in their theoretical version: the error curves of two strategies cross, so the best achievable error has a kink, a "first-order phase change" in physics language. (They use "phase change" loosely, meaning a sudden change, without claiming the stricter physics sense.)</p>
+          <p>They repeated it with 3 concepts in 2 directions and found more regions, including one where the newcomer gets a desk and the other two share a see-saw. Then they warned that the real picture is richer still, as the next scene shows.</p>
+          <p>Their analogy: we say water has three phases, but ice alone has many crystal forms. "Superposition" likewise isn't one thing. It has many phases of its own.</p>
+          <p>Why does this matter beyond toys? If superposition switches on and off in sharp phases, there may be a regime where a model has none at all. The authors call this "Phase Changes as Cause For Hope": push a model across the boundary, and the jumble might vanish entirely.</p>
+          <p class="paper">In the paper: <a href="https://transformer-circuits.pub/2022/toy_model/index.html#phase-change" target="_blank" rel="noopener">Superposition as a Phase Change</a>; <a href="https://transformer-circuits.pub/2022/toy_model/index.html#strategic" target="_blank" rel="noopener">The Strategic Picture: Additional Considerations</a>.</p>
+          <details class="deeper deepest">
+            <summary><span class="label">Deeper still</span><b>Work out a boundary by hand</b></summary>
+            <div class="in">
+              <p>Take the simplest version of each strategy and let <em>p</em> be how often each concept shows up (1 − S). A concept's strength is a random number between 0 and 1, so its average squared distance from its mean (its variance) is V = p/3 − p²/4.</p>
+              <p><strong>Ignore B:</strong> the model can only guess B's average, so it loses B's variance, weighted by B's importance r: error = r·V.</p>
+              <p><strong>See-saw</strong> (arrows +1 and −1, no offsets): if only one concept is present, the filter rebuilds it perfectly. If both are present (probability p²), each one's rebuilt value is reduced by the other's. The average squared loss works out to 1/6 for each, so error = p²(1 + r)/6.</p>
+              <p>Set them equal and solve: the see-saw beats ignoring B whenever</p>
+              <p class="math">p &lt; 4r / (2 + 5r)</p>
+              <p>For equally important concepts (r = 1), that's p &lt; 4/7: they can share once each shows up less than 57% of the time. For r = 0.1 it's p &lt; 16%. The live diagram lets every strategy also tune its lengths and offsets, which favours sharing a little more, so its boundary sits slightly to the left of this hand-made one.</p>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Scene 6 -->
+  <section class="scene" aria-labelledby="s6">
+    <div class="prose">
+      <p class="scene-tag">Scene 6</p>
+      <h3 id="s6">The shapes nobody asked for</h3>
+      <p>Back to many concepts. When all of them are equally important and equally rare, the toy model is solving a puzzle with a long history. In 1904 the physicist J. J. Thomson asked how electrons would arrange themselves on a sphere if they all pushed each other away. The paper shows that the toy model is solving a cousin of that puzzle: each stored concept is a point on a sphere, and interference is the push.</p>
+      <p>Below, a real model packs concepts into <strong>3 directions</strong>, so its arrows live in ordinary 3D space. Lines join concepts whose arrows aren't perpendicular: those are the concepts that interfere. Drag to turn it.</p>
+      <div class="quiz" data-quiz>
+        <p class="label">Predict before you press</p>
+        <p>Six rare, equally important concepts share three desks. What shape do you expect?</p>
+        <div class="opts"><button>A flat hexagon</button><button data-ok>Three see-saws at right angles to each other</button><button>Six arrows at random</button></div>
+        <p class="reveal">Three see-saws at right angles: the six corners of an <strong>octahedron</strong>. Each concept has exactly one partner pointing the opposite way and is perpendicular to the other four, so it scores ½ a desk, and ½ × 6 = 3. Choose 6 below to watch the model find it.</p>
+      </div>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>The shape finder: n concepts, 3 directions</h4><span class="label" id="c3yStatus">Real training</span></div>
+      <div class="grid2">
+        <canvas id="c3Poly" width="840" height="840" aria-label="Three-dimensional arrangement of concept arrows learned by the model" role="img"></canvas>
+        <div style="display:grid;gap:.8rem">
+          <p class="verdict" id="c3yVerdict" style="margin:0"></p>
+          <div class="dchips" id="c3yChips"></div>
+          <p class="stat" id="c3yStat"></p>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="ctl" style="flex:0 1 260px"><label for="c3yN">How many concepts?</label><select id="c3yN"><option>4</option><option>5</option><option selected>6</option><option>7</option><option>8</option></select></div>
+        <div class="btns"><button id="c3yAgain">Train again</button></div>
+      </div>
+      <p class="caption">Four models train side by side from random starts (each concept shows up 3% of the time, all equally important) and we show the one with the lowest error, as the paper did. What we saw in our runs: <strong>6</strong> gives the octahedron. <strong>8</strong> gives eight equal shares of 3/8 and no see-saws at all: a <strong>square antiprism</strong>, a shape mostly known from chemistry because it solves Thomson's puzzle for eight electrons. <strong>4</strong> is a surprise: rather than a tetrahedron, our small model usually prefers two private desks plus one see-saw. <strong>5</strong>: one private desk and two see-saws. 7 has no tidy answer.</p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span><b>A periodic table of sharing</b></summary>
+        <div class="in">
+          <p>In the large uniform experiment (400 concepts, 30 directions), the paper plotted every concept's share of a desk as rarity increased. The points didn't spread out evenly. They clustered on a handful of exact fractions, and each fraction turned out to be a shape:</p>
+          <div class="dchips"><span>1 · own desk</span><span>¾ · tetrahedron</span><span>⅔ · triangle</span><span>½ · see-saw (the paper's "digon" or antipodal pair)</span><span>⅖ · pentagon</span><span>⅜ · square antiprism</span><span>0 · left out</span></div>
+          <p>Many of these are known solutions of Thomson's problem. Bigger arrangements were often built from smaller ones placed in mutually perpendicular subspaces, which the paper calls a <span class="term">tegum product</span>. Concepts in different factors don't interfere at all. Our "two private desks plus a see-saw" for 4 concepts is a tegum product of that kind.</p>
+          <p>The authors were careful about how far to trust this. In their words, the geometry "seems 'too elegant to be true' and we think there's a good chance it's at least partly idiosyncratic to the toy model." In the discussion they rank it among the findings "much more uncertain" to carry over to real models.</p>
+          <p class="paper">In the paper: <a href="https://transformer-circuits.pub/2022/toy_model/index.html#geometry" target="_blank" rel="noopener">The Geometry of Superposition</a> (Uniform Superposition; Why these geometric structures?; Aside: Polytopes and Low-Rank Matrices).</p>
+          <details class="deeper deepest">
+            <summary><span class="label">Deeper still</span><b>When one concept is different</b></summary>
+            <div class="in">
+              <p>Real concepts aren't uniform. The paper tried the gentlest change: a pentagon of five concepts, with one of them made more or less rare than the rest. As it gets more common, the other four move away to give it room. As it gets rarer, they crowd in. Push far enough and the pentagon suddenly snaps into two see-saws, with the rare concept dropped. The authors' reading: non-uniform superposition may often be "a deformation of uniform superposition", plus jumps between the uniform shapes.</p>
+              <p>A practical note they leave for anyone repeating this: training these tiny 2D models is genuinely hard for gradient descent, and clean results needed several runs per setting, keeping the best. That's why our toys train several copies at once.</p>
+              <p class="paper">In the paper: <a href="https://transformer-circuits.pub/2022/toy_model/index.html#geometry-non-uniform" target="_blank" rel="noopener">Non-Uniform Superposition: Perturbing a Single Feature</a>.</p>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Scene 7 -->
+  <section class="scene" aria-labelledby="s7">
+    <div class="prose">
+      <p class="scene-tag">Scene 7</p>
+      <h3 id="s7">Who sits with whom</h3>
+      <p>So far every concept came and went independently. Real concepts don't. "Lawyer" and "court" turn up in the same sentences. "Guilty" and "not guilty" never describe the same verdict. Does the model notice?</p>
+      <p>It does, and it follows a clear order of preferences. Below, four concepts in two pairs share two directions. Switch between pairs that <strong>always come together</strong>, pairs that are <strong>never together</strong> (only one of each pair can be active), and pairs that are <strong>unrelated</strong>.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Four concepts, two directions, two kinds of company</h4><span class="label" id="c3rStatus">Real training</span></div>
+      <div class="grid2">
+        <canvas id="c3Corr" width="840" height="840" aria-label="Arrows showing where the model stores four concepts in two pairs" role="img"></canvas>
+        <div style="display:grid;gap:.8rem">
+          <div class="seg" id="c3rMode" role="group" aria-label="How the pairs relate"><button aria-pressed="true" data-m="corr">Always together</button><button aria-pressed="false" data-m="anti">Never together</button><button aria-pressed="false" data-m="indep">Unrelated</button></div>
+          <div class="legend" id="c3rLegend"></div>
+          <p class="verdict" id="c3rVerdict" style="margin:0"></p>
+          <p class="stat" id="c3rStat"></p>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="ctl"><label for="c3rS">How often does each pair show up?</label><input type="range" id="c3rS" min="0" max="3" step="1" value="2"><output id="c3rSOut" for="c3rS"></output></div>
+        <div class="btns"><button id="c3rAgain">Train again</button></div>
+      </div>
+      <p class="caption">Real training: four models from random starts, best one shown. What we saw: <strong>Always together</strong>, when rare, puts partners at right angles ("lawyer" and "court" never interfere with each other), and each one shares a see-saw with a concept from the <em>other</em> pair. Make them common ("half the time") and each pair <strong>merges</strong> into a single blended arrow. <strong>Never together</strong> puts each pair on a see-saw, and this works almost perfectly even when they're common. <strong>Unrelated</strong> gives see-saws too, but who partners whom is arbitrary.</p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <p>That merging deserves a second look. When "lawyer" and "court" always arrive together and space is tight, the model stops storing them separately. It keeps one arrow pointing between them, a single "legal-setting-ness" direction, and loses the ability to tell them apart. It's like writing one headnote that summarises two cases that are always cited together: cheaper to store, and fine until someone needs to know which case said what.</p>
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span><b>The order of preferences</b></summary>
+        <div class="in">
+          <p>The paper builds two kinds of related sets. In a <span class="term">correlated</span> set, one coin flip decides whether the whole set is present, so its members always appear together (with independent strengths). In an <span class="term">anticorrelated</span> set, at most one member is active at a time.</p>
+          <p>For correlated concepts, the model's preferences run in order. <strong>First choice:</strong> put them at right angles, in separate factors with no interference between them. <strong>If that's impossible:</strong> keep them close together, accepting positive interference rather than negative. <strong>If there's no room at all:</strong> collapse them into their <span class="term">principal component</span>, the blended direction (a + b)/√2, and give up the difference between them. In the paper's six-concept experiment, three correlated pairs form a hexagon with partners side by side when very rare, then "progressively 'collapse'" into their principal components as they get more common.</p>
+          <p>Anticorrelated concepts go the other way: they prefer to interfere, ideally as exact opposites, because they never need the desk at the same time. That's the see-saw again, and the paper lists "can superposition pack features more efficiently if they are anti-correlated?" among its open questions.</p>
+          <p>Two consequences the authors draw. In bigger models, correlated concepts formed a <span class="term">local almost-orthogonal basis</span>: nearly no superposition inside a group of concepts that appear together, even though the model as a whole is packed. And which concepts share a neuron isn't random: it's shaped by which concepts co-occur. They also see the merging as a sign that two classic strategies trade off: superposition wins when concepts are rare, principal component analysis when they're correlated, and real models probably mix both.</p>
+          <p class="paper">In the paper: <a href="https://transformer-circuits.pub/2022/toy_model/index.html#geometry-correlated" target="_blank" rel="noopener">Correlated and Anticorrelated Features</a>, including <a href="https://transformer-circuits.pub/2022/toy_model/index.html#geometry-local-bases" target="_blank" rel="noopener">Local Almost-Orthogonal Bases</a> and <a href="https://transformer-circuits.pub/2022/toy_model/index.html#geometry-collapsing" target="_blank" rel="noopener">Collapsing of Correlated Features</a>.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Scene 8 -->
+  <section class="scene" aria-labelledby="s8">
+    <div class="prose">
+      <p class="scene-tag">Scene 8</p>
+      <h3 id="s8">Ignoring the whispers</h3>
+      <p>Sharing has a cost. In the pentagon, the arrows aren't at right angles, so whenever one concept is active, its neighbours receive a faint, false signal: a whisper. The model handles this with a simple rule, built from the bias and the ReLU filter: <em>ignore anything quieter than a certain level</em>.</p>
+      <p>Below is a real pentagon model (five equally important concepts, each present 5% of the time), trained when the page loaded. Switch concepts on and see what each clerk hears before and after the filter.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Inside the pentagon</h4><span class="label" id="c3wStatus">Real weights, real arithmetic</span></div>
+      <div class="chips" id="c3wChips" role="group" aria-label="Which concepts are active"></div>
+      <div class="controls">
+        <div class="ctl"><label for="c3wV">How strongly are they present?</label><input type="range" id="c3wV" min="0.1" max="1" step="0.05" value="0.6"><output id="c3wVOut" for="c3wV"></output></div>
+        <div class="checks"><label><input type="checkbox" id="c3wF" checked> Filter on (bias + ReLU)</label></div>
+      </div>
+      <div class="wh" id="c3wRows"></div>
+      <p class="verdict" id="c3wVerdict"></p>
+      <p class="stat" id="c3wStat"></p>
+      <p class="caption">Left bars: the raw signal for each concept, read off the 2-number file (WᵀWx). The dashed red line is the threshold set by the learned bias. Right bars: what comes out after the filter, next to the true value (outlined). <strong>Try this:</strong> one concept at a time at medium strength, then at full strength, then two neighbours together, then turn the filter off. Whispers in the negative direction are free to ignore. Positive ones, which reach only a concept's two nearest neighbours, get through only when the concept is strong. Two active neighbours also inflate each other.</p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <p>This works only because concepts are rare. Two or three at once and the whispers pile up into errors. That's the bargain of superposition: more concepts, paid for with occasional mistakes on the rare days they collide.</p>
+      <p>And now the jumbled neuron from Scene 1 makes sense. If many concepts share the space, a single neuron's direction catches a little of several of them. It isn't confused. It's a shared desk.</p>
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span><b>Real neurons, and computing while crowded</b></summary>
+        <div class="in">
+          <p>The pentagon model has no special neuron directions: rotate the whole picture and nothing changes. To ask about <em>neurons</em>, the paper added a ReLU in the middle too, which makes each hidden direction special (a privileged basis). With 10 concepts and 5 neurons, it saw neurons go from <strong>monosemantic</strong> (one concept each) to <strong>polysemantic</strong> as concepts got rarer, often with both kinds in the same model. Real networks show that same mixture.</p>
+          <p>Storage is one thing; doing work is another. The paper's boldest toy asks the model to <em>compute</em> something: the absolute value of each input (turn −0.7 into 0.7). A ReLU network can do that with two neurons per concept, one for the positive side and one for the negative:</p>
+          <svg class="absplot" viewBox="0 0 520 200" role="img" aria-label="Plot: absolute value equals ReLU of x plus ReLU of minus x">
+            <line x1="20" y1="170" x2="500" y2="170" stroke="var(--line)" stroke-width="2"/><line x1="260" y1="20" x2="260" y2="180" stroke="var(--line)" stroke-width="2"/>
+            <polyline points="20,170 260,170 500,30" fill="none" stroke="var(--sky)" stroke-width="5" stroke-linecap="round"/>
+            <polyline points="20,30 260,170 500,170" fill="none" stroke="var(--tomato)" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 10"/>
+            <polyline points="20,30 260,170 500,30" fill="none" stroke="var(--plum)" stroke-width="2.5" opacity=".9"/>
+            <text x="440" y="60" fill="var(--sky)" font-size="16" font-family="var(--f-mono)">ReLU(x)</text>
+            <text x="28" y="60" fill="var(--tomato)" font-size="16" font-family="var(--f-mono)">ReLU(−x)</text>
+            <text x="200" y="40" fill="var(--plum)" font-size="16" font-family="var(--f-mono)">sum = |x|</text>
+            <text x="20" y="195" fill="var(--ink-soft)" font-size="13" font-family="var(--f-mono)">x = −1</text><text x="452" y="195" fill="var(--ink-soft)" font-size="13" font-family="var(--f-mono)">x = 1</text>
+          </svg>
+          <p>With 100 concepts and only 40 neurons, the trained model still computed absolute values once the inputs were sparse enough, by doing the work in superposition. The authors call this notable because it shows networks "can perform computation even on data that is represented in superposition".</p>
+          <p>Its neurons looked eerily familiar. Many had one <em>primary</em> concept with a large weight plus a few <em>secondary</em> ones with small weights. Watch such a neuron's strongest activations and it looks clean; look at its weaker ones and it's a jumble. That's exactly what researchers had reported about neurons in real language models. The authors call the resemblance "only suggestive", but it led to their biggest hypothesis: that real networks are "noisily simulating larger, highly sparse networks".</p>
+          <p class="paper">In the paper: <a href="https://transformer-circuits.pub/2022/toy_model/index.html#privileged-basis" target="_blank" rel="noopener">Superposition in a Privileged Basis</a>; <a href="https://transformer-circuits.pub/2022/toy_model/index.html#computation" target="_blank" rel="noopener">Computation in Superposition</a>.</p>
+          <details class="deeper deepest">
+            <summary><span class="label">Deeper still</span><b>A lopsided trick</b></summary>
+            <div class="in">
+              <p>Looking closely at one absolute-value model, the authors found a repeated pattern they call <span class="term">asymmetric superposition</span>. Normally two concepts sharing a neuron go in with equal strength. Here one goes in big (say ×2) and the other small (×½), and the output weights are the reciprocals. The result: the big one interferes heavily with the small one, but not the other way round. A second neuron then strongly suppresses the small concept in exactly the cases where that interference would hurt, turning harmful positive interference into harmless negative interference.</p>
+              <p class="paper">In the paper: <a href="https://transformer-circuits.pub/2022/toy_model/index.html#computation" target="_blank" rel="noopener">Computation in Superposition: The Asymmetric Superposition Motif</a>.</p>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Scene 9 -->
+  <section class="scene" aria-labelledby="s9">
+    <div class="prose">
+      <p class="scene-tag">Scene 9</p>
+      <h3 id="s9">Why a crowded office is a safety problem</h3>
+      <p>Suppose you want to certify that a contract contains no clause creating some liability. You can do it, in principle, by reading every clause. Now imagine the clauses were written on top of one another, thousands to a page. That's what superposition does to a model.</p>
+      <p>The authors' deepest motivation was safety. They would like, one day, to be able to say a model will never do certain things, such as deliberately deceive. One promising route is to list every concept a model has and check how each is used: in their words, "a universal quantifier over the fundamental units of neural network computation". With one concept per neuron, that list is just the list of neurons. Superposition takes that shortcut away.</p>
+      <p>Careful, though: finding a "deception" concept wouldn't by itself be alarming. A lawyer understands fraud without committing it, and a model that understands the world will represent unsavoury things. The paper makes this point itself: the useful claims are about how such concepts are wired into the model's behaviour.</p>
+      <div class="aside">
+        <p class="label">If you know crypto</p>
+        <p>A Bloom filter is a close cousin of superposition. It records which of many possible items are in a set using far fewer bits than items, by letting items share bits. It works beautifully when the set is sparse, and the price is occasional false positives: interference. Overfill it and the false positives take over. (An analogy for the trade-off, not the same mechanism.)</p>
+      </div>
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span><b>Adversarial examples, mistakes, and three ways out</b></summary>
+        <div class="in">
+          <p><strong>A weak spot built in.</strong> In a model without superposition, the read-out for concept 1 listens to concept 1 alone. With superposition, it also listens a little to many others, through all those small overlaps. That's an opening for an attacker: nudge the input along those overlaps and concept 1 misfires. The paper tested this with small, carefully chosen nudges and found vulnerability "sharply increases as superposition forms (increasing by &gt;3×)", tracking the number of concepts per direction. The authors are "hesitant to speculate" how much this explains adversarial examples in real models, since other good explanations exist.</p>
+          <p><strong>Mistakes from collisions?</strong> The whispers that get through when rare concepts collide are a natural suspect for some of the odd errors real models make. Treat that as a hypothesis: it follows from the toy's logic, but the paper doesn't demonstrate it in real models.</p>
+          <p><strong>Three ways out.</strong> The paper sketches three strategies. <em>Build models without superposition</em>: easy in toys (an extra penalty on activity, called L1 regularisation, does it), but it costs performance; models like "mixture of experts", which switch on only part of the network for each input, might reduce the need. <em>Find an overcomplete basis</em>: accept the crowding and work out the roster afterwards, the "sparse coding" or <span class="term">dictionary learning</span> problem. The authors warned it would be "a major engineering challenge" at the scale of real models. <em>Hybrids</em> of the two. Chapter 4 is the story of the second route.</p>
+          <p class="paper">In the paper: <a href="https://transformer-circuits.pub/2022/toy_model/index.html#adversarial" target="_blank" rel="noopener">Relationship to Adversarial Robustness</a>; <a href="https://transformer-circuits.pub/2022/toy_model/index.html#strategic" target="_blank" rel="noopener">The Strategic Picture of Superposition</a>.</p>
+        </div>
+      </details>
     </div>
   </section>
 
   <!-- Wrap-up -->
-  <section class="scene" aria-labelledby="s6">
+  <section class="scene" aria-labelledby="s10">
     <div class="prose">
       <p class="scene-tag">The end of the chapter</p>
-      <h3 id="s6">What we know, and what we don't</h3>
+      <h3 id="s10">What we know, and what we don't</h3>
+      <p>The authors graded their own findings. They expect some to carry over to real networks: superposition itself, the mix of monosemantic and polysemantic neurons, "perhaps the relationship to adversarial examples". Others, "especially the geometry and learning dynamics results", they called "much more uncertain".</p>
     </div>
     <div class="learned">
-      <div class="card k"><h4>Known: important, common ideas get their own direction</h4><p>When space is tight, models prioritise. The ideas that matter most and come up most often get private directions.</p></div>
-      <div class="card k"><h4>Known: rare ideas share space</h4><p>Superposition lets a model store far more concepts than it has directions, as long as those concepts seldom appear together.</p></div>
-      <div class="card k"><h4>Known: it makes neat shapes on its own</h4><p>In toy models, shared concepts settle into pairs, triangles, pentagons and other tidy geometric arrangements.</p></div>
-      <div class="card u"><h4>Unknown: how much of this happens in big models?</h4><p>The paper studied tiny toy models. Whether giant models use superposition in exactly the same way was an open question in 2022.</p></div>
-      <div class="card u"><h4>Unknown: can we untangle it?</h4><p>If concepts are squeezed together, reading a model means pulling them back apart. In 2022, nobody had shown how to do that at scale.</p></div>
-      <div class="card u"><h4>Unknown: what does the leakage cost?</h4><p>Researchers suspect that some model mistakes come from concepts leaking into each other at the wrong moment. That's still a hypothesis.</p></div>
+      <div class="card k"><h4>Known: superposition is real, at least in toys</h4><p>Small ReLU networks trained on sparse concepts store more concepts than they have directions. Before this paper, the authors knew of no unambiguous demonstration of this in neural networks.</p></div>
+      <div class="card k"><h4>Known: the filter is what makes it possible</h4><p>A linear model never superposes; it keeps the top concepts, like principal component analysis. Adding one ReLU changes the answer.</p></div>
+      <div class="card k"><h4>Known: rarity and importance decide, with sharp switches</h4><p>Whether a concept is dropped, shared or given its own direction depends on how often it appears and how much it matters, and the switch between those fates behaves like a phase change.</p></div>
+      <div class="card k"><h4>Known: in toys, neat shapes and sensible company</h4><p>Toy models settle into see-saws, triangles, pentagons, tetrahedra and square antiprisms. Co-occurring concepts are kept apart or merged; either/or concepts share see-saws.</p></div>
+      <div class="card u"><h4>Unknown: how realistic are the toys?</h4><p>The paper's predictions match what's seen in real networks, such as polysemantic neurons, more of them in later layers of a vision model, and very polysemantic early neurons in language models. Whether the geometry carries over is open.</p></div>
+      <div class="card u"><h4>Unknown: can we measure a real model's two numbers?</h4><p>The toy says importance and rarity curves decide everything. The authors ask whether anyone can estimate them for a real model, and whether superposition shrinks or grows as models scale.</p></div>
+      <div class="card u"><h4>Unknown: can we untangle it, or avoid it?</h4><p>Is there a statistical test that detects superposition? Can training be pushed across the phase boundary into a regime with none? Or can the crowded desks be read after the fact? In 2022, nobody had done it at scale.</p></div>
+      <div class="card u"><h4>Unknown: what does the leakage cost?</h4><p>Some model errors, and some adversarial weaknesses, might come from concepts whispering into each other. That's a hypothesis, not a result.</p></div>
     </div>
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 4: Untangling the Desks</h4>
-      <p>In 2023, researchers built a tool that finds the shared desks and separates the concepts sitting at them. For the first time, they could read thousands of clean, single-meaning concepts out of a real model. <a href="#untangling">Read Chapter 4 ↓</a></p>
+      <p>A year later, the same group tried the second way out. They built a tool that watches the crowded desks and works out the roster: who is really sitting where. For the first time, they could read thousands of clean, single-meaning concepts out of a real model. <a href="#untangling">Read Chapter 4 ↓</a></p>
     </div>
+    <p class="paper" style="max-width:66ch;margin:1.6rem auto 0">Credits: this chapter retells Nelson Elhage, Tristan Hume, Catherine Olsson, Nicholas Schiefer, Tom Henighan, Shauna Kravec, Zac Hatfield-Dodds, Robert Lasenby, Dawn Drain, Carol Chen, Roger Grosse, Sam McCandlish, Jared Kaplan, Dario Amodei, Martin Wattenberg and Christopher Olah, <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener">Toy Models of Superposition</a>, Transformer Circuits Thread, 2022. Quotes are the authors'; all toys, figures and other words are ours. The toys reproduce the paper's setups at small scale; where our runs differ from or go beyond the paper's figures, the captions say so.</p>
   </section>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const LL = window.LL, reduce = LL.reduce, arrow = LL.arrow, css = LL.css;
+  const root = document.getElementById('crowded-office');
+  const $ = id => document.getElementById(id);
+  const featCol = i => i < 6 ? LL.C.feats[i] : [css('--ink-soft'), css('--bad')][i - 6];
+  const cssFeat = ['--tomato', '--sky', '--teal', '--marigold', '--pink', '--plum', '--ink-soft', '--bad'];
+  const frac = d => { const F = [[1, '1'], [3 / 4, '¾'], [2 / 3, '⅔'], [1 / 2, '½'], [2 / 5, '⅖'], [3 / 8, '⅜'], [1 / 3, '⅓'], [0, '0']]; for (const [v, l] of F) if (Math.abs(d - v) < .015) return l; return d.toFixed(2); };
+  const whenVisible = (el, f) => { let done = false; const io = new IntersectionObserver(es => { if (!done && es[0].isIntersecting) { done = true; io.disconnect(); f(); } }, {rootMargin: '300px'}); io.observe(el); };
+
+  // A ReLU-output toy model x' = ReLU(W^T W x + b), trained with Adam on importance-weighted squared error.
+  class Toy {
+    constructor(n, m, imp, sample, LR = 0.012) { Object.assign(this, {n, m, imp, sample, LR}); this.reset(); this.x = new Float64Array(n); this.h = new Float64Array(m); this.g = new Float64Array(n); this.Wg = new Float64Array(m); this.gW = new Float64Array(m * n); this.gb = new Float64Array(n); }
+    reset() { const {n, m} = this; this.W = new Float64Array(m * n); this.b = new Float64Array(n); for (let i = 0; i < m * n; i++) this.W[i] = (Math.random() * 2 - 1) * .5; this.mW = new Float64Array(m * n); this.vW = new Float64Array(m * n); this.mb = new Float64Array(n); this.vb = new Float64Array(n); this.t = 0; this.loss = 0; }
+    step(B = 128) {
+      const {n, m, W, b, x, h, g, Wg, gW, gb, imp} = this; gW.fill(0); gb.fill(0); let L = 0;
+      for (let k = 0; k < B; k++) {
+        this.sample(x);
+        for (let j = 0; j < m; j++) { let a = 0; for (let i = 0; i < n; i++) if (x[i]) a += W[j * n + i] * x[i]; h[j] = a; }
+        for (let i = 0; i < n; i++) { let z = b[i]; for (let j = 0; j < m; j++) z += W[j * n + i] * h[j]; const y = z > 0 ? z : 0, d = x[i] - y; L += imp[i] * d * d / B; g[i] = z > 0 ? -2 * imp[i] * d / B : 0; }
+        for (let j = 0; j < m; j++) { let a = 0; for (let i = 0; i < n; i++) a += W[j * n + i] * g[i]; Wg[j] = a; }
+        for (let j = 0; j < m; j++) for (let i = 0; i < n; i++) gW[j * n + i] += h[j] * g[i] + Wg[j] * x[i];
+        for (let i = 0; i < n; i++) gb[i] += g[i];
+      }
+      const t = ++this.t, c1 = 1 - .9 ** t, c2 = 1 - .999 ** t, LR = this.LR;
+      for (let i = 0; i < m * n; i++) { this.mW[i] = .9 * this.mW[i] + .1 * gW[i]; this.vW[i] = .999 * this.vW[i] + .001 * gW[i] ** 2; W[i] -= LR * (this.mW[i] / c1) / (Math.sqrt(this.vW[i] / c2) + 1e-8); }
+      for (let i = 0; i < n; i++) { this.mb[i] = .9 * this.mb[i] + .1 * gb[i]; this.vb[i] = .999 * this.vb[i] + .001 * gb[i] ** 2; b[i] -= LR * (this.mb[i] / c1) / (Math.sqrt(this.vb[i] / c2) + 1e-8); }
+      this.loss = this.loss ? this.loss * .98 + L * .02 : L;
+    }
+    col(i) { return [...Array(this.m)].map((_, j) => this.W[j * this.n + i]); }
+    norm(i) { return Math.hypot(...this.col(i)); }
+    cos(i, k) { const a = this.col(i), c = this.col(k); let d = 0; for (let j = 0; j < this.m; j++) d += a[j] * c[j]; return d / (Math.hypot(...a) * Math.hypot(...c) + 1e-12); }
+    dims() { const {n, m} = this; return [...Array(n)].map((_, i) => { const wi = this.col(i), ni = Math.hypot(...wi); if (ni < 1e-3) return 0; let den = 0; for (let k = 0; k < n; k++) { const wk = this.col(k); let d = 0; for (let j = 0; j < m; j++) d += wi[j] * wk[j]; den += (d / ni) ** 2; } return ni * ni / den; }); }
+  }
+  const indepSampler = (n, S) => x => { for (let i = 0; i < n; i++) x[i] = Math.random() < 1 - S ? Math.random() : 0; };
+
+  /* quizzes: tap an answer to reveal */
+  root.querySelectorAll('[data-quiz]').forEach(q => {
+    q.querySelectorAll('.opts button').forEach(b => b.addEventListener('click', () => {
+      q.querySelectorAll('.opts button').forEach(x => { if (x.hasAttribute('data-ok')) x.classList.add('right'); });
+      if (!b.hasAttribute('data-ok')) b.classList.add('wrong');
+      q.classList.add('done');
+    }));
+  });
+
+  /* how many almost-perpendicular arrows fit: N >= exp(d eps^2 / 4), eps = sin(tolerance) */
+  {
+    const dS = $('c3cD'), eS = $('c3cE'), out = $('c3cOut'), note = $('c3cNote');
+    const words = ['', 'thousand', 'million', 'billion', 'trillion'];
+    const fmt = log10 => {
+      if (log10 < 6) return Math.floor(10 ** log10).toLocaleString();
+      const e = Math.floor(log10); if (e < 15) { const g = Math.floor(e / 3); return (10 ** (log10 - 3 * g)).toPrecision(3).replace(/\.?0+$/, '') + ' ' + words[g]; }
+      return 'about 10' + String(e).split('').map(c => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+c]).join('');
+    };
+    const upd = () => {
+      const d = +dS.value, deg = +eS.value, eps = Math.sin(deg * Math.PI / 180), log10 = d * eps * eps / 4 / Math.LN10;
+      if (log10 < Math.log10(d)) { out.textContent = d.toLocaleString(); note.textContent = `Here the guarantee (${fmt(log10)}) is weaker than simply using the ${d.toLocaleString()} exactly perpendicular directions. Try more directions or a looser angle.`; }
+      else { out.textContent = fmt(log10); note.textContent = `concepts, every pair within ${deg}° of a right angle, in a space with ${d.toLocaleString()} directions. Exactly perpendicular, you could fit only ${d.toLocaleString()}.`; }
+      out.dataset.log10 = log10.toFixed(2);
+    };
+    dS.addEventListener('change', upd); eS.addEventListener('change', upd); upd();
+  }
+
+  /* phase diagram: 2 features, 1 dimension. Exact expected loss by quadrature, three strategies optimised by Adam. */
+  {
+    const NX = 16, NY = 14, G = 12, q = [...Array(G)].map((_, k) => (k + .5) / G);
+    const dens = xi => Math.pow(10, -2 * xi / (NX - 1)), imp = yi => Math.pow(10, -1 + 2 * yi / (NY - 1));
+    const points = S => { const P = [[0, 0, S * S]], d = 1 - S; for (const u of q) { P.push([u, 0, d * S / G]); P.push([0, u, d * S / G]); } for (const u of q) for (const v of q) P.push([u, v, d * d / G / G]); return P; };
+    const lossGrad = (p, P, r, g) => {
+      const [w1, w2, b1, b2] = p; let L = 0; g[0] = g[1] = g[2] = g[3] = 0;
+      for (const [x1, x2, wt] of P) {
+        const h = w1 * x1 + w2 * x2, z1 = w1 * h + b1, z2 = w2 * h + b2, y1 = z1 > 0 ? z1 : 0, y2 = z2 > 0 ? z2 : 0;
+        L += wt * ((y1 - x1) ** 2 + r * (y2 - x2) ** 2);
+        const d1 = z1 > 0 ? 2 * wt * (y1 - x1) : 0, d2 = z2 > 0 ? 2 * wt * r * (y2 - x2) : 0;
+        g[0] += d1 * (h + w1 * x1) + d2 * w2 * x1; g[1] += d1 * w1 * x2 + d2 * (h + w2 * x2); g[2] += d1; g[3] += d2;
+      }
+      return L;
+    };
+    const optimise = (p0, mask, P, r) => {
+      const p = p0.slice(), m = [0, 0, 0, 0], v = [0, 0, 0, 0], g = [0, 0, 0, 0];
+      for (let t = 1; t <= 400; t++) { lossGrad(p, P, r, g); for (let i = 0; i < 4; i++) { if (!mask[i]) continue; m[i] = .9 * m[i] + .1 * g[i]; v[i] = .999 * v[i] + .001 * g[i] * g[i]; p[i] -= .03 * (m[i] / (1 - .9 ** t)) / (Math.sqrt(v[i] / (1 - .999 ** t)) + 1e-8); } }
+      return {p, L: lossGrad(p, P, r, g)};
+    };
+    const classify = p => Math.abs(p[1]) < .3 ? 'N' : Math.abs(p[0]) < .3 ? 'D' : 'S';
+    const cell = (xi, yi) => {
+      const P = points(1 - dens(xi)), r = imp(yi);
+      const A = optimise([1, 0, 0, .1], [1, 0, 1, 1], P, r), Bd = optimise([0, 1, .1, 0], [0, 1, 1, 1], P, r), Sh = optimise([1, -1, 0, 0], [1, 1, 1, 1], P, r);
+      const sc = classify(Sh.p), cands = [['N', A], ['D', Bd]]; if (sc === 'S') cands.push(['S', Sh]);
+      cands.sort((a, b) => a[1].L - b[1].L);
+      return {cls: cands[0][0], best: cands[0][1], A, B: Bd, S: sc === 'S' ? Sh : null};
+    };
+    const grid = [...Array(NY)].map(() => Array(NX).fill(null));
+    const cv = $('c3Phase'), ctx = cv.getContext('2d'), xs = $('c3pX'), ys = $('c3pY');
+    const L0 = 120, T0 = 20, PW = cv.width - L0 - 20, PH = cv.height - T0 - 90, cw = PW / NX, ch = PH / NY;
+    const colFor = c => c === 'N' ? css('--line') : c === 'S' ? LL.C.plum : css('--teal');
+    const draw = () => {
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      for (let yi = 0; yi < NY; yi++) for (let xi = 0; xi < NX; xi++) {
+        const c = grid[yi][xi], x = L0 + xi * cw, y = T0 + (NY - 1 - yi) * ch;
+        ctx.fillStyle = c ? colFor(c.cls) : LL.C.wash; ctx.beginPath(); ctx.roundRect(x + 2, y + 2, cw - 4, ch - 4, 6); ctx.fill();
+      }
+      const sx = +xs.value, sy = +ys.value;
+      ctx.strokeStyle = LL.C.ink; ctx.lineWidth = 5; ctx.beginPath(); ctx.roundRect(L0 + sx * cw, T0 + (NY - 1 - sy) * ch, cw, ch, 8); ctx.stroke();
+      ctx.fillStyle = LL.C.soft; ctx.font = '600 26px "JetBrains Mono", monospace';
+      ctx.textAlign = 'left'; ctx.fillText('every time', L0, T0 + PH + 40); ctx.textAlign = 'right'; ctx.fillText('1 time in 100', L0 + PW, T0 + PH + 40);
+      ctx.textAlign = 'center'; ctx.fillText('how often they show up →', L0 + PW / 2, T0 + PH + 78);
+      ctx.textAlign = 'right'; ctx.fillText('B 10×', L0 - 12, T0 + 26); ctx.fillText('B = A', L0 - 12, T0 + PH / 2 + 9); ctx.fillText('B 0.1×', L0 - 12, T0 + PH - 6);
+    };
+    const setOut = () => {
+      const r = imp(+ys.value), d = dens(+xs.value);
+      $('c3pYOut').textContent = (r >= 1 ? r.toPrecision(2) + '×' : r.toPrecision(2) + '×') + ' as important as A';
+      $('c3pXOut').textContent = d > .99 ? 'Every time' : `1 time in ${Math.round(1 / d)}`;
+    };
+    const lineCv = $('c3pLine'), lctx = lineCv.getContext('2d');
+    const info = () => {
+      setOut(); draw();
+      const c = grid[+ys.value][+xs.value];
+      if (!c) { $('c3pVerdict').textContent = 'Computing…'; $('c3pLoss').innerHTML = ''; return; }
+      $('c3pVerdict').innerHTML = {N: 'Best: <span>ignore B</span>. Keep the desk for A.', D: 'Best: <span>give the desk to B</span> and drop A.', S: 'Best: <span>share</span>. A and B sit on the two ends of a see-saw.'}[c.cls];
+      const rows = [['N', 'Ignore B', c.A], ['D', 'B takes the desk', c.B], ['S', 'Share (see-saw)', c.S]];
+      const mx = Math.max(...rows.filter(r => r[2]).map(r => r[2].L), 1e-9);
+      $('c3pLoss').innerHTML = '<p class="label">Average error of each strategy</p>' + rows.map(([k, l, v]) => `<div class="lossrow ${k === c.cls ? 'win' : ''}"><span>${l}</span><span class="bar">${v ? `<i style="width:${Math.max(2, v.L / mx * 100)}%;background:${colFor(k)}"></i>` : ''}</span><span>${v ? v.L.toPrecision(2) : 'unstable'}</span></div>`).join('') + (c.S ? '' : '<p class="stat" style="margin-top:6px">"Unstable": started as a see-saw, training slides back to one of the other two.</p>');
+      // arrows on the single desk
+      const W = lineCv.width, H = lineCv.height, mid = W / 2, sc = W * .28, p = c.best.p;
+      lctx.clearRect(0, 0, W, H); lctx.strokeStyle = LL.C.line; lctx.lineWidth = 3; lctx.beginPath(); lctx.moveTo(20, H / 2); lctx.lineTo(W - 20, H / 2); lctx.stroke();
+      lctx.fillStyle = LL.C.ink; lctx.beginPath(); lctx.arc(mid, H / 2, 8, 0, 7); lctx.fill();
+      [[p[0], LL.C.feats[0], 'A', -28], [p[1], LL.C.feats[1], 'B', 28]].forEach(([w, col, lab, dy]) => { if (Math.abs(w) > .05) { arrow(lctx, mid, H / 2 + dy, mid + w * sc, H / 2 + dy, col, 10); } lctx.fillStyle = col; lctx.font = '700 28px "Bricolage Grotesque", sans-serif'; lctx.textAlign = 'center'; lctx.fillText(lab, Math.abs(w) > .05 ? mid + w * sc + Math.sign(w) * 26 : mid + (lab === 'A' ? -40 : 40), H / 2 + dy + 10); });
+      $('c3pLineNote').textContent = `The single desk, with the best model's arrows: A = ${p[0].toFixed(2)}, B = ${p[1].toFixed(2)}. ${Math.abs(p[0]) < .05 ? 'A has no arrow: dropped.' : Math.abs(p[1]) < .05 ? 'B has no arrow: left out.' : 'Opposite signs: a see-saw.'}`;
+    };
+    LL.shared.c3phase = {grid, NX, NY};
+    xs.addEventListener('input', info); ys.addEventListener('input', info);
+    cv.addEventListener('click', e => { const R = cv.getBoundingClientRect(), x = (e.clientX - R.left) * cv.width / R.width, y = (e.clientY - R.top) * cv.height / R.height; const xi = Math.floor((x - L0) / cw), yi = NY - 1 - Math.floor((y - T0) / ch); if (xi >= 0 && xi < NX && yi >= 0 && yi < NY) { xs.value = xi; ys.value = yi; info(); } });
+    LL.redrawers.push(info);
+    info();
+    whenVisible(cv, () => {
+      let yi = 0; $('c3pStatus').textContent = 'Computing…';
+      const row = () => { for (let xi = 0; xi < NX; xi++) grid[yi][xi] = cell(xi, yi); yi++; info(); if (yi < NY) setTimeout(row, 0); else { $('c3pStatus').textContent = 'Real calculation · done'; LL.shared.c3phase.done = true; } };
+      setTimeout(row, 50);
+    });
+  }
+
+  /* shape finder: n concepts in 3 dims, uniform importance, rare; best of 4 runs */
+  {
+    const cv = $('c3Poly'), ctx = cv.getContext('2d'), nS = $('c3yN');
+    const S = .97, TOTAL = 4000, PER = 25;
+    let models = [], yaw = .6, pitch = .35, drag = null, done = false, best = null;
+    const start = () => { const n = +nS.value; models = [...Array(4)].map(() => new Toy(n, 3, Array(n).fill(1), indepSampler(n, S))); done = false; best = null; };
+    const describe = M => {
+      const n = M.n, D = M.dims(), pairs = [];
+      for (let i = 0; i < n; i++) for (let k = i + 1; k < n; k++) if (M.cos(i, k) < -.95) pairs.push([i, k]);
+      const own = D.filter(d => d > .9).length, sum = D.reduce((a, b) => a + b, 0);
+      let shape;
+      if (n === 6 && pairs.length === 3 && D.every(d => Math.abs(d - .5) < .05)) shape = 'an <span>octahedron</span>: three see-saws at right angles';
+      else if (n === 8 && !pairs.length && D.every(d => Math.abs(d - .375) < .05)) shape = 'a <span>square antiprism</span>: eight equal shares, no see-saws';
+      else if (n === 4 && D.every(d => Math.abs(d - .75) < .05)) shape = 'a <span>tetrahedron</span>';
+      else if (own + 2 * pairs.length === n && own + pairs.length === 3) shape = `<span>${own} private desk${own === 1 ? '' : 's'} and ${pairs.length} see-saw${pairs.length === 1 ? '' : 's'}</span>`;
+      else shape = `<span>${n} concepts in an uneven arrangement</span>`;
+      return {D, pairs, own, sum, shape};
+    };
+    const draw = () => {
+      const W = cv.width, c = W / 2, R = W * .36, M = best || models[0];
+      ctx.clearRect(0, 0, W, W);
+      ctx.strokeStyle = LL.C.line; ctx.lineWidth = 3; ctx.setLineDash([10, 14]); ctx.beginPath(); ctx.arc(c, c, R, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+      if (!M) return;
+      const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+      const proj = v => { const x1 = cy * v[0] + sy * v[2], z1 = -sy * v[0] + cy * v[2]; const y2 = cp * v[1] - sp * z1, z2 = sp * v[1] + cp * z1; return [c + x1 * R, c - y2 * R, z2]; };
+      const n = M.n, P = [...Array(n)].map((_, i) => proj(M.col(i)));
+      for (let i = 0; i < n; i++) for (let k = i + 1; k < n; k++) { const cs = Math.abs(M.cos(i, k)); if (cs > .1 && M.norm(i) > .3 && M.norm(k) > .3) { ctx.strokeStyle = LL.C.soft; ctx.globalAlpha = .25 + .5 * cs; ctx.lineWidth = 1 + 5 * cs; ctx.beginPath(); ctx.moveTo(P[i][0], P[i][1]); ctx.lineTo(P[k][0], P[k][1]); ctx.stroke(); } }
+      ctx.globalAlpha = 1;
+      [...Array(n).keys()].sort((a, b) => P[a][2] - P[b][2]).forEach(i => { ctx.globalAlpha = .45 + .55 * (P[i][2] / 1.3 + .5); arrow(ctx, c, c, P[i][0], P[i][1], featCol(i), 12); });
+      ctx.globalAlpha = 1; ctx.fillStyle = LL.C.ink; ctx.beginPath(); ctx.arc(c, c, 10, 0, 7); ctx.fill();
+      const d = describe(M);
+      $('c3yVerdict').innerHTML = done ? `It found ${d.shape}.` : 'Training…';
+      $('c3yChips').innerHTML = d.D.map((v, i) => `<span><i style="background:var(${cssFeat[i]})"></i>${frac(v)}</span>`).join('');
+      $('c3yStat').textContent = `Shares of a desk add up to ${d.sum.toFixed(2)} (3 directions) · steps ${M.t.toLocaleString()} · error ${M.loss.toFixed(5)}`;
+    };
+    LL.shared.c3poly = {get best() { return best; }, get done() { return done; }, describe};
+    const loop = () => {
+      if (!done && visible) {
+        for (const M of models) for (let s = 0; s < PER; s++) M.step(128);
+        best = models.reduce((a, b) => a.loss < b.loss ? a : b);
+        if (models[0].t >= TOTAL) { done = true; $('c3yStatus').textContent = 'Real training · best of 4'; }
+      }
+      if (!reduce && !drag && visible) yaw += .004;
+      if (visible) draw();
+      requestAnimationFrame(loop);
+    };
+    let visible = false; new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(cv);
+    cv.addEventListener('pointerdown', e => { drag = [e.clientX, e.clientY]; cv.setPointerCapture(e.pointerId); });
+    cv.addEventListener('pointermove', e => { if (!drag) return; yaw += (e.clientX - drag[0]) * .01; pitch += (e.clientY - drag[1]) * .01; drag = [e.clientX, e.clientY]; draw(); });
+    cv.addEventListener('pointerup', () => { drag = null; });
+    nS.addEventListener('change', () => { start(); $('c3yStatus').textContent = 'Training…'; });
+    $('c3yAgain').addEventListener('click', () => { start(); $('c3yStatus').textContent = 'Training…'; });
+    LL.redrawers.push(draw);
+    start(); requestAnimationFrame(loop);
+  }
+
+  /* who sits with whom: 2 pairs, 2 dims; correlated / anticorrelated / independent */
+  {
+    const cv = $('c3Corr'), ctx = cv.getContext('2d'), sS = $('c3rS');
+    const Ss = [{S: .5, l: 'Half the time'}, {S: .8, l: 'One time in five'}, {S: .9, l: 'One time in ten'}, {S: .97, l: 'One time in thirty'}];
+    const names = {corr: ['lawyer', 'court', 'recipe', 'oven'], anti: ['guilty', 'not guilty', 'bull market', 'bear market'], indep: ['octopus', 'sonnet', 'glacier', 'tax law']};
+    const cols = ['--tomato', '--pink', '--sky', '--teal'];
+    let mode = 'corr', models = [], best = null, done = false, visible = false;
+    const sampler = (mode, S) => mode === 'corr' ? x => { for (let p = 0; p < 2; p++) { const on = Math.random() < 1 - S; x[2 * p] = on ? Math.random() : 0; x[2 * p + 1] = on ? Math.random() : 0; } }
+      : mode === 'anti' ? x => { for (let p = 0; p < 2; p++) { const on = Math.random() < 1 - S, w = Math.random() < .5 ? 0 : 1; x[2 * p] = on && !w ? Math.random() : 0; x[2 * p + 1] = on && w ? Math.random() : 0; } }
+      : indepSampler(4, S);
+    const start = () => { const S = Ss[+sS.value].S; models = [...Array(4)].map(() => new Toy(4, 2, [1, 1, 1, 1], sampler(mode, S), .01)); best = null; done = false; $('c3rStatus').textContent = 'Training…'; };
+    const ang = (M, i, k) => Math.acos(Math.max(-1, Math.min(1, M.cos(i, k)))) * 180 / Math.PI;
+    const relate = (M, i, k) => { const ni = M.norm(i), nk = M.norm(k), a = ang(M, i, k); if (Math.min(ni, nk) < .35) return Math.max(ni, nk) < .35 ? 'both left out' : 'one of them left out'; if (a < 25) return 'merged into one blended arrow'; if (a > 160) return 'on a see-saw'; if (a > 65 && a < 115) return 'at right angles'; return `${Math.round(a)}° apart`; };
+    const describe = M => {
+      const nm = names[mode], p1 = relate(M, 0, 1), p2 = relate(M, 2, 3);
+      let cross = 0; for (const i of [0, 1]) for (const k of [2, 3]) if (M.cos(i, k) < -.9 && M.norm(i) > .35 && M.norm(k) > .35) cross++;
+      return {p1, p2, cross, text: `"${nm[0]}" and "${nm[1]}": <span>${p1}</span>. "${nm[2]}" and "${nm[3]}": <span>${p2}</span>.` + (cross >= 2 ? ' Each also shares a see-saw with a concept from the other pair.' : '')};
+    };
+    const legend = () => { $('c3rLegend').innerHTML = names[mode].map((t, i) => `<div class="leg" style="grid-template-columns:18px minmax(0,1fr)"><span class="dot" style="background:var(${cols[i]})"></span><span>${t}<small>pair ${i < 2 ? 'A' : 'B'}</small></span></div>`).join(''); };
+    const draw = () => {
+      const W = cv.width, c = W / 2, R = W * .34, M = best || models[0];
+      ctx.clearRect(0, 0, W, W);
+      ctx.strokeStyle = LL.C.line; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(c - W * .46, c); ctx.lineTo(c + W * .46, c); ctx.moveTo(c, c - W * .46); ctx.lineTo(c, c + W * .46); ctx.stroke();
+      ctx.setLineDash([10, 14]); ctx.beginPath(); ctx.arc(c, c, R, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+      const nm = names[mode];
+      for (let i = 0; i < 4; i++) { const [a, d] = M.col(i), col = css(cols[i]); arrow(ctx, c, c, c + a * R, c - d * R, col, 13); if (M.norm(i) > .3) { const L = Math.hypot(a, d); ctx.fillStyle = col; ctx.font = '700 40px "Bricolage Grotesque", sans-serif'; ctx.textAlign = a >= 0 ? 'left' : 'right'; ctx.fillText(nm[i], c + a * R + a / L * 18, c - d * R - d / L * 18 + (i % 2 ? 28 : 0)); } }
+      ctx.fillStyle = LL.C.ink; ctx.beginPath(); ctx.arc(c, c, 10, 0, 7); ctx.fill();
+      $('c3rVerdict').innerHTML = done ? describe(M).text : 'Training…';
+      $('c3rStat').textContent = `steps ${M.t.toLocaleString()} · error ${M.loss.toFixed(4)}`;
+    };
+    LL.shared.c3corr = {get best() { return best; }, get done() { return done; }, describe, setMode: m => { mode = m; legend(); start(); }};
+    const loop = () => { if (!done && visible) { for (const M of models) for (let s = 0; s < 40; s++) M.step(128); best = models.reduce((a, b) => a.loss < b.loss ? a : b); if (models[0].t >= 4000) { done = true; $('c3rStatus').textContent = 'Real training · best of 4'; } draw(); } requestAnimationFrame(loop); };
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(cv);
+    const seg = $('c3rMode');
+    seg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; mode = b.dataset.m; seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); legend(); start(); });
+    sS.addEventListener('input', () => { $('c3rSOut').textContent = Ss[+sS.value].l; start(); });
+    $('c3rAgain').addEventListener('click', start);
+    $('c3rSOut').textContent = Ss[+sS.value].l;
+    LL.redrawers.push(draw);
+    legend(); start(); draw(); requestAnimationFrame(loop);
+  }
+
+  /* inside the pentagon: a trained 5-in-2 model, read out by hand */
+  {
+    const chips = $('c3wChips'), vS = $('c3wV'), fB = $('c3wF'), rowsEl = $('c3wRows');
+    const on = [true, false, false, false, false];
+    let M = null;
+    chips.innerHTML = on.map((v, i) => `<button class="chip" aria-pressed="${v}" data-i="${i}"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(${cssFeat[i]});margin-right:6px"></span>Concept ${i + 1}</button>`).join('');
+    const pos = v => 50 + Math.max(-1.5, Math.min(1.5, v)) / 1.5 * 50;
+    const bar = (v, col) => { const a = pos(0), b = pos(v); return `<i style="left:${Math.min(a, b)}%;width:${Math.abs(b - a)}%;background:${col}"></i>`; };
+    const compute = () => {
+      const n = 5, v = +vS.value, x = on.map(o => o ? v : 0), h = [0, 0];
+      for (let i = 0; i < n; i++) { const w = M.col(i); h[0] += w[0] * x[i]; h[1] += w[1] * x[i]; }
+      return [...Array(n)].map((_, i) => { const w = M.col(i), raw = w[0] * h[0] + w[1] * h[1], out = fB.checked ? Math.max(0, raw + M.b[i]) : raw; return {raw, out, x: x[i], cut: -M.b[i]}; });
+    };
+    const render = () => {
+      $('c3wVOut').textContent = (+vS.value).toFixed(2);
+      if (!M) { $('c3wVerdict').textContent = 'Training the pentagon…'; return; }
+      const R = compute();
+      rowsEl.innerHTML = `<div class="whr head"><span></span><span>Raw signal</span><span>After the filter</span></div>` + R.map((r, i) => `<div class="whr"><span>Concept ${i + 1}</span><span class="track"><span class="zero"></span>${bar(r.raw, `var(${cssFeat[i]})`)}${fB.checked ? `<span class="cut" style="left:${pos(r.cut)}%"></span>` : ''}</span><span class="track"><span class="zero"></span>${bar(r.out, `var(${cssFeat[i]})`)}${r.x ? `<i style="left:${pos(0)}%;width:${pos(r.x) - pos(0)}%;background:transparent;border:2px solid var(--ink)"></i>` : ''}</span></div>`).join('');
+      const leaks = R.filter(r => !r.x && Math.abs(r.out) > .02).length, err = R.reduce((a, r) => a + (r.x - r.out) ** 2, 0);
+      const act = R.filter(r => r.x).length;
+      $('c3wVerdict').innerHTML = leaks ? `<span>${leaks}</span> whisper${leaks > 1 ? 's' : ''} got through as false signal${leaks > 1 ? 's' : ''}. Error: ${err.toFixed(3)}` : act > 1 && err > .02 ? `No false signals, but the active concepts <span>distort each other</span>. Error: ${err.toFixed(3)}` : `Every inactive concept is silenced. Error: <span>${err.toFixed(3)}</span>`;
+      LL.shared.c3whisper.last = {leaks, err, R};
+    };
+    LL.shared.c3whisper = {get M() { return M; }, set: (arr, v, f) => { arr.forEach((o, i) => { on[i] = o; chips.children[i].setAttribute('aria-pressed', o); }); vS.value = v; fB.checked = f; render(); }};
+    chips.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; const i = +b.dataset.i; on[i] = !on[i]; b.setAttribute('aria-pressed', on[i]); render(); });
+    vS.addEventListener('input', render); fB.addEventListener('change', render);
+    render();
+    setTimeout(() => {
+      const runs = [...Array(3)].map(() => { const T = new Toy(5, 2, Array(5).fill(1), indepSampler(5, .95)); for (let s = 0; s < 3000; s++) T.step(128); return T; });
+      M = runs.reduce((a, b) => a.loss < b.loss ? a : b);
+      const D = M.dims(), nr = [...Array(5)].map((_, i) => M.norm(i)), bs = [...M.b];
+      const avg = a => a.reduce((s, v) => s + v, 0) / a.length;
+      $('c3wStat').textContent = `This model's shares of a desk: ${D.map(frac).join(', ')}. Learned bias ≈ ${avg(bs).toFixed(2)} for every concept, so the threshold sits at +${(-avg(bs)).toFixed(2)}; to make up for it, the arrows are ${avg(nr).toFixed(2)} long instead of 1, which is why pentagons poke out past the circle. Going round the pentagon, the concepts sit in the order ${[0, 1, 2, 3, 4].sort((a, c) => Math.atan2(M.col(a)[1], M.col(a)[0]) - Math.atan2(M.col(c)[1], M.col(c)[0])).map(i => i + 1).join(' · ')}, so each one's neighbours are the ones beside it in that list (wrapping round).`;
+      render();
+    }, 200);
+  }
+});
+</script>
 </article>
 
 <article id="untangling">
@@ -2184,6 +2840,7 @@ tourists walk across the bridge in the fog`.split('\n');
       document.getElementById('tDays').textContent = days;
       document.getElementById('tClash').textContent = clashes;
       document.getElementById('tRate').textContent = Math.round(clashes / days * 100) + '%';
+      { let e = 0, c = 1; for (let k = 0; k <= P; k++) { if (k > DESKS) e += c * p ** k * (1 - p) ** (P - k); c = c * (P - k) / (k + 1); } document.getElementById('tExp').textContent = (e >= .995 ? '100' : e < .001 ? (e * 100).toFixed(2) : (e * 100).toFixed(e < .1 ? 1 : 0)) + '%'; }
       document.getElementById('dayStrip').innerHTML = hist.map(x => `<i class="${x ? 'x' : ''}"></i>`).join('');
     };
     const reset = () => { days = 0; clashes = 0; hist = []; day(); };
@@ -2209,15 +2866,17 @@ tourists walk across the bridge in the fog`.split('\n');
       const d = dimsList[+dr.value];
       const V = [];
       for (let k = 0; k < K; k++) { const v = new Float64Array(d); let s = 0; for (let i = 0; i < d; i++) { v[i] = gauss(); s += v[i] * v[i]; } s = Math.sqrt(s); for (let i = 0; i < d; i++) v[i] /= s; V.push(v); }
-      bins = new Array(36).fill(0); near = 0; total = 0;
+      bins = new Array(36).fill(0); near = 0; total = 0; let worst = 0;
       for (let a = 0; a < K; a++) for (let b = a + 1; b < K; b++) {
         let dot = 0; const x = V[a], y = V[b]; for (let i = 0; i < d; i++) dot += x[i] * y[i];
         const ang = Math.acos(Math.max(-1, Math.min(1, dot))) * 180 / Math.PI;
         bins[Math.min(35, Math.floor(ang / 5))]++; total++; if (Math.abs(ang - 90) <= 5) near++;
+        worst = Math.max(worst, Math.abs(ang - 90));
       }
       dout.textContent = d.toLocaleString() + ' directions' + (d === 2 ? ' (a flat page)' : d === 3 ? ' (a room)' : '');
       const pct = Math.round(near / total * 100);
       document.getElementById('angleVerdict').innerHTML = `<span>${pct}%</span> of arrow pairs are within 5° of a right angle.`;
+      document.getElementById('angleWorst').textContent = `Most overlapping pair of all ${total.toLocaleString()}: ${worst.toFixed(1)}° away from a right angle.` + (K > d ? ` That's ${K} arrows in only ${d} directions.` : '');
       draw();
     };
     const draw = () => {
@@ -2248,28 +2907,32 @@ tourists walk across the bridge in the fog`.split('\n');
 
   /* ---------- scene 4: live toy model (Elhage et al. 2022 setup) ----------
      x in R^5, each entry 0 with prob S else U(0,1); h = W x (2-d);
-     y = ReLU(W^T h + b); loss = sum_i I_i (x_i - y_i)^2, I_i = 0.8^i. Trained with Adam. */
+     y = ReLU(W^T h + b) (or linear when the filter is off); loss = sum_i I_i (x_i - y_i)^2, I_i = base^i. Trained with Adam. */
   {
     const n = 5, m = 2, B = 128, LR = 0.012, STEPS_PER_FRAME = 12;
-    const imp = [...Array(n)].map((_, i) => Math.pow(0.8, i));
-    const sparsities = [{S: 0, l: 'Every time (always present)'}, {S: .5, l: 'Half the time'}, {S: .8, l: 'One time in five'}, {S: .9, l: 'One time in ten'}, {S: .95, l: 'One time in twenty'}, {S: .99, l: 'Very rarely (1 in 100)'}];
+    let imp = [];
+    const sparsities = [{S: 0, l: 'Every time (always present)'}, {S: .5, l: 'Half the time'}, {S: .7, l: 'Three times in ten'}, {S: .8, l: 'One time in five'}, {S: .9, l: 'One time in ten'}, {S: .95, l: 'One time in twenty'}, {S: .99, l: 'Very rarely (1 in 100)'}];
     const sr = document.getElementById('sparsity'), so = document.getElementById('sparsityOut');
+    const impSel = document.getElementById('impSel'), reluBox = document.getElementById('reluBox');
     const cv = document.getElementById('modelCanvas'), ctx = cv.getContext('2d');
-    let W, b, mW, vW, mb, vb, t, loss = 0, playing = true, steps = 0;
+    const sp = document.getElementById('modelSpark'), sctx = sp.getContext('2d');
+    const colVars = ['--tomato', '--sky', '--teal', '--marigold', '--pink'];
+    let W, b, mW, vW, mb, vb, t, loss = 0, playing = true, steps = 0, hist = [];
+    const setImp = () => { const base = +impSel.value; imp = [...Array(n)].map((_, i) => Math.pow(base, i)); };
     const init = () => {
       W = new Float64Array(m * n); b = new Float64Array(n);
       for (let i = 0; i < m * n; i++) W[i] = (Math.random() * 2 - 1) * .5;
-      mW = new Float64Array(m * n); vW = new Float64Array(m * n); mb = new Float64Array(n); vb = new Float64Array(n); t = 0; steps = 0;
+      mW = new Float64Array(m * n); vW = new Float64Array(m * n); mb = new Float64Array(n); vb = new Float64Array(n); t = 0; steps = 0; loss = 0; hist = [];
     };
     const x = new Float64Array(n), h = new Float64Array(m), g = new Float64Array(n), Wg = new Float64Array(m);
     const gW = new Float64Array(m * n), gb = new Float64Array(n);
     const step = () => {
-      const S = sparsities[+sr.value].S;
+      const S = sparsities[+sr.value].S, relu = reluBox.checked;
       gW.fill(0); gb.fill(0); let L = 0;
       for (let k = 0; k < B; k++) {
         for (let i = 0; i < n; i++) x[i] = Math.random() < 1 - S ? Math.random() : 0;
         for (let j = 0; j < m; j++) { let a = 0; for (let i = 0; i < n; i++) a += W[j * n + i] * x[i]; h[j] = a; }
-        for (let i = 0; i < n; i++) { let z = b[i]; for (let j = 0; j < m; j++) z += W[j * n + i] * h[j]; const y = z > 0 ? z : 0, d = x[i] - y; L += imp[i] * d * d / B; g[i] = z > 0 ? -2 * imp[i] * d / B : 0; }
+        for (let i = 0; i < n; i++) { let z = b[i]; for (let j = 0; j < m; j++) z += W[j * n + i] * h[j]; const pass = !relu || z > 0, y = pass ? z : 0, d = x[i] - y; L += imp[i] * d * d / B; g[i] = pass ? -2 * imp[i] * d / B : 0; }
         for (let j = 0; j < m; j++) { let a = 0; for (let i = 0; i < n; i++) a += W[j * n + i] * g[i]; Wg[j] = a; }
         for (let j = 0; j < m; j++) for (let i = 0; i < n; i++) gW[j * n + i] += h[j] * g[i] + Wg[j] * x[i];
         for (let i = 0; i < n; i++) gb[i] += g[i];
@@ -2278,10 +2941,37 @@ tourists walk across the bridge in the fog`.split('\n');
       for (let i = 0; i < m * n; i++) { mW[i] = b1 * mW[i] + (1 - b1) * gW[i]; vW[i] = b2 * vW[i] + (1 - b2) * gW[i] ** 2; W[i] -= LR * (mW[i] / c1) / (Math.sqrt(vW[i] / c2) + 1e-8); }
       for (let i = 0; i < n; i++) { mb[i] = b1 * mb[i] + (1 - b1) * gb[i]; vb[i] = b2 * vb[i] + (1 - b2) * gb[i] ** 2; b[i] -= LR * (mb[i] / c1) / (Math.sqrt(vb[i] / c2) + 1e-8); }
       loss = loss ? loss * .95 + L * .05 : L; steps++;
+      if (steps % 10 === 0) { hist.push(loss); if (hist.length > 400) hist.shift(); }
     };
+    // the paper's feature dimensionality D_i = |W_i|^2 / sum_j (W_i_hat . W_j)^2
+    const dims = () => [...Array(n)].map((_, i) => { const ni = Math.hypot(W[i], W[n + i]); if (ni < 1e-3) return 0; let den = 0; for (let k = 0; k < n; k++) den += ((W[i] * W[k] + W[n + i] * W[n + k]) / ni) ** 2; return ni * ni / den; });
+    const cosOf = (i, k) => (W[i] * W[k] + W[n + i] * W[n + k]) / (Math.hypot(W[i], W[n + i]) * Math.hypot(W[k], W[n + k]) + 1e-12);
+    const frac = d => { for (const [v, l] of [[1, '1'], [1 / 2, '½'], [2 / 5, '⅖'], [2 / 3, '⅔'], [0, '0']]) if (Math.abs(d - v) < .03) return l; return d.toFixed(2); };
     const legend = document.getElementById('legend');
-    legend.innerHTML = [...Array(n)].map((_, i) => `<div class="leg"><span class="dot" style="background:var(${['--tomato', '--sky', '--teal', '--marigold', '--pink'][i]})"></span><span>Concept ${i + 1}<small>${'★'.repeat(5 - i)}${'☆'.repeat(i)} importance</small></span><span class="bar"><i id="lb${i}" style="background:var(${['--tomato', '--sky', '--teal', '--marigold', '--pink'][i]})"></i></span></div>`).join('');
-    const shapeName = k => ['none', 'one concept', 'two concepts, at a right angle', 'three concepts sharing the space', 'four concepts, as two opposite pairs', 'all five, in a pentagon'][k];
+    const buildLegend = () => { legend.innerHTML = [...Array(n)].map((_, i) => `<div class="leg"><span class="dot" style="background:var(${colVars[i]})"></span><span>Concept ${i + 1}<small>importance ${imp[i].toFixed(2)} · share <b id="ld${i}">0</b></small></span><span class="bar"><i id="lb${i}" style="background:var(${colVars[i]})"></i></span></div>`).join(''); };
+    const list = a => a.length === 1 ? a[0] : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+    const describe = () => {
+      const D = dims(), norms = [...Array(n)].map((_, i) => Math.hypot(W[i], W[n + i]));
+      const kept = [...Array(n).keys()].filter(i => norms[i] > .5), own = kept.filter(i => D[i] > .9);
+      const pairs = []; for (const i of kept) for (const k of kept) if (i < k && cosOf(i, k) < -.9) pairs.push([i + 1, k + 1]);
+      const S = sparsities[+sr.value].S;
+      let text;
+      if (+impSel.value === 1 && S === 0 && reluBox.checked) text = 'two desks\' worth, <span>spread over several concepts</span>. With all equally important and always present, any two directions are as good as any others';
+      else if (kept.length === 5 && D.every(d => Math.abs(d - .4) < .06)) text = '<span>all five, in a pentagon</span>';
+      else if (kept.length === 4 && pairs.length === 2) text = `<span>four, as two see-saws</span> (${pairs.map(p => p.join(' & ')).join(', ')})`;
+      else if (kept.length === 3 && own.length === 1 && pairs.length === 1) text = `<span>three</span>: concept ${own[0] + 1} has its own desk, concepts ${pairs[0].join(' and ')} share a see-saw`;
+      else if (kept.length === 2 && own.length === 2) text = `<span>two</span>, concepts ${own[0] + 1} and ${own[1] + 1}, each with its own desk`;
+      else text = `<span>${kept.length} concept${kept.length === 1 ? '' : 's'}</span>${kept.length ? ' (' + list(kept.map(i => i + 1)) + ')' : ''}, sharing the space unevenly`;
+      return {D, kept: kept.length, own: own.length, pairs: pairs.length, text};
+    };
+    const drawSpark = () => {
+      const Wd = sp.width, Hd = sp.height; sctx.clearRect(0, 0, Wd, Hd);
+      if (hist.length < 2) return;
+      const lg = hist.map(v => Math.log10(Math.max(v, 1e-6))), lo = Math.min(...lg), hi = Math.max(...lg, lo + .3);
+      sctx.strokeStyle = C.plum; sctx.lineWidth = 4; sctx.beginPath();
+      lg.forEach((v, i) => { const X = i / 399 * Wd, Y = 8 + (hi - v) / (hi - lo) * (Hd - 16); i ? sctx.lineTo(X, Y) : sctx.moveTo(X, Y); });
+      sctx.stroke();
+    };
     const draw = () => {
       const S = cv.width, c = S / 2, R = S * .36;
       ctx.clearRect(0, 0, S, S);
@@ -2289,26 +2979,27 @@ tourists walk across the bridge in the fog`.split('\n');
       ctx.beginPath(); ctx.moveTo(c - S * .46, c); ctx.lineTo(c + S * .46, c); ctx.moveTo(c, c - S * .46); ctx.lineTo(c, c + S * .46); ctx.stroke();
       ctx.setLineDash([10, 14]); ctx.beginPath(); ctx.arc(c, c, R, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
       ctx.fillStyle = C.soft; ctx.font = '600 28px "JetBrains Mono", monospace'; ctx.textAlign = 'left';
-      ctx.fillText('direction 1', c + S * .3, c - 14); ctx.save(); ctx.translate(c + 14, c - S * .3); ctx.fillText('direction 2', 0, 0); ctx.restore();
-      let shown = 0;
-      for (let i = n - 1; i >= 0; i--) {
-        const a = W[i], d = W[n + i], len = Math.hypot(a, d);
-        if (len > .5 && i >= 0) shown++;
-        arrow(ctx, c, c, c + a * R, c - d * R, C.feats[i], 14);
-        const el = document.getElementById('lb' + i); if (el) el.style.width = Math.min(100, len / 1.2 * 100) + '%';
-      }
+      ctx.fillText('direction 1', c + S * .26, c - 14); ctx.save(); ctx.translate(c + 14, c - S * .3); ctx.fillText('direction 2', 0, 0); ctx.restore();
+      for (let i = n - 1; i >= 0; i--) arrow(ctx, c, c, c + W[i] * R, c - W[n + i] * R, C.feats[i], 14);
       ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(c, c, 12, 0, Math.PI * 2); ctx.fill();
-      document.getElementById('modelVerdict').innerHTML = `The model is storing <span>${shapeName(shown)}</span>.`;
-      document.getElementById('modelStat').textContent = `Training steps: ${steps.toLocaleString()} · error: ${loss.toFixed(4)}`;
-      document.getElementById('trainStatus').textContent = playing ? (steps < 4000 ? 'Training…' : 'Settled, still training') : 'Paused';
+      const d = describe();
+      d.D.forEach((v, i) => { const el = document.getElementById('lb' + i); if (el) el.style.width = Math.min(100, v * 100) + '%'; const l = document.getElementById('ld' + i); if (l) l.textContent = frac(v); });
+      document.getElementById('modelVerdict').innerHTML = `The model is storing ${d.text}.`;
+      document.getElementById('modelStat').textContent = `Shares add up to ${d.D.reduce((a, v) => a + v, 0).toFixed(2)} desks · training steps ${steps.toLocaleString()} · error ${loss.toFixed(4)}`;
+      document.getElementById('trainStatus').textContent = (reluBox.checked ? '' : 'Linear model · ') + (playing ? (steps < 4000 ? 'Training…' : 'Settled, still training') : 'Paused');
+      drawSpark();
+      shared.toy = {describe, steps, loss};
     };
     redrawers.push(draw);
     const setPlay = v => { playing = v; document.getElementById('trainPlay').textContent = v ? 'Pause' : 'Train'; draw(); };
-    sr.addEventListener('input', () => { so.textContent = sparsities[+sr.value].l; steps = Math.min(steps, 1); });
+    const changed = () => { steps = Math.min(steps, 1); hist = []; };
+    sr.addEventListener('input', () => { so.textContent = sparsities[+sr.value].l; changed(); });
+    impSel.addEventListener('change', () => { setImp(); buildLegend(); changed(); draw(); });
+    reluBox.addEventListener('change', () => { changed(); draw(); });
     document.getElementById('trainPlay').addEventListener('click', () => setPlay(!playing));
     document.getElementById('trainReset').addEventListener('click', () => { init(); draw(); });
     so.textContent = sparsities[+sr.value].l;
-    init();
+    setImp(); buildLegend(); init();
     // pre-train so the first frame already shows a settled result
     for (let i = 0; i < 2500; i++) step();
     draw();
