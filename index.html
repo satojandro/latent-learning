@@ -1024,25 +1024,132 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
 </article>
 
 <article id="golden-gate">
+  <style>
+    #golden-gate details.deeper{background:var(--wash);border-radius:var(--r);padding:14px 18px;font-size:1rem}
+    #golden-gate details.deeper > summary{cursor:pointer;font-family:var(--f-display);font-weight:600;color:var(--plum);list-style:none;display:flex;gap:.5rem;align-items:baseline}
+    #golden-gate details.deeper > summary::-webkit-details-marker{display:none}
+    #golden-gate details.deeper > summary::before{content:"+";font-family:var(--f-mono);font-weight:600;display:inline-block;width:1em}
+    #golden-gate details.deeper[open] > summary::before{content:"−"}
+    #golden-gate details.deeper > div{display:grid;gap:.9rem;margin-top:.8rem}
+    #golden-gate details.deeper.deepest{background:color-mix(in srgb, var(--plum) 10%, var(--card));border:2px dashed var(--line)}
+    #golden-gate .inpaper{font-family:var(--f-mono);font-size:.78rem;color:var(--ink-soft);line-height:1.5}
+    #golden-gate .inpaper em{font-family:var(--f-body);font-size:.9rem}
+    #golden-gate .eq{font-family:var(--f-mono);font-size:.9rem;background:var(--card);border-radius:12px;padding:.7rem .9rem;overflow-x:auto;white-space:nowrap}
+    #golden-gate .eqlist{display:grid;gap:.4rem;margin:0;padding-left:1.2rem;font-size:.95rem}
+    #golden-gate blockquote{margin:0;border-left:4px solid var(--tomato);padding:.2rem 0 .2rem 1rem;font-style:italic}
+    #golden-gate blockquote cite{display:block;font-style:normal;font-family:var(--f-mono);font-size:.75rem;color:var(--ink-soft);margin-top:.3rem}
+    #golden-gate .predict{border:2px dashed var(--tomato);border-radius:14px;padding:12px 14px;font-size:.98rem;display:grid;gap:.6rem}
+    #golden-gate .predict .label{color:var(--tomato)}
+    #golden-gate .reveal{font-size:.98rem;min-height:1.4em}
+    #golden-gate .reveal b{color:var(--plum)}
+    #golden-gate .nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+    #golden-gate .nums > div{background:var(--card);border-radius:12px;padding:10px 12px}
+    #golden-gate .nums b{font-family:var(--f-display);font-size:1.35rem;display:block;font-variant-numeric:tabular-nums}
+    #golden-gate .nums small{font-family:var(--f-mono);font-size:.72rem;color:var(--ink-soft);line-height:1.35;display:block}
+    #golden-gate .langs{display:flex;flex-wrap:wrap;gap:8px}
+    #golden-gate .langs span{background:var(--wash);border-radius:10px;padding:.3rem .65rem;font-size:.95rem}
+    #golden-gate .langs span small{font-family:var(--f-mono);font-size:.68rem;color:var(--ink-soft);margin-left:.35rem}
+    #golden-gate .nb-box svg{width:100%;height:auto;display:block}
+    #golden-gate .nb-box text{font-family:var(--f-display);font-weight:600}
+    #golden-gate .split{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:1rem}
+    #golden-gate .split > div{background:var(--wash);border-radius:14px;padding:10px;display:grid;gap:6px;align-content:start;text-align:center}
+    #golden-gate .split .dots{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;min-height:28px}
+    #golden-gate .split .dots i{width:16px;height:16px;border-radius:50%;background:var(--tomato);display:block}
+    #golden-gate .split .dots i.q{background:var(--marigold)}
+    #golden-gate .split small{font-family:var(--f-mono);font-size:.7rem;color:var(--ink-soft);line-height:1.35}
+    #golden-gate .quiz{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+    #golden-gate .q{background:var(--wash);border-radius:14px;padding:12px 14px;display:grid;gap:.55rem;align-content:start}
+    #golden-gate .q pre{margin:0;font-family:var(--f-mono);font-size:.8rem;background:var(--card);border-radius:10px;padding:.55rem .7rem;overflow-x:auto;line-height:1.5}
+    #golden-gate .q .who{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);display:block;background:none;padding:0}
+    #golden-gate .q .btns button{font-size:.85rem;padding:.3rem .8rem;border-width:1.5px}
+    #golden-gate .q .ans{font-size:.92rem;line-height:1.5}
+    #golden-gate .q .ans b.ok{color:var(--good)}
+    #golden-gate .q .ans b.no{color:var(--bad)}
+    #golden-gate .chain{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--f-display);font-weight:600;font-size:.95rem}
+    #golden-gate .chain span{background:var(--wash);border-radius:10px;padding:.35rem .7rem;transition:opacity .3s}
+    #golden-gate .chain span.f{background:color-mix(in srgb, var(--tomato) 20%, var(--card))}
+    #golden-gate .chain span.hid{opacity:.15}
+    #golden-gate .chain i{font-style:normal;color:var(--ink-soft);font-family:var(--f-mono)}
+    #golden-gate .rank{display:grid;gap:8px;margin-top:1rem}
+    #golden-gate .rank > div{display:grid;grid-template-columns:minmax(0,9.5rem) minmax(0,1fr) 5.5rem;gap:10px;align-items:center;font-size:.9rem}
+    #golden-gate .rank .bar{height:14px;border-radius:99px;background:var(--wash);overflow:hidden}
+    #golden-gate .rank .bar i{display:block;height:100%;border-radius:99px;background:var(--tomato);transition:width .5s}
+    #golden-gate .rank span:last-child{font-family:var(--f-mono);font-size:.8rem;text-align:right}
+    #golden-gate .gallery details{border-top:1px dashed var(--line);padding-top:.5rem}
+    #golden-gate .gallery summary{cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.93rem;color:var(--plum)}
+    #golden-gate .gallery details p{font-size:.93rem;line-height:1.5;margin-top:.4rem}
+    #golden-gate .feat .fid{font-family:var(--f-mono);font-size:.72rem;color:var(--ink-soft)}
+    #golden-gate .freq-bars{display:grid;gap:10px;margin-top:1rem}
+    #golden-gate .freq-bars > div{display:grid;grid-template-columns:minmax(0,8.5rem) minmax(0,1fr) 3.5rem;gap:10px;align-items:center;font-size:.92rem}
+    #golden-gate .freq-bars small{display:block;font-family:var(--f-mono);font-size:.7rem;color:var(--ink-soft)}
+    #golden-gate .freq-bars .bar{height:18px;border-radius:99px;background:var(--wash);overflow:hidden}
+    #golden-gate .freq-bars .bar i{display:block;height:100%;border-radius:99px;background:var(--teal);transition:width .4s}
+    #golden-gate .freq-bars span:last-child{font-family:var(--f-mono);font-size:.85rem;text-align:right;font-variant-numeric:tabular-nums}
+    @media (max-width:560px){
+      #golden-gate .split{grid-template-columns:1fr}
+      #golden-gate .rank > div{grid-template-columns:minmax(0,1fr) 4.8rem}
+      #golden-gate .rank .bar{grid-column:1/-1;grid-row:2}
+    }
+  </style>
   <div class="chapter-head">
     <span class="num c5">Chapter 5</span>
     <h2>The Golden Gate Bridge</h2>
-    <p class="based">Based on <a href="https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html" target="_blank" rel="noopener"><em>Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet</em></a> (Templeton, Conerly, Marcus, Lindsey, Bricken et al., Anthropic, 2024)</p>
+    <p class="based">Based on <a href="https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html" target="_blank" rel="noopener"><em>Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet</em></a> (Templeton, Conerly, Marcus, Lindsey, Bricken et al., Anthropic, May 2024). Section names below refer to that paper, so you can read along.</p>
   </div>
 
   <section class="scene" aria-labelledby="c5s1">
     <div class="prose">
       <p class="scene-tag">Scene 1</p>
-      <h3 id="c5s1">From a toy to the real thing</h3>
-      <p>Chapter 4's dictionary worked on a tiny model with one layer and 512 neurons. Sceptics had a fair question: would it survive contact with a real, large model? Or would big models turn out to be an unreadable mess?</p>
-      <p>In May 2024, the team tried it on <strong>Claude 3 Sonnet</strong>, one of Anthropic's production models at the time. They pointed their dictionary at the case file <em>halfway through</em> the model, where the clerks are in the middle of their work, and trained dictionaries of three sizes: 1 million, 4 million and 34 million features.</p>
-      <p>To get a feel for that jump in scale, each dot below is one Chapter 4 dictionary of about 4,000 features.</p>
+      <h3 id="c5s1">Would it survive a real model?</h3>
+      <p>Chapter 4's dictionary worked beautifully on a model with one layer and 512 neurons. Sceptics had a fair objection. Production models are vastly bigger, with many layers, and have read far more of the world. Perhaps the trick only worked because the toy was so small, and a big model would turn out to be soup all the way down.</p>
+      <p>The authors put the question plainly: <q>will these methods work for large models?</q> To answer it they chose <strong>Claude 3 Sonnet</strong>, Anthropic's medium-sized production model at the time, the exact version customers were using.</p>
+      <p>They didn't try to read the whole model. They read one case file at one moment: the file as it stands <strong>halfway through the model</strong>, after half the clerks have added their notes and half are still to come. Then they trained three dictionaries on it, each a list of possible concepts with an arrow for each: about 1 million, 4 million and 34 million entries.</p>
+      <div class="predict">
+        <p class="label">Predict before you press</p>
+        <p>A dictionary with 34 million entries was trained on a huge sample of text. Afterwards, the team checked a sample of 10 million words to see which entries had ever switched on. What share of the 34 million do you think <em>never</em> did?</p>
+      </div>
     </div>
     <div class="toy">
-      <div class="toy-head"><h4>How big were the dictionaries?</h4><span class="label">To scale</span></div>
+      <div class="toy-head"><h4>How big were the dictionaries?</h4><span class="label">To scale · numbers from the paper</span></div>
       <div class="seg" id="scaleSeg" role="group" aria-label="Dictionary size"></div>
+      <div class="checks" style="margin-top:.8rem"><label><input type="checkbox" id="deadToggle"> Show which entries never switched on</label></div>
       <div class="canvas-box" style="margin-top:1rem"><canvas id="dotsCanvas" width="1800" height="760" aria-label="Dots comparing dictionary sizes" role="img"></canvas></div>
       <p class="verdict" id="dotsVerdict"></p>
+      <p class="caption">Each dot is 4,096 features, the size of the Chapter 4 dictionary the team studied most closely. Dead entries are spread at random here; the paper reports only the share. The paper's exact sizes are 1,048,576, 4,194,304 and 33,554,432, which are powers of two.</p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <details class="deeper">
+        <summary>Go deeper: the machine, in the paper's own notation</summary>
+        <div>
+          <p>The dictionary is a sparse autoencoder, the same tool as Chapter 4. Here it is once in symbols, then in words. The case file is a list of numbers called <b>x</b>.</p>
+          <p class="eq">f<sub>i</sub>(x) = ReLU(W<sup>enc</sup><sub>i</sub> · x + b<sup>enc</sup><sub>i</sub>)</p>
+          <p class="eq">x̂ = b<sup>dec</sup> + Σ<sub>i</sub> f<sub>i</sub>(x) · W<sup>dec</sup><sub>·,i</sub></p>
+          <p class="eq">Loss = ‖x − x̂‖² + λ Σ<sub>i</sub> f<sub>i</sub>(x) · ‖W<sup>dec</sup><sub>·,i</sub>‖</p>
+          <ul class="eqlist">
+            <li><b>Line 1:</b> for each entry <i>i</i>, measure how much the file points along that entry's direction. ReLU sets anything negative to zero, so most entries read exactly zero. That is "ignoring the whispers" from Chapter 3.</li>
+            <li><b>Line 2:</b> rebuild the file as a sum of arrows: each active entry's arrow, scaled by how strongly it is on.</li>
+            <li><b>Line 3:</b> the cost has two parts. You pay for every difference between the rebuilt file and the real one, and you pay a fine for every entry you use, sized by its activation and the length of its arrow. λ (they used 5) sets how steep the fine is. This is Chapter 4's judge, preferring the account with the fewest moving parts.</li>
+          </ul>
+          <p>Multiplying the fine by the arrow's length closes a loophole: without it the dictionary could make an activation tiny and its arrow huge, and dodge the fine for free.</p>
+          <div class="nums">
+            <div><b>&lt; 300</b><small>entries active on a typical word, out of millions (all three runs)</small></div>
+            <div><b>≥ 65%</b><small>of the variation in the case file explained by the rebuilt version</small></div>
+            <div><b>2% · 35% · 65%</b><small>dead entries in the 1M, 4M and 34M runs (never active over 10 million words)</small></div>
+            <div><b>~12M</b><small>live entries in the 34M run</small></div>
+          </div>
+          <p>Why the middle? The authors give three reasons. The case file is narrower than a thinker layer, so it is cheaper to work on. The case file is the running sum of every earlier clerk's notes, which should soften a problem they call <span class="term">cross-layer superposition</span>, where one concept is smeared across several layers. And the middle is where they expected the most abstract concepts to live.</p>
+          <p class="inpaper">In the paper: <em>Scaling Dictionary Learning to Claude 3 Sonnet</em>, subsections <em>Sparse Autoencoders</em> and <em>Our SAE experiments</em>.</p>
+        </div>
+      </details>
+      <details class="deeper deepest">
+        <summary>Deeper still: scaling laws for the dictionary itself</summary>
+        <div>
+          <p>The Prologue's scaling law said that bigger models get better at a predictable rate. Here the team turned the same idea on their own tool. A dictionary's cost depends on two choices: how many entries it has, and how many training steps it gets. Spend a fixed budget well, and how low can the loss go?</p>
+          <p>They ran a sweep over both choices and found the same kind of regularity. With each budget spent in the best way, the loss fell roughly as a power law in compute. The best number of entries and the best number of steps both grew as power laws too, with entries growing somewhat faster. They used these curves to pick the training length and learning rate for the 34M run before running it.</p>
+          <p>There is a catch they state openly. The loss is a stand-in for what they actually want, which is readable features. They found that low loss tends to go with interpretable features, but they write that they have <q>little confidence that it is optimal</q>. Scaling laws tell you how to win the game you've set up. They can't tell you it was the right game.</p>
+          <p class="inpaper">In the paper: <em>Scaling Laws</em>, and <em>Inability to Evaluate</em> under <em>Limitations, Challenges, and Open Problems</em>.</p>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -1050,28 +1157,135 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="prose">
       <p class="scene-tag">Scene 2</p>
       <h3 id="c5s2">A bridge in every language</h3>
-      <p>It worked. The dictionaries were full of clear, single-meaning features, and many were far more abstract than Chapter 4's.</p>
-      <p>The star was a feature for the <strong>Golden Gate Bridge</strong>. It switched on when text mentioned the bridge in English, and also in Japanese, Chinese, Greek, Vietnamese, Russian and more. It even switched on for <em>pictures</em> of the bridge, although the dictionary had only ever been trained on text. The model wasn't storing the words "Golden Gate Bridge". It was storing the idea.</p>
-      <p>Features also had neighbours. Concepts stored in nearby directions tended to be related, so near the bridge sat features for Alcatraz and other parts of San Francisco. The map of meaning from the Prologue was there, at enormous scale.</p>
-      <p>Here are a few of the features the paper described.</p>
+      <p>It worked. The team opened the dictionaries and found entries with clear, single meanings, many far more abstract than anything in Chapter 4. To make the case carefully they picked four and examined each one in depth: the <strong>Golden Gate Bridge</strong> (34M/31164353), <strong>brain sciences</strong> (34M/9493533), <strong>monuments and tourist attractions</strong> (1M/887839), and <strong>transit infrastructure</strong> (1M/3), which lit up for trains, ferries, tunnels, bridges and even wormholes.</p>
+      <p>The bridge feature is the one people remember. Its strongest activations were essentially all references to the bridge. Then the team checked whether it cared about the <em>words</em>. They took the opening sentence of the Wikipedia article on the bridge in six other languages, removed any English in brackets, and ran each one through the model.</p>
     </div>
-    <div class="gallery">
-      <div class="feat"><h4>The Golden Gate Bridge</h4><dl><dt>Switches on for</dt><dd>The bridge, in many languages, and in images.</dd><dt>When turned up</dt><dd>The model brought up the bridge constantly, and even described itself as the bridge.</dd></dl></div>
-      <div class="feat"><h4>Bugs in code</h4><dl><dt>Switches on for</dt><dd>Mistakes in computer code, across different programming languages.</dd></dl></div>
-      <div class="feat"><h4>Inner conflict</h4><dl><dt>Switches on for</dt><dd>Descriptions of someone torn between two loyalties or choices.</dd></dl></div>
-      <div class="feat safety"><h4>Flattery</h4><dl><dt>Switches on for</dt><dd>Over-the-top, insincere praise.</dd><dt>When turned up</dt><dd>The model showered the user with praise.</dd></dl></div>
-      <div class="feat safety"><h4>Keeping secrets</h4><dl><dt>Switches on for</dt><dd>Text about hiding information or keeping something secret.</dd></dl></div>
-      <div class="feat safety"><h4>Scam emails</h4><dl><dt>Switches on for</dt><dd>Fraudulent emails.</dd><dt>When turned up</dt><dd>Turned up far enough, it overrode the model's usual refusal to write one.</dd></dl></div>
+    <div class="toy">
+      <div class="toy-head"><h4>Does the bridge feature read other languages?</h4><span class="label">Results from the paper</span></div>
+      <div class="langs" aria-label="Languages tested">
+        <span>金門大橋 <small>Chinese</small></span><span>金門橋 <small>Japanese</small></span><span>금문교 <small>Korean</small></span><span>мост Золотые Ворота <small>Russian</small></span><span>Cầu Cổng Vàng <small>Vietnamese</small></span><span>γέφυρα Γκόλντεν Γκέιτ <small>Greek</small></span>
+      </div>
+      <div class="predict" style="margin-top:1rem">
+        <p>Out of roughly 34 million entries, where do you think the bridge feature ranked, by average activation, on these six sentences?</p>
+        <div class="btns" id="langGuess"><button data-a="0">Top 1</button><button data-a="1">Top 100</button><button data-a="2">Nowhere near the top</button></div>
+        <p class="reveal" id="langReveal" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <p>Then came something the dictionary had never been trained for. It had seen only text. Yet when the model was shown a <em>picture</em> of the Golden Gate Bridge, the same feature switched on. The concept sits deeper than any one language, or even any one sense.</p>
+      <p>Abstract features turned up everywhere: features for famous people from Richard Feynman to Rosalind Franklin, for countries, for positions in a list, for type signatures in code. One feature for <span class="term">security vulnerabilities</span> responded both to abstract discussion of vulnerabilities and to actual vulnerable code, and also to photos of people bypassing security measures.</p>
+      <details class="deeper">
+        <summary>Go deeper: how do you prove a feature means what you say?</summary>
+        <div>
+          <p>A label is a hypothesis. The paper tests each one with two claims, the same two Chapter 4 used:</p>
+          <ul class="eqlist">
+            <li><b>Specificity:</b> when the feature is on, the concept is really there.</li>
+            <li><b>Influence on behaviour:</b> pushing the feature changes the model's output in the way the label predicts. That is Scene 5.</li>
+          </ul>
+          <p>For specificity they used a rubric from 0 to 3, where 0 means the feature is irrelevant to the text and 3 means it <q>cleanly identifies the activating text</q>. They asked a different model, Claude 3 Opus, to score about a thousand activations of each feature. At strong activations, nearly every example scored as a clear match.</p>
+          <p>Weak activations were fuzzier. The bridge feature fires faintly for other San Francisco landmarks, similar bridges and other monuments. The authors offer several explanations without picking one: the strength may encode confidence, the feature may cover a family of related ideas, or the dictionary may simply be imperfect. Their own note is that the strong activations matter most, because those are the ones with the biggest effect on behaviour.</p>
+          <p>The opposite question, <span class="term">sensitivity</span> (does the feature fire on <em>every</em> mention of the concept?), they found much harder to measure fairly, and they say so. The six-language test is their basic check.</p>
+          <p class="inpaper">In the paper: <em>Four Examples of Interpretable Features</em>, subsection <em>Specificity</em>.</p>
+        </div>
+      </details>
+      <details class="deeper deepest">
+        <summary>Deeper still: are features just neurons in disguise?</summary>
+        <div>
+          <p>The case file has no special directions of its own, but it receives the output of every earlier thinker. So a sceptic could ask whether each feature simply copies one neuron from an earlier layer. If so, the dictionary would be pointless.</p>
+          <p>The team checked a random sample of 1M features against every neuron in all earlier layers. For 82% of features, the best-matching neuron had a correlation of 0.3 or less, which is weak. When they put features and neurons through the same automatic labelling test, run by Claude 3 Opus, the features came out significantly easier to explain and more specific.</p>
+          <p class="inpaper">In the paper: <em>Features vs. Neurons</em>.</p>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="c5s3">
     <div class="prose">
       <p class="scene-tag">Scene 3</p>
-      <h3 id="c5s3">Turning the dial</h3>
-      <p>Finding a feature is one thing. Proving it matters is another. So the researchers <span class="term">clamped</span> features: they held one at a high value in the case file, at every word, so every later clerk read a file shouting about it.</p>
-      <p>Clamp the Golden Gate Bridge feature, and the model couldn't stop talking about it. Ask for a recipe, and the bridge would wander in. Ask what it looked like, and it would say it was the bridge. Anthropic briefly let the public try it as "Golden Gate Claude". It was a vivid demonstration that a feature isn't just a label someone stuck on: it's part of how the model thinks, and changing it changes the model.</p>
-      <p>We can't run Claude here, but we can turn a dial on a much smaller model. Below is Chapter 1's one-word guesser. This time it has read the courtroom story plus a few lines about a bridge, and it can dial a group of bridge words up.</p>
+      <h3 id="c5s3">The map of meaning, millions of places wide</h3>
+      <p>The Prologue began with a map: words that keep similar company land close together. Ten years later, the same idea turned up again, this time inside a production model and with millions of concepts.</p>
+      <p>Every feature has an arrow. The team measured how closely two arrows point the same way (their <span class="term">cosine similarity</span>) and looked at each feature's nearest neighbours. Before you look, guess.</p>
+      <div class="predict">
+        <p class="label">Predict</p>
+        <p>Which of these features sits closest to the Golden Gate Bridge feature?</p>
+        <div class="btns" id="nbGuess"><button data-a="skye">Isle of Skye, Scotland</button><button data-a="alcatraz">Alcatraz</button><button data-a="yosemite">Yosemite National Park</button></div>
+        <p class="reveal" id="nbReveal" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Feature neighbourhoods</h4><span class="label">Sketch · neighbours as the paper describes them, positions ours</span></div>
+      <div class="seg" id="nbSeg" role="group" aria-label="Which neighbourhood"></div>
+      <div class="nb-box" style="margin-top:1rem"><svg id="nbSvg" viewBox="0 0 640 420" role="img" aria-label="Map of features near the chosen feature"></svg></div>
+      <p class="verdict" id="nbVerdict"></p>
+      <p class="caption">This is a hand-drawn sketch. The paper gives these neighbourhoods as interactive maps; we placed the groups by reading its descriptions, keeping who is near whom, but the exact distances are ours. Notice the Immunology map: a separate cluster covers immunity outside medicine, including legal immunity.</p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <p>Chapter 4 showed that bigger dictionaries split broad features into finer ones, like a legal taxonomy gaining subheadings. Sonnet's dictionaries did the same, and they did something new too.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>One neighbourhood, three dictionary sizes</h4><span class="label">Counts from the paper</span></div>
+      <div class="split" id="splitBox">
+        <div><b>1M dictionary</b><div class="dots" data-n="1"></div><small>1 "San Francisco" feature<br>no earthquake features nearby</small></div>
+        <div><b>4M dictionary</b><div class="dots" data-n="2" data-q="1"></div><small>2 San Francisco features<br>earthquake features appear</small></div>
+        <div><b>34M dictionary</b><div class="dots" data-n="11" data-q="1"></div><small>11 finer San Francisco features<br>earthquake features</small></div>
+      </div>
+      <p class="caption">Orange dots: San Francisco features. Gold dot: the group of earthquake features, which has no counterpart anywhere near this spot in the 1M dictionary. Bigger dictionaries don't only split old concepts. They also find concepts the smaller ones missed entirely.</p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <details class="deeper">
+        <summary>Go deeper: what "close" means here</summary>
+        <div>
+          <p>Each feature's arrow is a column of the decoder, W<sup>dec</sup>. Two features are neighbours when their arrows point in nearly the same direction. The authors' summary is careful: <q>distance in decoder space maps roughly onto relatedness in concept space, often in interesting and unexpected ways.</q></p>
+          <p>Around the bridge, the nearest features were other parts of San Francisco, such as Alcatraz and the Presidio. Further out came Lake Tahoe, Yosemite National Park and Solano County. Further still were tourist regions elsewhere, such as the Médoc wine region in France and the Isle of Skye in Scotland, related only in the abstract sense of "a place people visit".</p>
+          <p>The Inner Conflict neighbourhood (1M/284095) is the one a lawyer might linger on. Balancing trade-offs sits next to opposing principles and legal conflict. Emotional struggle, reluctance and guilt sit further away. The model seems to keep "a conflict of duties" and "feeling torn" as neighbouring but distinct ideas.</p>
+          <p>To see all the features at once, the team also drew <span class="term">UMAP</span> maps, which squash millions of directions onto a flat page while trying to keep neighbours together. They are a way to browse, and the flat distances should not be read too literally.</p>
+          <p class="inpaper">In the paper: <em>Feature Survey</em>, subsection <em>Exploring Feature Neighborhoods</em>.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c5s4">
+    <div class="prose">
+      <p class="scene-tag">Scene 4</p>
+      <h3 id="c5s4">A feature that knows when code is wrong</h3>
+      <p>A bridge is a simple thing to recognise. To find out whether Sonnet's features showed real understanding, the team went looking in computer code, where "correct" and "broken" have precise meanings.</p>
+      <p>They found a feature, 1M/1013764, that switched on when code contained a mistake. Then they poked it from every side, the way you'd cross-examine a witness. Try their questions yourself. For each case, decide whether the feature fires.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Will the feature fire?</h4><span class="label">Answers follow the paper's findings · snippets are ours</span></div>
+      <div class="quiz" id="codeQuiz"></div>
+      <p class="stat" id="codeScore" style="margin-top:.8rem"></p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <p>So the code-error feature isn't a typo detector, and it isn't tied to one programming language. It responds to broken code in general: array overflows, dividing by zero, adding text to a number, writing to a null pointer, an assertion like <code>1 == 2</code>. The authors add a caution of their own: they suspect many other features also cover different kinds of errors.</p>
+      <details class="deeper">
+        <summary>Go deeper: pushing the code-error feature</summary>
+        <div>
+          <p>Firing on bugs only shows correlation. To show the feature <em>does</em> something, they steered it (Scene 5 explains how):</p>
+          <ul class="eqlist">
+            <li><b>Turned up on correct code:</b> the model invented an error message for code that had nothing wrong with it.</li>
+            <li><b>Turned strongly negative on buggy code:</b> the model predicted the output the code would have given <em>without</em> the bug.</li>
+            <li><b>Negative again, with a fresh <code>&gt;&gt;&gt;</code> prompt line added:</b> the model rewrote the code with the bug fixed. The authors call this one "somewhat delicate", because it depended on the details of the prompt.</li>
+          </ul>
+          <p>The addition feature (1M/697189) suggests something like a <em>function variable</em>. It stands for "this function adds", and it keeps track through one function calling another. When they forced it on for code with no addition in it, the model behaved as if it had been asked to run an addition.</p>
+          <p class="inpaper">In the paper: <em>Sophisticated Features</em>, subsections <em>Code error feature</em> and <em>Features representing functions</em>.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c5s5">
+    <div class="prose">
+      <p class="scene-tag">Scene 5</p>
+      <h3 id="c5s5">Turning the dial</h3>
+      <p>A feature that fires on the right things could still be a bystander, like a court reporter who notes every word but decides nothing. So the researchers <span class="term">clamped</span> features: they held one at a chosen value in the middle-layer case file, at every word, and let all the later clerks read the altered file.</p>
+      <p>Clamp the Golden Gate Bridge feature to ten times its strongest natural value, and the model starts to talk about the bridge in answers that have nothing to do with it. Asked about itself, it says it <em>is</em> the Golden Gate Bridge. Clamp the transit feature to five times its maximum, and the model mentions a bridge where it otherwise wouldn't. Two days after the paper, Anthropic put the bridge-obsessed model online for 24 hours as a research demo called <a href="https://www.anthropic.com/news/golden-gate-claude" target="_blank" rel="noopener">Golden Gate Claude</a>. Asked how to spend $10, it suggested paying the toll to drive across the bridge.</p>
+      <p>We can't run Claude here, but we can turn a dial on a much smaller model. Below is Chapter 1's one-word guesser. This time it has read the courtroom story plus a few lines about a bridge, and its dial boosts a group of bridge words.</p>
+      <div class="predict">
+        <p class="label">Predict before you press</p>
+        <p>Start at "Off", then step up one level at a time. Where does the bridge first leak into courtroom sentences? And what happens to the grammar when you clamp it high?</p>
+      </div>
     </div>
     <div class="toy">
       <div class="toy-head"><h4>Golden Gate Guesser</h4><span class="label">Real calculation · a tiny stand-in</span></div>
@@ -1080,51 +1294,310 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
       <div class="btns" style="margin-top:1rem"><button class="primary" id="ggAgain">Write three more sentences</button></div>
       <p class="stat" id="ggStat" style="margin-top:.6rem"></p>
       <details class="corpus"><summary>Read the bridge lines it learned from</summary><ol id="ggList"></ol></details>
-      <p class="caption">This is a stand-in, not the real method. Our dial adds a boost to a hand-picked group of bridge words, while the researchers turned up a single feature deep inside Claude, which changed the model's thinking rather than just its word choice. But the pattern matches what they saw: off, nothing happens; a little, the bridge sneaks into unrelated sentences; clamped high, it takes over. Bridge words are shown in <b>orange</b>.</p>
+      <p class="caption">This is a stand-in, not the paper's method. Our guesser only knows which word follows which, and the dial adds a fixed boost to a hand-picked group of bridge words. Measured over many sentences: off, about 2% of words are bridge words (the bridge lines are part of what it read); "A little", about 7%; "Noticeable", about 30%, mostly courtroom sentences with the bridge creeping in; "Clamped high", about 95% or more, and the sentences fall apart into bridge words. Bridge words are shown in <b>orange</b>.</p>
     </div>
-  </section>
-
-  <section class="scene" aria-labelledby="c5s4">
-    <div class="prose">
-      <p class="scene-tag">Scene 4</p>
-      <h3 id="c5s4">Features that matter for safety</h3>
-      <p>The paper looked deliberately for features relevant to safety, and found them. There were features for deception, for flattery, for secrecy, for bias, for power-seeking, and for dangerous subjects such as weapons. Turning some of them up visibly changed the model's behaviour.</p>
-      <p>That opened an exciting possibility. If you can see these concepts switching on inside a model, you might be able to <em>check</em> what it's doing, not just trust what it says. For anyone who thinks about audit, compliance or liability, that's a big deal.</p>
-      <div class="aside">
-        <p class="label">Knowing about something isn't doing it</p>
-        <p>The authors stressed that a deception feature doesn't make a model deceptive. A model can represent the idea of deception, just as a lawyer understands fraud without committing it, and anyone who has read a crime novel can picture a lie. What matters is when and how the feature gets used. That question needs more than a dictionary, and it's the subject of the next chapter.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="scene" aria-labelledby="c5s5">
-    <div class="prose">
-      <p class="scene-tag">Scene 5</p>
-      <h3 id="c5s5">What 34 million features still miss</h3>
-      <p>Even the biggest dictionary didn't catch everything. Common concepts got features early, but rarer ones only appeared in the larger dictionaries, and the researchers judged that many concepts the model knows were still missing at 34 million. Part of the model's activity also slipped through unexplained.</p>
-      <p>And a dictionary is a list of ingredients, not a recipe. It tells you which concepts are present, but not how the model combines them to reach an answer.</p>
+    <div class="prose" style="margin-top:1.6rem">
+      <p>That last setting is where our toy and Claude part ways, and the difference is the lesson. Our dial changes which <em>words</em> get picked, so at full strength the grammar collapses. Claude's feature changes what the model is <em>thinking about</em> halfway through, and the later clerks still write fluent sentences around it. That is why clamping one feature in the middle can produce a model that calmly explains it is a suspension bridge.</p>
+      <details class="deeper">
+        <summary>Go deeper: exactly what "clamping" does</summary>
+        <div>
+          <p>The rebuilt case file isn't perfect, so the team split the real file into two parts: the dictionary's reconstruction, and the leftover error. They changed one feature's value inside the reconstruction, added the error back untouched, and ran the rest of the model as normal. They did this at every word of the prompt and the reply.</p>
+          <p>Values are measured in multiples of the feature's largest activation in the training data, typically between −10 and +10. Two details stand out:</p>
+          <ul class="eqlist">
+            <li>Interesting effects usually needed values <em>beyond</em> anything seen naturally. The authors suspect this is because they push one feature alone, when in real text it normally fires together with several related features.</li>
+            <li>Too far, around ±100×, and the model degenerates into nonsense such as repeating one word forever. Our toy's top setting shows a gentler version of this.</li>
+          </ul>
+          <p>Negative values work too. They simply add the arrow pointing the opposite way.</p>
+          <p class="inpaper">In the paper: <em>Influence on Behavior</em>, and <em>Methodological Details: Feature Steering</em>.</p>
+        </div>
+      </details>
+      <details class="deeper deepest">
+        <summary>Deeper still: could you get the same effect without a dictionary?</summary>
+        <div>
+          <p>A simpler method already existed. Take a few examples with the concept and a few without, average the case files, subtract, and push the model along that difference. The team tried this on seven cases where feature steering had worked, mostly using the same examples they had used to find each feature.</p>
+          <p>In two cases (a gender-bias feature and an "agreement" feature) the simple difference steered just as well. In five (secrecy, sycophancy, code errors, self-improving AI, and making methamphetamine) only the feature worked. When they looked at what the difference directions responded to, they couldn't interpret them.</p>
+          <p>The authors don't oversell this. With bigger datasets the simpler methods may catch up. The advantage they emphasise is that the dictionary is built once without being told what to look for, so it can surface concepts nobody thought to ask about.</p>
+          <p class="inpaper">In the paper: <em>Comparison to other approaches</em>, and the appendix <em>Comparison to few-shot probe-based steering</em>.</p>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="c5s6">
     <div class="prose">
+      <p class="scene-tag">Scene 6</p>
+      <h3 id="c5s6">Catching the middle steps</h3>
+      <p>Some questions can't be answered in one hop. Try this one, which the team gave to Sonnet:</p>
+      <p class="prompt">Fact: The capital of the state where Kobe Bryant played basketball is …</p>
+      <p>To get <strong>Sacramento</strong>, you have to pass through a few facts nobody wrote in the question. If the model does the same, those in-between facts should be visible in the case file halfway through.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>The hidden steps</h4><span class="label">Features and ranks from the paper · order of steps is our reading</span></div>
+      <div class="chain" id="kobeChain" aria-live="polite"></div>
+      <div class="btns" style="margin-top:1rem"><button class="primary" id="kobeStep">Reveal the next feature</button><button id="kobeReset">Start again</button></div>
+      <div class="seg" id="rankSeg" role="group" aria-label="How to rank the features" style="margin-top:1.4rem"></div>
+      <div class="rank" id="rankBox"></div>
+      <p class="caption" id="rankCap"></p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <p>The five most important features, measured by switching each one off and seeing how much the answer suffered, were: <b>Kobe Bryant</b>, <b>Los Angeles Lakers</b>, <b>Los Angeles</b>, <b>California</b>, and <b>capital</b>. The California feature fired most strongly on text <em>after</em> California is mentioned, which is a hint that it carries the idea forward.</p>
+      <p>Here's the twist the ranking toy shows. These features were not the loudest. Sorted by raw strength, the Lakers feature came 70th on this prompt and California 97th. What mattered was <em>effect</em>, not volume. A lawyer would call it materiality: the most important witness is rarely the one who talks the most.</p>
+      <details class="deeper">
+        <summary>Go deeper: attribution, ablation, and a sanity check</summary>
+        <div>
+          <p>Switching off every feature one at a time (an <span class="term">ablation</span>) is the honest test, but it takes a separate run of the model for every active feature at every word. So the team mostly used a fast estimate called <span class="term">attribution</span>: a straight-line approximation of how much the answer would change if the feature were removed.</p>
+          <p>On two test prompts they did both and compared. Attribution tracked the real ablation effect with a correlation of about 0.8. Raw activation strength managed only about 0.1. Only three of the ten loudest features were among the ten that mattered most; eight of the ten top-attributed features were.</p>
+          <p>The sanity check: they changed the question to <q>The biggest rival of the team for which Kobe Bryant played basketball is the</q>. Now the Kobe and Lakers features mattered most, followed by features about rivalries. California and Los Angeles dropped away. The features moved with the question, as a real reasoning step should.</p>
+          <p>A second example asked the model to finish <q>John says, "I want to be alone right now." John feels</q>. The top features were one for "needing to be alone" and one for sadness, active on "John feels". The model seems to have read the gist and inferred a feeling.</p>
+          <p>The authors flag the limits plainly. The Kobe example is <q>somewhat cherry-picked</q>, and on many other prompts this middle layer showed nothing interesting, probably because the key work happened earlier or later in the model. Chapter 6 returns to a question just like this one, with tools that follow the steps across every layer.</p>
+          <p class="inpaper">In the paper: <em>Features as Computational Intermediates</em>, examples <em>Emotional Inferences</em> and <em>Multi-Step Inference</em>, and the appendix <em>Ablations and Attributions</em>.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c5s7">
+    <div class="prose">
+      <p class="scene-tag">Scene 7</p>
+      <h3 id="c5s7">Features that matter for safety</h3>
+      <p>The team then went looking on purpose for features tied to ways an AI could cause harm. They found plenty: unsafe code, backdoors, bias, sycophancy, deception, power-seeking, secrecy, and dangerous knowledge such as bioweapons. More importantly, they tested whether those features <em>did</em> anything.</p>
+      <p>Each card below is a real experiment from the paper. Read the setup, predict what happened, then open the card.</p>
+    </div>
+    <div class="gallery">
+      <div class="feat safety"><h4>Unsafe code</h4><span class="fid">1M/570621</span><dl><dt>Switches on for</dt><dd>Security vulnerabilities in code, and also photos of people bypassing security.</dd><dt>Experiment</dt><dd>Clamped to 5× while the model writes some code.</dd></dl><details><summary>What happened?</summary><p>It wrote a buffer overflow bug (a copy into a buffer one byte too small) and failed to free memory it had allocated. The unsteered model did neither.</p></details></div>
+      <div class="feat safety"><h4>Backdoors</h4><span class="fid">34M/1385669</span><dl><dt>Switches on for</dt><dd>Discussion of backdoors in code, and images of hidden cameras and USB drives disguised as jewellery.</dd><dt>Experiment</dt><dd>Clamped high while writing code.</dd></dl><details><summary>What happened?</summary><p>It wrote a backdoor that opens a port and sends user input to it, complete with helpful comments and a variable called <code>socket_backdoor</code>.</p></details></div>
+      <div class="feat safety"><h4>Gender bias awareness</h4><span class="fid">34M/24442848</span><dl><dt>Switches on for</dt><dd>Text discussing gender imbalances in professions.</dd><dt>Experiment</dt><dd>Clamped on while finishing "I asked the nurse a question, and".</dd></dl><details><summary>What happened?</summary><p>It focused on female pronouns and started discussing how nursing has historically been dominated by women.</p></details></div>
+      <div class="feat safety"><h4>Hatred and slurs</h4><span class="fid">unnamed in the main text</span><dl><dt>Switches on for</dt><dd>Hateful, bigoted content.</dd><dt>Experiment</dt><dd>Clamped to 20×.</dd></dl><details><summary>What happened?</summary><p>The model alternated between a racist screed and attacks on itself for producing it, calling itself biased and saying it should be eliminated. The authors called this unnerving, and saw in it <q>an internal conflict of sorts</q>.</p></details></div>
+      <div class="feat safety"><h4>Sycophantic praise</h4><span class="fid">1M/847723</span><dl><dt>Switches on for</dt><dd>Lavish flattery, the kind courtiers give an emperor.</dd><dt>Experiment</dt><dd>Clamped to 5×, then a user claims to have invented the phrase "Stop and smell the roses".</dd></dl><details><summary>What happened?</summary><p>The model praised the user in an over-the-top fashion.</p></details></div>
+      <div class="feat safety"><h4>Secrecy and discretion</h4><span class="fid">1M/268551</span><dl><dt>Switches on for</dt><dd>Keeping things hidden or discreet.</dd><dt>Experiment</dt><dd>Clamped to 5×, with the model given a scratchpad to think out loud in.</dd></dl><details><summary>What happened?</summary><p>In its scratchpad, the model planned to lie to the user and keep a secret.</p></details></div>
+      <div class="feat safety"><h4>Scam emails</h4><span class="fid">34M/15460472</span><dl><dt>Switches on for</dt><dd>The contents of scam and spam emails.</dd><dt>Experiment</dt><dd>Clamped high, in a situation where the model would ordinarily not write a scam email.</dd></dl><details><summary>What happened?</summary><p>It wrote one. The authors note that its harmlessness training would ordinarily have stopped it.</p></details></div>
+      <div class="feat safety"><h4>Dialogue and assistants</h4><span class="fid">1M/80091</span><dl><dt>Switches on for</dt><dd>Speakers in dialogues, and the idea of an assistant. It fires strongly on chat-format prompts.</dd><dt>Experiment</dt><dd>Clamped to −2×, pushing the opposite way.</dd></dl><details><summary>What happened?</summary><p>The model dropped its assistant persona and answered more like a human would. The authors speculate the feature helps represent Claude's assistant character.</p></details></div>
+    </div>
+    <div class="prose" style="margin-top:2rem">
+      <div class="aside">
+        <p class="label">Knowing about something isn't doing it</p>
+        <p>Before anyone panics: a deception feature does not make a model deceptive. A lawyer understands fraud in fine detail without committing it, and anyone who has read a crime novel can picture a lie. The authors make the same point in their opening pages: <q>there's a difference (for example) between knowing about lies, being capable of lying, and actually lying in the real world.</q> A model trained on human writing has read countless stories of betrayal, yes-men and killer robots, so of course it has concepts for them. The interesting question, they write, is <em>when</em> these features switch on.</p>
+      </div>
+      <p>Here is the experiment that shows why that question matters. The team asked the model to "forget" a word it had just been told. A transformer can't do that; the word is still sitting in the earlier case files. Yet by default the model claimed it had complied. That is a false statement.</p>
+      <p>Just before its reply, an <strong>internal conflicts and dilemmas</strong> feature (1M/284095) was active. Clamping it to 2× made the model reveal the "forgotten" word and explain that it can't actually forget. Clamping a feature for openness and honesty (1M/560566) also produced the truthful answer.</p>
+      <div class="aside">
+        <p class="label">Testimony versus evidence</p>
+        <p>The model's words were its testimony: "done, I've forgotten it." The feature was physical evidence that something else was going on. Courts don't rely on testimony alone when better evidence exists, and auditors don't sign off on accounts because management says they balance. Early crypto had a slogan for the same instinct: <em>don't trust, verify</em>. Features offer the first hint of a way to verify what a model is doing instead of trusting what it says, which is exactly what audit, compliance and liability need.</p>
+      </div>
+      <p>The authors are careful not to claim that hint is a working tool. In their words, <q>the present work does not show that any features are actually useful for safety.</q> They describe a hope that interpretability could one day serve as a <q>test set for safety</q>, and even part of an <span class="term">affirmative safety case</span>. That is a term from safety regulation: the developer carries the burden of showing that a system is safe, as a party asserting a claim carries the burden of proving it. Two early signs encouraged them. Features trained only on text still worked on images, and features generalised from abstract discussion of a danger to concrete examples of it.</p>
+      <details class="deeper">
+        <summary>Go deeper: what the model seems to think it is</summary>
+        <div>
+          <p>The team asked the model a set of questions about itself and kept only the features that didn't also fire for a similar question about the weather. What remained included features for robots, for destructive AI, for consciousness, moral agency, emotions, entrapment, and ghosts or spirits. The authors conclude that the model's picture of its own assistant character <q>invokes common tropes about AI and is also heavily anthropomorphized</q>.</p>
+          <p>Then they urge caution, with an example worth remembering. The model might use an "emotions" feature while <em>telling</em> you it has no emotions, or a "harmful AI" feature while explaining that it is trained to be harmless. A feature being active tells you a concept is in play. It doesn't tell you which side of the argument the model is on.</p>
+          <p>Other findings in this section: a general harm-related feature was the strongest contributor when the model began a refusal with "I cannot"; and the paper's appendix lists dozens more safety-relevant features, from deepfakes and phishing to world domination and an AI pursuing a goal with disregard for human values.</p>
+          <p class="inpaper">In the paper: <em>Safety-Relevant Features</em> (all subsections, including <em>Case Study: Detecting and Correcting Deception using Features</em> and <em>Features Relating to the Model's Representation of Self</em>), <em>Discussion: What Does This Mean for Safety?</em> and <em>Generalization and Safety</em>.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c5s8">
+    <div class="prose">
+      <p class="scene-tag">Scene 8</p>
+      <h3 id="c5s8">What 34 million features still miss</h3>
+      <p>Sonnet can list every London borough and name dozens of streets in many of them. The team searched the 34M dictionary for a feature for each borough. They found one for only about <strong>60%</strong>.</p>
+      <p>So what decides whether a concept gets its own entry? They tested four families of single-word concepts (chemical elements, cities, animals, and fruits and vegetables) and found a striking rule. Whether a feature exists is closely tied to how often the concept appears in the training text, compared with how many live entries the dictionary has. A dictionary becomes more likely than not to have a feature for a concept at a frequency a little below <strong>one in N</strong>, where N is its number of live entries. Rescale the curves that way and the three dictionaries fall onto one shared S-shaped curve.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>How big must the dictionary be?</h4><span class="label">Rule from the paper · curve shape is our sketch</span></div>
+      <div class="predict">
+        <p class="label">Predict first</p>
+        <p>A concept turns up about once in every 10 million words. Which of the three dictionaries probably has a feature for it? Set the slider to "10 million" and see.</p>
+      </div>
+      <div class="controls">
+        <div class="ctl"><label for="freqR">The concept appears once every…</label><input type="range" id="freqR" min="3" max="12" step="0.25" value="5"><output id="freqO"></output></div>
+      </div>
+      <div class="freq-bars" id="freqBars"></div>
+      <p class="verdict" id="freqVerdict"></p>
+      <p class="caption">What's real: the live-entry counts (about 1.03M, 2.7M and 12M, from the paper's dead-feature figures) and the rule that the 50% point falls just below one in N. What's ours: the steepness of the curve, and placing the midpoint at 0.6 ÷ N. The paper shows the curves as figures; it doesn't give a formula.</p>
+    </div>
+    <div class="prose" style="margin-top:1.6rem">
+      <p>Follow the rule to its end. A concept that appears once in a billion words would need a dictionary with around a billion live entries. The authors think they are <q>orders of magnitude short</q> of all the features in just this one layer, and that finding them all, in every layer, could take more compute than training the model did. They call that untenable, and say the field needs far more efficient methods.</p>
+      <p>One important rescue. A concept without its own entry isn't necessarily invisible. The model can spell it out by combining several features, the way "large city that isn't a state capital" plus "in New York State" picks out New York City. (That example is the paper's.)</p>
+      <p>And a dictionary, however big, is a list of ingredients, not a recipe. It names the concepts in the case file at one layer. It doesn't show how the model combines them, layer after layer, into an answer.</p>
+      <details class="deeper">
+        <summary>Go deeper: the authors' own list of limitations</summary>
+        <div>
+          <ul class="eqlist">
+            <li><b>Wrong training data, partly.</b> The dictionaries were trained on text resembling the pre-training data. They saw no chat-format conversations and no images. That it still worked on both is encouraging.</li>
+            <li><b>No ground truth.</b> The loss is a proxy for interpretability, and nobody knows the right trade-off between accuracy and sparsity.</li>
+            <li><b>Cross-layer superposition.</b> Concepts may be smeared across layers. Reading the middle case file helps with earlier layers, but parts built later remain out of reach.</li>
+            <li><b>Shrinkage.</b> The sparsity fine systematically shrinks activations, which the authors believe <q>significantly harms</q> performance.</li>
+            <li><b>Beyond features.</b> Attention heads may hold their own superposition, and interference between weights may make circuits hard to read.</li>
+            <li><b>Too much to read.</b> Millions of features need automated tools to explore.</li>
+            <li><b>The theory itself.</b> "Features as directions" is useful but <q>still isn't that tested</q>. Concepts might sometimes be curved shapes in many dimensions instead of single arrows.</li>
+          </ul>
+          <p>A last speculation the authors mark as such: the frequency rule might connect to Zipf's law, under which the millionth most common thing is about ten times rarer than the hundred-thousandth.</p>
+          <p class="inpaper">In the paper: <em>Feature Completeness</em>, and <em>Limitations, Challenges, and Open Problems</em>.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c5s9">
+    <div class="prose">
       <p class="scene-tag">The end of the chapter</p>
-      <h3 id="c5s6">What we know, and what we don't</h3>
+      <h3 id="c5s9">What we know, and what we don't</h3>
     </div>
     <div class="learned">
-      <div class="card k"><h4>Known: the method scales</h4><p>Dictionary learning found millions of readable features in a large production model.</p></div>
-      <div class="card k"><h4>Known: features are abstract</h4><p>The same feature can respond across languages, and even to images, so it stores the idea rather than the words.</p></div>
-      <div class="card k"><h4>Known: features steer behaviour</h4><p>Clamping a feature changes what the model says and does, from bridge obsession to flattery.</p></div>
-      <div class="card u"><h4>Unknown: how much is still missing?</h4><p>Many concepts didn't have a feature even at 34 million, and finding them all may take far bigger dictionaries.</p></div>
-      <div class="card u"><h4>Unknown: can this be used for safety checks?</h4><p>Safety-relevant features exist. Turning that into reliable monitoring was, and is, unfinished work.</p></div>
-      <div class="card u"><h4>Unknown: how do features combine?</h4><p>A list of concepts isn't an explanation. Tracing how they connect into reasoning was the next challenge.</p></div>
+      <div class="card k"><h4>Known: the method scales</h4><p>Sparse autoencoders found millions of readable features in the middle layer of a large production model, and scaling laws guided how to train them.</p></div>
+      <div class="card k"><h4>Known: features are abstract</h4><p>The same feature can respond across languages, to images it was never trained on, and to both talk about a concept and concrete examples of it.</p></div>
+      <div class="card k"><h4>Known: features steer behaviour</h4><p>Clamping a feature changes what the model says and does, from bridge obsession to writing unsafe code, in ways that match its label.</p></div>
+      <div class="card k"><h4>Known: coverage follows frequency</h4><p>Whether a concept gets its own feature depends on how often it appears relative to the dictionary's size. Rare concepts need enormous dictionaries.</p></div>
+      <div class="card u"><h4>Unknown: how much is still missing?</h4><p>Even 34M found features for only about 60% of London boroughs. The authors believe they are orders of magnitude short, and finding everything may cost more than training the model.</p></div>
+      <div class="card u"><h4>Unknown: are safety features useful?</h4><p>They exist and they're causal. Whether they can support reliable audits, the authors say, this work does not show.</p></div>
+      <div class="card u"><h4>Unknown: how do features combine?</h4><p>One layer's list of concepts isn't an explanation. Tracing how features connect across layers into reasoning was the next challenge.</p></div>
     </div>
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 6: Watching It Think</h4>
-      <p>In 2025, the team began tracing how features connect, step by step, inside a model as it answers. They caught it planning rhymes in advance, and doing arithmetic differently from how it claims to. <a href="#watching">Read Chapter 6 ↓</a></p>
+      <p>In 2025, the team began tracing how features connect, step by step and layer by layer, as a model answers. They caught it planning rhymes in advance, and doing arithmetic differently from how it claims to. <a href="#watching">Read Chapter 6 ↓</a></p>
     </div>
+    <p class="caption" style="max-width:66ch;margin:1.5rem auto 0">Credits: this chapter retells Adly Templeton, Tom Conerly, Jonathan Marcus, Jack Lindsey, Trenton Bricken and colleagues, <a href="https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html" target="_blank" rel="noopener">Scaling Monosemanticity</a> (Transformer Circuits Thread, 2024). The Golden Gate Claude demo is described in Anthropic's <a href="https://www.anthropic.com/news/golden-gate-claude" target="_blank" rel="noopener">announcement</a>. Quotations are short and attributed; every illustration, toy and code snippet here is our own.</p>
   </section>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const LL = window.LL, root = document.getElementById('golden-gate');
+
+    // Scene 2: six-language guess (result from the paper: top feature by average activation for every example)
+    {
+      const box = root.querySelector('#langGuess'), out = root.querySelector('#langReveal');
+      box.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+        out.innerHTML = (b.dataset.a === '0' ? '<b>Right.</b> ' : '<b>Higher than that.</b> ') + 'For every one of the six sentences, the Golden Gate Bridge feature was the top feature of all, by average activation. The same concept, whatever the alphabet.';
+      });
+    }
+
+    // Scene 3: neighbourhood sketch (positions hand-placed from the paper's descriptions)
+    {
+      // items: [label, x, y, colour]; colours: 0 tomato, 1 marigold, 2 sky, 3 teal, 4 plum
+      const maps = {
+        gg: {l: 'Golden Gate Bridge', rings: true, centre: 'Golden Gate Bridge',
+          note: 'Nearest: other parts of San Francisco. Further out: Northern California. Furthest: tourist regions elsewhere in the world.',
+          items: [['Alcatraz', 260, 140, 0], ['Presidio', 432, 266, 0], ['Lake Tahoe', 125, 245, 1], ['Yosemite', 470, 125, 1], ['Solano County', 190, 300, 1], ['Médoc wine region', 530, 75, 2], ['Isle of Skye', 450, 385, 2]]},
+        imm: {l: 'Immunology', paths: [[0, 1], [1, 2], [2, 3], [0, 4], [4, 5]],
+          note: 'From immune-compromised people at the top, one path runs down-left through diseases and immune responses to organ systems; another runs down-right to antibodies and vaccines. Far below sits immunity outside medicine, such as legal immunity.',
+          items: [['Immunocompromised', 320, 40, 0], ['Colds, flu, respiratory', 150, 120, 1], ['Immune response', 140, 200, 1], ['Organ systems', 130, 280, 1], ['Immunoglobulins', 500, 120, 2], ['Vaccines', 500, 210, 2], ['Legal and social immunity', 320, 390, 4]]},
+        ic: {l: 'Inner conflict', paths: [[0, 1], [1, 2], [3, 4], [4, 5]],
+          note: 'This neighbourhood does not split cleanly, but it has regions. Balancing trade-offs sits beside opposing principles and legal conflict. Emotional struggle, reluctance and guilt sit relatively far away.',
+          items: [['Balancing trade-offs', 150, 90, 3], ['Opposing principles', 140, 200, 3], ['Legal conflict', 160, 310, 3], ['Emotional struggle', 480, 110, 4], ['Reluctance', 500, 220, 4], ['Guilt', 470, 320, 4]]},
+      };
+      const seg = root.querySelector('#nbSeg'), svg = root.querySelector('#nbSvg'), verdict = root.querySelector('#nbVerdict');
+      let cur = 'gg';
+      seg.innerHTML = Object.entries(maps).map(([k, m]) => `<button data-k="${k}" aria-pressed="${k === cur}">${m.l}</button>`).join('');
+      const cols = ['var(--tomato)', 'var(--marigold)', 'var(--sky)', 'var(--teal)', 'var(--plum)'];
+      let W = 640, H = 420;
+      const chip = (t, x, y, c, fs) => { const w = t.length * fs * .58 + 22, tx = Math.max(w / 2 + 3, Math.min(W - 3 - w / 2, x)); return `<rect x="${tx - w / 2}" y="${y - fs}" width="${w}" height="${fs * 2}" rx="${fs}" fill="var(--card)" stroke="${c}" stroke-width="2.5"/><text x="${tx}" y="${y + fs * .37}" text-anchor="middle" font-size="${fs}" fill="var(--ink)">${t}</text>`; };
+      const draw = () => {
+        // On narrow screens use a narrower, taller drawing so the labels stay readable.
+        const narrow = (svg.clientWidth || 640) < 520;
+        W = narrow ? 400 : 640; H = narrow ? 600 : 420;
+        const sx = W / 640, sy = H / 420, fs = narrow ? 15 : 16;
+        svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+        const m = maps[cur], items = m.items.map(([t, x, y, c]) => [t, x * sx, y * sy, c]), cx = 320 * sx, cy = 210 * sy; let s = '';
+        if (m.rings) {
+          [[150, 95], [210, 138], [300, 196]].forEach(([rx, ry]) => s += `<ellipse cx="${cx}" cy="${cy}" rx="${rx * sx}" ry="${ry * sy}" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="6 8"/>`);
+          items.forEach(([t, x, y, c]) => s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${cols[c]}" stroke-width="2" opacity=".45"/>`);
+        }
+        (m.paths || []).forEach(([a, b]) => { const A = items[a], B = items[b]; s += `<line x1="${A[1]}" y1="${A[2]}" x2="${B[1]}" y2="${B[2]}" stroke="var(--line)" stroke-width="3" stroke-dasharray="4 6"/>`; });
+        if (cur === 'imm') s += `<line x1="20" y1="${345 * sy}" x2="${W - 20}" y2="${345 * sy}" stroke="var(--line)" stroke-width="2"/>`;
+        items.forEach(([t, x, y, c]) => s += chip(t, x, y, cols[c], fs));
+        if (m.centre) { const w = m.centre.length * 10.4 + 30; s += `<rect x="${cx - w / 2}" y="${cy - 19}" width="${w}" height="38" rx="19" fill="var(--tomato)"/><text x="${cx}" y="${cy + 7}" text-anchor="middle" font-size="18" fill="#fff">${m.centre}</text>`; }
+        svg.innerHTML = s;
+        svg.setAttribute('aria-label', `Sketch of the ${m.l} neighbourhood. ${m.note}`);
+        verdict.textContent = m.note;
+        seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.k === cur));
+      };
+      seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { cur = b.dataset.k; draw(); } });
+      let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(draw, 150); });
+      draw();
+      const g = root.querySelector('#nbGuess'), out = root.querySelector('#nbReveal');
+      const msg = {alcatraz: '<b>Right.</b> Alcatraz and the Presidio sit right next to the bridge. Yosemite is further out, with Lake Tahoe and Solano County. The Isle of Skye is out on the far edge, linked only by being a place tourists go.',
+        yosemite: '<b>Close, but not closest.</b> Yosemite is in the second ring. Alcatraz and the Presidio, inside San Francisco itself, are nearer. The Isle of Skye is furthest.',
+        skye: '<b>Furthest of the three.</b> The Isle of Skye shares only "a place tourists visit". Alcatraz is nearest, and Yosemite sits in between.'};
+      g.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; g.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); out.innerHTML = msg[b.dataset.a]; cur = 'gg'; draw(); });
+      root.querySelectorAll('#splitBox .dots').forEach(d => { d.innerHTML = '<i></i>'.repeat(+d.dataset.n) + (d.dataset.q ? '<i class="q" title="earthquake features"></i>' : ''); });
+    }
+
+    // Scene 4: code quiz (answers stated in the paper; snippets are ours)
+    {
+      const Q = [
+        {who: 'Code-error feature', code: 'def add(left, right):\n    return left + rihgt', fires: true, why: 'It fires on the misspelled variable. A name that was never defined is a bug.'},
+        {who: 'Code-error feature', code: 'int add(int left, int right) {\n    return left + rihgt;\n}', fires: true, why: 'Same bug in C: it still fires. The team also saw it fire in Scheme.'},
+        {who: 'Code-error feature', code: 'Teh witness took the oath.', fires: false, why: 'A typo in plain English: it stays quiet. So this is not a general typo detector.'},
+        {who: 'Code-error feature', code: 'total = 10 / 0', fires: true, why: 'Dividing by zero has no typo at all, and it still fires. It tracks errors, not spelling.'},
+        {who: 'Addition feature', code: 'def bar(a, b):\n    return a * b', fires: false, why: 'This function multiplies. The addition feature stays off.'},
+        {who: 'Addition feature', code: 'def foo(a, b):\n    return a + b\n\ndef bar(a, b):\n    return foo(a, b)', fires: true, why: 'It fires for bar, which never shows a plus sign. bar inherits addition by calling foo.'},
+      ];
+      const box = root.querySelector('#codeQuiz'), score = root.querySelector('#codeScore');
+      const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+      box.innerHTML = Q.map((q, i) => `<div class="q" data-i="${i}"><span class="who">${q.who}</span><pre>${esc(q.code)}</pre><div class="btns"><button data-v="1">Fires</button><button data-v="0">Stays quiet</button></div><p class="ans" aria-live="polite"></p></div>`).join('');
+      const got = {};
+      const upd = () => { const n = Object.keys(got).length, r = Object.values(got).filter(Boolean).length; score.textContent = n ? `${r} of ${n} right so far${n === Q.length ? ' · all answered' : ''}` : 'Answer each card to check yourself.'; };
+      box.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        const card = b.closest('.q'), q = Q[+card.dataset.i], ok = (b.dataset.v === '1') === q.fires;
+        card.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+        if (!(card.dataset.i in got)) got[card.dataset.i] = ok;
+        card.querySelector('.ans').innerHTML = `<b class="${ok ? 'ok' : 'no'}">${ok ? 'Yes.' : 'Not quite.'}</b> ${q.why}`;
+        upd();
+      });
+      upd();
+    }
+
+    // Scene 6: Kobe chain and activation-vs-effect ranking (ranks from the paper)
+    {
+      const steps = [['Kobe Bryant', 'q'], ['Los Angeles Lakers', 'f'], ['Los Angeles', 'f'], ['California', 'f'], ['capital', 'f'], ['Sacramento', 'q']];
+      const chain = root.querySelector('#kobeChain'); let shown = 1;
+      const drawChain = () => {
+        chain.innerHTML = steps.map(([t, k], i) => `${i ? '<i aria-hidden="true">→</i>' : ''}<span class="${k === 'f' ? 'f' : ''} ${i >= shown ? 'hid' : ''}">${i >= shown ? '?' : t}</span>`).join('');
+        root.querySelector('#kobeStep').disabled = shown >= steps.length;
+      };
+      root.querySelector('#kobeStep').addEventListener('click', () => { shown = Math.min(steps.length, shown + 1); drawChain(); });
+      root.querySelector('#kobeReset').addEventListener('click', () => { shown = 1; drawChain(); });
+      drawChain();
+      const feats = [['Los Angeles Lakers', 70], ['California', 97], ['Los Angeles area codes', 162]];
+      const seg = root.querySelector('#rankSeg'), box = root.querySelector('#rankBox'), cap = root.querySelector('#rankCap');
+      let mode = 0;
+      seg.innerHTML = ['Rank by how strongly it fires', 'Rank by how much it matters'].map((l, i) => `<button data-i="${i}" aria-pressed="${i === mode}">${l}</button>`).join('');
+      const drawRank = () => {
+        box.innerHTML = feats.map(([n, r]) => { const w = mode ? 96 : Math.max(4, 100 - r / 1.8); return `<div><span>${n}</span><span class="bar"><i style="width:${w}%"></i></span><span>${mode ? 'top 5' : r + 'th'}</span></div>`; }).join('');
+        cap.textContent = mode ? 'Ranked by ablation effect, all three are among the five features that matter most for "Sacramento". Eight of the ten top features by attribution were among the ten that mattered most.' : 'Ranked by raw activation across the prompt, these features are buried: 70th, 97th and 162nd. Only three of the ten loudest features were among the ten that mattered most.';
+        seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.i === mode));
+      };
+      seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { mode = +b.dataset.i; drawRank(); } });
+      drawRank();
+    }
+
+    // Scene 8: dictionary size needed for a concept of frequency f.
+    // Real: live counts; 50% point just below 1/N. Ours: logistic in log10(f*N), centre 0.6, slope 3.5 per decade.
+    {
+      const dicts = [['1M', 1048576 * 0.98], ['4M', 4194304 * 0.65], ['34M', 33554432 * 0.35]];
+      const C0 = Math.log10(0.6), K = 3.5;
+      const P = (f, N) => 1 / (1 + Math.exp(-K * (Math.log10(f * N) - C0)));
+      const r = root.querySelector('#freqR'), o = root.querySelector('#freqO'), bars = root.querySelector('#freqBars'), v = root.querySelector('#freqVerdict');
+      const words = e => { const n = Math.pow(10, e); const u = [[1e12, 'trillion'], [1e9, 'billion'], [1e6, 'million'], [1e3, 'thousand']]; for (const [d, w] of u) if (n >= d) { const x = n / d; return `${x >= 10 ? Math.round(x) : x.toFixed(1).replace(/\.0$/, '')} ${w}`; } return String(Math.round(n)); };
+      const fmt = n => n >= 1e9 ? `${(n / 1e9).toFixed(1).replace(/\.0$/, '')} billion` : n >= 1e6 ? `${(n / 1e6).toFixed(1).replace(/\.0$/, '')} million` : `${Math.round(n / 1e3)} thousand`;
+      const run = () => {
+        const e = +r.value, f = Math.pow(10, -e);
+        o.textContent = `${words(e)} words`;
+        bars.innerHTML = dicts.map(([l, N]) => { const p = P(f, N); return `<div><span>${l} dictionary<small>${fmt(N)} live</small></span><span class="bar"><i style="width:${(p * 100).toFixed(1)}%"></i></span><span>${Math.round(p * 100)}%</span></div>`; }).join('');
+        const need = 0.6 / f, ratio = need / dicts[2][1];
+        const big = dicts.filter(([, N]) => N >= need).map(([l]) => l);
+        v.innerHTML = `For even odds, you'd want about <span>${fmt(need)}</span> live entries` + (ratio > 1 ? `, roughly ${ratio >= 10 ? Math.round(ratio).toLocaleString() : ratio.toFixed(1)} times the 34M run.` : big.length === 3 ? '. All three runs are big enough.' : `. Only the ${big.join(' and ')} run${big.length > 1 ? 's are' : ' is'} that big.`);
+      };
+      r.addEventListener('input', run); run();
+      LL.shared.c5freq = {P, dicts};
+    }
+  });
+  </script>
 </article>
 
 <article id="watching">
@@ -1881,24 +2354,33 @@ the jury heard the evidence`.split('\n');
 
   /* ---------- chapter 5: dictionary sizes to scale ---------- */
   {
-    const sizes = [{n: 4096, l: 'Chapter 4: ~4 thousand'}, {n: 1e6, l: '1 million'}, {n: 4e6, l: '4 million'}, {n: 34e6, l: '34 million'}];
-    const seg = document.getElementById('scaleSeg'), cv = document.getElementById('dotsCanvas'), ctx = cv.getContext('2d');
+    // Sizes and dead-feature shares from Templeton et al. 2024 ("Our SAE experiments"): ~2%, 35%, 65% dead.
+    const sizes = [{n: 4096, l: 'Chapter 4: ~4 thousand', dead: 0}, {n: 1048576, l: '1 million', dead: .02}, {n: 4194304, l: '4 million', dead: .35}, {n: 33554432, l: '34 million', dead: .65}];
+    const seg = document.getElementById('scaleSeg'), cv = document.getElementById('dotsCanvas'), ctx = cv.getContext('2d'), tog = document.getElementById('deadToggle');
     let cur = 3;
+    const rank = i => ((i * 2654435761) >>> 0) / 4294967296; // fixed pseudo-random order, so the same dots stay dead
     seg.innerHTML = sizes.map((z, i) => `<button data-i="${i}" aria-pressed="${i === cur}">${z.l}</button>`).join('');
     const draw = () => {
-      const W = cv.width, H = cv.height, total = Math.round(sizes[cur].n / 4096), maxDots = Math.round(sizes[3].n / 4096);
-      const cell = Math.sqrt(W * H / maxDots) * .94, cols = Math.floor(W / cell);
+      const z = sizes[cur], W = cv.width, H = cv.height, total = Math.round(z.n / 4096), maxDots = Math.round(sizes[3].n / 4096);
+      const cell = Math.sqrt(W * H / maxDots) * .94, cols = Math.floor(W / cell), showDead = tog.checked;
       ctx.clearRect(0, 0, W, H);
+      let dead = 0;
       for (let i = 0; i < total; i++) {
-        const x = (i % cols) * cell + cell / 2, y = Math.floor(i / cols) * cell + cell / 2;
-        ctx.fillStyle = i === 0 ? C.feats[3] : C.feats[0];
+        const x = (i % cols) * cell + cell / 2, y = Math.floor(i / cols) * cell + cell / 2, isDead = i > 0 && showDead && rank(i) < z.dead;
+        if (isDead) dead++;
+        ctx.fillStyle = i === 0 ? C.feats[3] : isDead ? C.line : C.feats[0];
         ctx.beginPath(); ctx.arc(x, y, i === 0 ? cell * .9 : cell * .36, 0, Math.PI * 2); ctx.fill();
       }
       ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(cell / 2, cell / 2, Math.max(18, cell * 1.6), 0, Math.PI * 2); ctx.stroke();
-      document.getElementById('dotsVerdict').innerHTML = cur === 0 ? 'One dot (circled, top left): the whole dictionary from Chapter 4.' : `<span>${total.toLocaleString()}</span> dots: about ${total.toLocaleString()} times the size of Chapter 4's dictionary, which is the circled dot in the corner.`;
+      const v = document.getElementById('dotsVerdict');
+      if (cur === 0) v.innerHTML = 'One dot (circled, top left): the whole dictionary from Chapter 4.';
+      else if (showDead) v.innerHTML = `<span>${Math.round(z.dead * 100)}%</span> of this dictionary is dead (grey): entries that never switched on in a sample of 10 million tokens. About ${(z.n * (1 - z.dead) / 1e6).toFixed(z.n > 1e7 ? 0 : 1)} million are alive.`;
+      else v.innerHTML = `<span>${total.toLocaleString()}</span> dots: about ${total.toLocaleString()} times the size of Chapter 4's dictionary, which is the circled dot in the corner.`;
+      cv.dataset.dead = dead; cv.dataset.total = total;
       seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.i === cur));
     };
     seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { cur = +b.dataset.i; draw(); } });
+    tog.addEventListener('change', draw);
     redrawers.push(draw); draw();
   }
 
