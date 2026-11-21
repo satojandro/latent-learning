@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Latent Learning</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="A storybook about what happens inside AI models, told one discovery at a time.">
@@ -65,7 +66,7 @@ strong{font-weight:600}
 .chap.soon{opacity:.72}
 
 /* chapter title */
-.chapter-head{text-align:left;padding:3rem 0 2rem;border-top:3px dashed var(--line)}
+.chapter-head{text-align:left;padding:3rem max(0px, calc((100% - 66ch) / 2)) 2rem;border-top:3px dashed var(--line)}
 .chapter-head .num{font-family:var(--f-display);font-weight:800;font-size:1rem;color:#fff;background:var(--plum);display:inline-block;padding:.25rem .8rem;border-radius:999px}
 .chapter-head h2{font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;letter-spacing:-.02em;margin-top:.8rem}
 .chapter-head .based{color:var(--ink-soft);margin-top:.8rem;font-size:1rem}
@@ -295,10 +296,37 @@ select{font-family:var(--f-display);font-weight:600;font-size:.95rem;color:var(-
 .circuit .whole{grid-column:1/-1;background:color-mix(in srgb, var(--teal) 14%, var(--card));border-radius:14px;padding:12px}
 .circuit .arrows{grid-column:1/-1;font-family:var(--f-mono);color:var(--ink-soft);font-size:.8rem}
 footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-size:.9rem;color:var(--ink-soft);display:grid;gap:.6rem}
+/* reading progress + jump navigation */
+html{scroll-padding-top:16px}
+@media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
+.ll-progress{position:fixed;inset:0 0 auto 0;height:5px;z-index:50;background:color-mix(in srgb, var(--line) 60%, transparent);pointer-events:none}
+.ll-progress i{display:block;height:100%;width:100%;background:var(--plum);transform-origin:0 50%;transform:scaleX(0)}
+.ll-nav{position:fixed;right:max(16px, env(safe-area-inset-right, 0px));bottom:max(16px, env(safe-area-inset-bottom, 0px));z-index:50;display:flex;gap:6px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:5px;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+.ll-nav button{border:0;padding:.4rem .75rem;font-size:.9rem;background:transparent}
+.ll-nav button:hover{background:var(--wash)}
+.ll-nav .ll-where{display:flex;gap:.5rem;align-items:baseline;max-width:min(52vw, 320px)}
+.ll-nav .ll-where span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--f-mono);font-weight:400;font-size:.78rem;color:var(--ink-soft)}
+.ll-nav .ll-where b{white-space:nowrap}
+.ll-panel{position:fixed;right:max(16px, env(safe-area-inset-right, 0px));bottom:calc(max(16px, env(safe-area-inset-bottom, 0px)) + 58px);z-index:51;width:min(380px, calc(100vw - 32px));max-height:min(70vh, 640px);overflow:auto;background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:10px;box-shadow:0 10px 40px rgba(0,0,0,.25);font-family:var(--f-display)}
+.ll-panel ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.ll-panel a{display:block;text-decoration:none;color:var(--ink);border-radius:10px;padding:.35rem .6rem;line-height:1.3}
+.ll-panel a:hover{background:var(--wash)}
+.ll-panel .ch > a{font-weight:600;font-size:1rem;margin-top:4px}
+.ll-panel .ch > a small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.ll-panel .ch ol{padding-left:.6rem;border-left:2px solid var(--line);margin:2px 0 6px .8rem}
+.ll-panel .ch ol a{font-size:.88rem;color:var(--ink-soft)}
+.ll-panel .ends{display:flex;gap:8px;padding:4px 4px 8px;border-bottom:2px solid var(--line);margin-bottom:4px}
+.ll-panel .ends a{flex:1;text-align:center;border:2px solid var(--line);border-radius:999px;font-size:.88rem}
+.ll-panel a[aria-current]{background:color-mix(in srgb, var(--plum) 18%, var(--card));color:var(--ink)}
+.ll-nav[hidden],.ll-panel[hidden]{display:none}
+.noscript-note{max-width:66ch;margin:1rem auto;padding:12px 16px;border:2px solid var(--marigold);border-radius:var(--r);background:var(--card);font-size:1rem}
+@media (max-width:560px){.ll-nav{left:max(16px, env(safe-area-inset-left, 0px));justify-content:space-between}.ll-nav .ll-where{max-width:none;flex:1;min-width:0;justify-content:center}.ll-panel{left:16px;right:16px;width:auto}}
+@media print{.ll-nav,.ll-panel,.ll-progress{display:none}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
 
 <div class="wrap">
+<noscript><p class="noscript-note"><strong>JavaScript is switched off.</strong> The words are all here, but the pictures and toys need JavaScript to draw. Open this page in a normal browser tab to see them.</p></noscript>
 
 <header class="hero">
   <div>
@@ -1920,6 +1948,14 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
 </footer>
 </div>
 
+<div class="ll-progress" aria-hidden="true"><i></i></div>
+<nav class="ll-nav" aria-label="Jump around the book" hidden>
+  <button type="button" class="ll-top" aria-label="Back to the top" title="Back to the top">↑</button>
+  <button type="button" class="ll-where" aria-expanded="false" aria-controls="llPanel"><b>Contents</b><span></span></button>
+  <button type="button" class="ll-bottom" aria-label="Jump to the end" title="Jump to the end">↓</button>
+</nav>
+<div class="ll-panel" id="llPanel" hidden></div>
+
 <script>
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2893,5 +2929,65 @@ tourists walk across the bridge in the fog`.split('\n');
     if (reduce) setPlay(true);
     requestAnimationFrame(loop);
   }
+})();
+</script>
+<script>
+/* ---------- reading progress + jump navigation (built from the chapters on the page) ---------- */
+(() => {
+  const bar = document.querySelector('.ll-progress i'), nav = document.querySelector('.ll-nav'), panel = document.getElementById('llPanel');
+  const where = nav.querySelector('.ll-where'), whereText = where.querySelector('span');
+  const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const go = y => scrollTo({top: y, behavior: smooth ? 'smooth' : 'auto'});
+  const esc = t => t.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  // Table of contents: every <article> with a .chapter-head, and every scene heading inside it.
+  const chapters = [...document.querySelectorAll('article[id]')].map(a => {
+    const num = a.querySelector('.chapter-head .num'), h = a.querySelector('.chapter-head h2');
+    const scenes = [...a.querySelectorAll('section.scene')].map(sec => {
+      const h3 = sec.querySelector('h3'); if (!h3) return null;
+      if (!h3.id) h3.id = a.id + '-' + Math.random().toString(36).slice(2, 7);
+      const tag = sec.querySelector('.scene-tag');
+      return {el: sec, id: h3.id, title: h3.textContent.trim(), tag: tag ? tag.textContent.trim() : ''};
+    }).filter(Boolean);
+    return {el: a, id: a.id, num: num ? num.textContent.trim() : '', title: h ? h.textContent.trim() : a.id, scenes};
+  });
+  panel.innerHTML = '<div class="ends"><a href="#" data-top>↑ Top of the book</a><a href="#" data-bottom>End ↓</a></div><ol>' +
+    chapters.map(c => `<li class="ch"><a href="#${c.id}"><small>${esc(c.num)}</small>${esc(c.title)}</a><ol>` +
+      c.scenes.map(s => `<li><a href="#${s.id}">${esc(s.title)}</a></li>`).join('') + '</ol></li>').join('') + '</ol>';
+  nav.hidden = false;
+
+  const open = v => { panel.hidden = !v; where.setAttribute('aria-expanded', v); if (v) { const cur = panel.querySelector('[aria-current]'); if (cur) cur.scrollIntoView({block: 'nearest'}); } };
+  where.addEventListener('click', e => { e.stopPropagation(); open(panel.hidden); });
+  nav.querySelector('.ll-top').addEventListener('click', () => go(0));
+  nav.querySelector('.ll-bottom').addEventListener('click', () => go(document.documentElement.scrollHeight));
+  panel.addEventListener('click', e => {
+    const a = e.target.closest('a'); if (!a) return;
+    if (a.hasAttribute('data-top')) { e.preventDefault(); go(0); }
+    else if (a.hasAttribute('data-bottom')) { e.preventDefault(); go(document.documentElement.scrollHeight); }
+    open(false);
+  });
+  document.addEventListener('click', e => { if (!panel.hidden && !panel.contains(e.target)) open(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) { open(false); where.focus(); } });
+
+  // Progress bar and "you are here".
+  let ticking = false, lastKey = '';
+  const update = () => {
+    ticking = false;
+    const de = document.documentElement, max = de.scrollHeight - innerHeight;
+    bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+    const probe = innerHeight * 0.3;
+    let ch = null, sc = null;
+    for (const c of chapters) if (c.el.getBoundingClientRect().top <= probe) ch = c;
+    if (ch) for (const s of ch.scenes) if (s.el.getBoundingClientRect().top <= probe) sc = s;
+    const key = (ch ? ch.id : '') + '|' + (sc ? sc.id : '');
+    if (key === lastKey) return; lastKey = key;
+    whereText.textContent = ch ? (ch.num + (sc && sc.tag ? ' · ' + sc.tag : '')) : '';
+    panel.querySelectorAll('[aria-current]').forEach(a => a.removeAttribute('aria-current'));
+    const cur = sc ? panel.querySelector(`a[href="#${sc.id}"]`) : ch ? panel.querySelector(`a[href="#${ch.id}"]`) : null;
+    if (cur) cur.setAttribute('aria-current', 'location');
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, {passive: true});
+  addEventListener('resize', update);
+  update();
 })();
 </script>
