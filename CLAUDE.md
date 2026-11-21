@@ -29,3 +29,7 @@ Story hook (the puzzle researchers faced), scenes with interactive toys, "Known 
 
 ## About the author
 The project owner is a lawyer with a crypto background who now works with AI agents, and is learning mechanistic interpretability from scratch. Analogies from law and crypto land well.
+
+## Workflow
+- **One commit per chapter.** When a chapter is finished and checked, commit it on its own (index.html plus any README/CLAUDE.md updates for it) and push to `main`. Don't bundle two chapters in one commit. Small fixes to an existing chapter get their own commit too.
+- After pushing, republish the claude.ai Artifact so the live page matches the repo.
