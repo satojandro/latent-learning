@@ -159,6 +159,21 @@ button.primary:hover{opacity:.88}
 .chapter-head .num.pro{background:var(--teal)}
 .chapter-head .num.c1{background:var(--sky)}
 .chapter-head .num.c2{background:var(--pink)}
+.chapter-head .num.c4{background:var(--marigold);color:var(--ink)}
+.resp{overflow-x:auto}
+.resp table{border-collapse:separate;border-spacing:6px;font-size:.88rem;min-width:420px;width:100%}
+.resp th{font-family:var(--f-mono);font-weight:600;font-size:.75rem;color:var(--ink-soft);text-align:center}
+.resp th.rowh{text-align:left;font-family:var(--f-display);font-size:.92rem;color:var(--ink);white-space:nowrap}
+.resp td{height:40px;text-align:center;background:var(--wash);border-radius:10px}
+.resp td i{display:inline-block;border-radius:50%;vertical-align:middle;transition:width .4s,height .4s}
+.resp tr.sep th,.resp tr.sep td{padding-top:10px}
+.tree{display:grid;gap:10px;font-family:var(--f-display);font-weight:600;text-align:center}
+.tree .lvl{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.tree .lvl span{border-radius:12px;padding:.45rem .8rem;font-size:.92rem;background:var(--wash)}
+.tree .l0 span{background:var(--marigold);color:var(--ink)}
+.tree .l1 span{background:color-mix(in srgb, var(--marigold) 45%, var(--card))}
+.tree .l2 span{background:color-mix(in srgb, var(--marigold) 20%, var(--card))}
+.tree .down{font-family:var(--f-mono);color:var(--ink-soft);font-size:.8rem}
 .seq{display:flex;flex-wrap:wrap;gap:6px}
 .seq span{font-family:var(--f-mono);font-size:.85rem;padding:.3rem .55rem;border-radius:8px;background:var(--wash);border:2px solid transparent}
 .seq span.ok{background:color-mix(in srgb, var(--good) 22%, var(--card));border-color:var(--good)}
@@ -237,7 +252,7 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <a class="chap open" href="#clerks"><span class="yr">2021</span><h3>1. The Clerks and the Case File</h3><p>What actually happens inside a model, layer by layer.</p><span class="status">Read now ↓</span></a>
     <a class="chap open" href="#copycat"><span class="yr">2022</span><h3>2. The Copycat Trick</h3><p>How a model learns new things in the middle of a conversation.</p><span class="status">Read now ↓</span></a>
     <a class="chap open" href="#crowded-office"><span class="yr">2022</span><h3>3. The Crowded Office</h3><p>How a model fits millions of ideas into a few thousand directions.</p><span class="status">Read now ↓</span></a>
-    <div class="chap soon"><span class="yr">2023</span><h3>4. Untangling the Desks</h3><p>A tool for pulling the squeezed ideas back apart.</p><span class="status">Coming soon</span></div>
+    <a class="chap open" href="#untangling"><span class="yr">2023</span><h3>4. Untangling the Desks</h3><p>A tool for pulling the squeezed ideas back apart.</p><span class="status">Read now ↓</span></a>
     <div class="chap soon"><span class="yr">2024</span><h3>5. The Golden Gate Bridge</h3><p>Finding real concepts inside a real, large model, and turning one up.</p><span class="status">Coming soon</span></div>
     <div class="chap soon"><span class="yr">2025</span><h3>6. Watching It Think</h3><p>Rhymes planned ahead, and maths done differently than the model claims.</p><span class="status">Coming soon</span></div>
     <div class="chap soon"><span class="yr">Today</span><h3>Epilogue: The Blank Spaces on the Map</h3><p>What nobody knows yet.</p><span class="status">Coming soon</span></div>
@@ -816,15 +831,136 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 4: Untangling the Desks</h4>
-      <p>In 2023, researchers built a tool that finds the shared desks and separates the concepts sitting at them. For the first time, they could read thousands of clean, single-meaning concepts out of a real model.</p>
-      <p class="label">Coming soon</p>
+      <p>In 2023, researchers built a tool that finds the shared desks and separates the concepts sitting at them. For the first time, they could read thousands of clean, single-meaning concepts out of a real model. <a href="#untangling">Read Chapter 4 ↓</a></p>
+    </div>
+  </section>
+</article>
+
+<article id="untangling">
+  <div class="chapter-head">
+    <span class="num c4">Chapter 4</span>
+    <h2>Untangling the Desks</h2>
+    <p class="based">Based on <a href="https://transformer-circuits.pub/2023/monosemantic-features/index.html" target="_blank" rel="noopener"><em>Towards Monosemanticity: Decomposing Language Models With Dictionary Learning</em></a> (Bricken, Templeton, Batson, Chen, Jermyn et al., Anthropic, 2023)</p>
+  </div>
+
+  <section class="scene" aria-labelledby="c4s1">
+    <div class="prose">
+      <p class="scene-tag">Scene 1</p>
+      <h3 id="c4s1">The detective's problem</h3>
+      <p>Chapter 3 left us with a crowded office. Concepts share desks, so each neuron responds to a jumble of unrelated things. Remember the neuron that fired for citations, dialogue, web requests and Korean? It was found in this very study.</p>
+      <p>The researchers now faced a detective's problem. They could see how busy each desk was at every moment: the neuron readings. What they wanted was the <strong>roster</strong>: who was actually sitting there.</p>
+      <p>A court faces the same problem when reconstructing events. The evidence is incomplete, and many stories could fit it. A sensible judge prefers the account that explains <em>all</em> the evidence with the <em>fewest</em> moving parts. That single principle turns out to be the key.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c4s2">
+    <div class="prose">
+      <p class="scene-tag">Scene 2</p>
+      <h3 id="c4s2">Explain every day with as few people as possible</h3>
+      <p>Their tool is called <span class="term">dictionary learning</span>, carried out with a <span class="term">sparse autoencoder</span>. It works like a translator with a strict rule:</p>
+      <p><strong>1. Expand.</strong> Take the neuron readings and translate them into a much longer list of possible concepts, the "dictionary". The model in the paper had 512 neurons, and the dictionary had thousands of entries.</p>
+      <p><strong>2. Be stingy.</strong> For each moment, use as <em>few</em> dictionary entries as possible. Most entries must stay silent. That's what "sparse" means.</p>
+      <p><strong>3. Check your work.</strong> Translate back, and make sure the result matches the original readings.</p>
+      <p>Train that translator on millions of moments, and each dictionary entry tends to settle on one real concept. Researchers call the entries <span class="term">features</span>.</p>
+      <p>You can try it on the crowded office from Chapter 3. Below, five hidden concepts share two desks, arranged in the pentagon you saw the model invent. The autoencoder only sees the dots, which are the desk readings at different moments. It has to discover where the five concepts are.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Untangle the crowded office</h4><span class="label" id="saeStatus">Training…</span></div>
+      <div class="model-grid">
+        <canvas id="saeCanvas" width="880" height="880" aria-label="Desk readings as dots, with the autoencoder's learned concept arrows" role="img"></canvas>
+        <div style="display:grid;gap:1rem">
+          <p class="verdict" id="saeVerdict" style="margin:0"></p>
+          <div class="scores" style="margin:0">
+            <div class="score"><small>Concepts found</small><b id="saeFound">0 of 5</b></div>
+            <div class="score"><small>Concepts used per moment</small><b id="saeUsed">0</b></div>
+          </div>
+          <p class="stat" id="saeStat"></p>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="ctl"><label for="saeLam">How strict is the "as few as possible" rule?</label><input type="range" id="saeLam" min="0" max="2" step="1" value="2"><output id="saeLamOut" for="saeLam"></output></div>
+        <div class="ctl" style="flex:0 1 220px"><label for="saeK">Dictionary size</label><select id="saeK"><option value="5">5 entries</option><option value="8">8 entries</option></select></div>
+      </div>
+      <div class="btns" style="margin-top:1rem"><button class="primary" id="saePlay">Pause</button><button id="saeReset">Start from scratch</button><button id="saeReveal" aria-pressed="false">Reveal the true concepts</button></div>
+      <p class="caption">This is a real sparse autoencoder training live in your browser, the same kind of tool the paper used, shrunk to two dimensions. <strong>Try this:</strong> set the rule to "off" and start from scratch. The autoencoder still rebuilds the readings perfectly, but its arrows often land in the wrong places and it uses many concepts at once: a perfect fit that tells the wrong story. The stingy rule is what makes it find the truth. With 8 entries, the spare ones double up or fall silent.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c4s3">
+    <div class="prose">
+      <p class="scene-tag">Scene 3</p>
+      <h3 id="c4s3">Neurons versus features</h3>
+      <p>Now compare the two ways of reading the office. Below, each of the five concepts is switched on by itself, and we measure what responds: the two desks (the neurons), and the dictionary entries the autoencoder just learned (the features).</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Who responds to each concept?</h4><span class="label">Live from the autoencoder above</span></div>
+      <div class="resp"><table id="respTable" aria-label="How strongly each neuron and feature responds to each concept"></table></div>
+      <p class="caption">Each neuron responds to several concepts at once: that's the jumble. Once the autoencoder has settled, each feature responds to just one. That's what the paper's title means. <strong>Monosemantic</strong> means "one meaning", the opposite of the polysemantic neurons from Chapter 3.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c4s4">
+    <div class="prose">
+      <p class="scene-tag">Scene 4</p>
+      <h3 id="c4s4">What they found in a real model</h3>
+      <p>The researchers ran this on a small real language model, with one layer and 512 neurons in its thinker layer. They trained dictionaries of many sizes. In the run they studied most closely, the 512 neurons unpacked into about <strong>4,000 features</strong>.</p>
+      <p>Many were strikingly clear. One feature responded to Arabic script, another to DNA sequences, another to base64 (a way of encoding computer data as letters and numbers), another to Hebrew. When people were asked to judge how interpretable features and neurons were, the features won by a wide margin.</p>
+      <p>Three more findings made the result convincing:</p>
+      <p><strong>They're real causes, not just labels.</strong> Artificially switching a feature on changes what the model writes. Turn up the base64 feature, and the model starts producing base64 text.</p>
+      <p><strong>They show up again and again.</strong> Train a second model from scratch, and very similar features appear in it. The researchers called this <span class="term">universality</span>.</p>
+      <p><strong>The features explain most of what the model does.</strong> Swapping the neuron readings for the autoencoder's translation kept most of the model's performance, though not all of it.</p>
+      <div class="aside">
+        <p class="label">The fine print</p>
+        <p>The translation isn't perfect. Some of what the model does slips through the dictionary unexplained, and some features are hard to put into words. And this was a tiny one-layer model. Whether the method would work on a big, modern model was the obvious open question.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c4s5">
+    <div class="prose">
+      <p class="scene-tag">Scene 5</p>
+      <h3 id="c4s5">Zooming in and out</h3>
+      <p>One more surprise. The size of the dictionary changes what you find. A small dictionary gives broad concepts. A bigger one splits them into finer ones, like zooming in on a map. The paper called this <span class="term">feature splitting</span>, and saw whole families of related features appear as dictionaries grew.</p>
+      <p>It's a lot like how a body of law gets organised. Here's an invented example to show the shape of the idea. It's an illustration, not a result from the paper.</p>
+    </div>
+    <div class="toy" style="max-width:720px">
+      <div class="toy-head"><h4>One concept, three dictionary sizes</h4><span class="label">Illustrative example</span></div>
+      <div class="tree">
+        <div class="lvl l0"><span>legal language</span></div>
+        <div class="down">bigger dictionary ↓</div>
+        <div class="lvl l1"><span>contracts</span><span>court procedure</span><span>legislation</span></div>
+        <div class="down">bigger still ↓</div>
+        <div class="lvl l2"><span>defined terms</span><span>termination clauses</span><span>objections</span><span>witness testimony</span><span>section numbers</span><span>amendments</span></div>
+      </div>
+      <p class="caption">There isn't one "correct" list of concepts inside a model. How finely you slice depends on how big a dictionary you choose, just as "law" can be divided into ten subjects or ten thousand.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c4s6">
+    <div class="prose">
+      <p class="scene-tag">The end of the chapter</p>
+      <h3 id="c4s6">What we know, and what we don't</h3>
+    </div>
+    <div class="learned">
+      <div class="card k"><h4>Known: the jumble can be untangled</h4><p>A sparse autoencoder can unpack polysemantic neurons into many features that each mean one thing.</p></div>
+      <div class="card k"><h4>Known: features are real and recurring</h4><p>Switching a feature on changes the model's behaviour, and similar features appear in separately trained models.</p></div>
+      <div class="card k"><h4>Known: the zoom level is a choice</h4><p>Bigger dictionaries split broad features into finer ones, in families.</p></div>
+      <div class="card u"><h4>Unknown: does it work on big models?</h4><p>This was a one-layer model with 512 neurons. Modern models are thousands of times larger.</p></div>
+      <div class="card u"><h4>Unknown: what slips through?</h4><p>Part of the model's behaviour isn't captured by the features. Nobody yet knew how much that leftover mattered.</p></div>
+      <div class="card u"><h4>Unknown: how do features connect?</h4><p>Finding the concepts is step one. Seeing how they combine into reasoning is a separate, harder step.</p></div>
+    </div>
+    <div class="next">
+      <p class="label">Next in the story</p>
+      <h4>Chapter 5: The Golden Gate Bridge</h4>
+      <p>In 2024, the team ran dictionary learning on Claude 3 Sonnet, a large production model, and found millions of features. One of them was the Golden Gate Bridge, and turning it up had memorable results. Coming soon.</p>
     </div>
   </section>
 </article>
 
 <footer>
   <p><strong>Latent Learning</strong> is an independent learning project. It isn't affiliated with or endorsed by Anthropic or the authors of the papers it explains. All illustrations and explanations are original. The research belongs to its authors, so please read the originals.</p>
-  <p>Prologue sources are listed at the end of the Prologue. Chapter 2 source: Catherine Olsson, Nelson Elhage, Neel Nanda and colleagues, <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener">In-context Learning and Induction Heads</a>, Transformer Circuits Thread, 2022.</p>
+  <p>Prologue sources are listed at the end of the Prologue. Chapter 4 source: Trenton Bricken, Adly Templeton, Joshua Batson, Brian Chen, Adam Jermyn and colleagues, <a href="https://transformer-circuits.pub/2023/monosemantic-features/index.html" target="_blank" rel="noopener">Towards Monosemanticity: Decomposing Language Models With Dictionary Learning</a>, Transformer Circuits Thread, 2023.</p>
+  <p>Chapter 2 source: Catherine Olsson, Nelson Elhage, Neel Nanda and colleagues, <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener">In-context Learning and Induction Heads</a>, Transformer Circuits Thread, 2022.</p>
   <p>Chapter 1 source: Nelson Elhage, Neel Nanda, Catherine Olsson and colleagues, <a href="https://transformer-circuits.pub/2021/framework/index.html" target="_blank" rel="noopener">A Mathematical Framework for Transformer Circuits</a>, Transformer Circuits Thread, 2021.</p>
   <p>Chapter 3 source: Nelson Elhage, Tristan Hume, Catherine Olsson, Nicholas Schiefer, Tom Henighan, Shauna Kravec, Zac Hatfield-Dodds, Robert Lasenby, Dawn Drain, Carol Chen, Roger Grosse, Sam McCandlish, Jared Kaplan, Dario Amodei, Martin Wattenberg and Christopher Olah. <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener">Toy Models of Superposition</a>, Transformer Circuits Thread, 2022.</p>
 </footer>
@@ -1231,6 +1367,88 @@ the jury heard the evidence`.split('\n');
     redrawers.push(draw);
     tr.addEventListener('input', draw); one.addEventListener('change', draw);
     draw();
+  }
+
+  /* ---------- chapter 4: sparse autoencoder on the crowded office ---------- */
+  {
+    const n = 5, TRUE = [...Array(n)].map((_, i) => { const a = Math.PI / 2 + i * 2 * Math.PI / n; return [Math.cos(a), Math.sin(a)]; });
+    const P_ON = 0.12, LR = 0.01, B = 96, STEPS_PER_FRAME = 10;
+    const lams = [{v: 0, l: 'Off'}, {v: 0.1, l: 'Gentle'}, {v: 0.4, l: 'Strict'}];
+    const cv = document.getElementById('saeCanvas'), ctx = cv.getContext('2d');
+    const lr_ = document.getElementById('saeLam'), lo = document.getElementById('saeLamOut'), kSel = document.getElementById('saeK');
+    let k, We, be, Wd, m, v, t, steps, playing = true, reveal = false, usedAvg = 0;
+    const sample = () => { const h = [0, 0], x = []; for (let i = 0; i < n; i++) { const on = Math.random() < P_ON; x[i] = on ? .2 + .8 * Math.random() : 0; h[0] += x[i] * TRUE[i][0]; h[1] += x[i] * TRUE[i][1]; } return h; };
+    const dots = [...Array(700)].map(sample);
+    const init = () => {
+      k = +kSel.value; We = []; Wd = []; be = new Float64Array(k);
+      for (let j = 0; j < k; j++) { const a = Math.random() * 2 * Math.PI; Wd.push([Math.cos(a), Math.sin(a)]); We.push([Wd[j][0], Wd[j][1]]); }
+      m = new Float64Array(5 * k); v = new Float64Array(5 * k); t = 0; steps = 0; usedAvg = 0;
+    };
+    const encode = h => We.map((w, j) => Math.max(0, w[0] * h[0] + w[1] * h[1] + be[j]));
+    const step = () => {
+      const lam = lams[+lr_.value].v, g = new Float64Array(5 * k); let used = 0;
+      for (let b = 0; b < B; b++) {
+        const h = sample(), a = We.map((w, j) => w[0] * h[0] + w[1] * h[1] + be[j]), f = a.map(x => x > 0 ? x : 0);
+        const hh = [0, 0]; for (let j = 0; j < k; j++) { hh[0] += Wd[j][0] * f[j]; hh[1] += Wd[j][1] * f[j]; if (f[j] > .02) used++; }
+        const r = [hh[0] - h[0], hh[1] - h[1]];
+        for (let j = 0; j < k; j++) {
+          g[3 * k + 2 * j] += 2 * r[0] * f[j] / B; g[3 * k + 2 * j + 1] += 2 * r[1] * f[j] / B;
+          if (a[j] > 0) { const df = (2 * r[0] * Wd[j][0] + 2 * r[1] * Wd[j][1] + lam) / B; g[2 * j] += df * h[0]; g[2 * j + 1] += df * h[1]; g[2 * k + j] += df; }
+        }
+      }
+      t++;
+      const P = [...We.flat(), ...be, ...Wd.flat()];
+      for (let i = 0; i < 5 * k; i++) { m[i] = .9 * m[i] + .1 * g[i]; v[i] = .999 * v[i] + .001 * g[i] * g[i]; P[i] -= LR * (m[i] / (1 - .9 ** t)) / (Math.sqrt(v[i] / (1 - .999 ** t)) + 1e-8); }
+      for (let j = 0; j < k; j++) { We[j] = [P[2 * j], P[2 * j + 1]]; be[j] = P[2 * k + j]; const d = [P[3 * k + 2 * j], P[3 * k + 2 * j + 1]], nn = Math.hypot(...d) || 1; Wd[j] = [d[0] / nn, d[1] / nn]; }
+      const nonzero = dots.length ? used / B : 0; usedAvg = usedAvg ? usedAvg * .97 + nonzero * .03 : nonzero; steps++;
+    };
+    const alive = () => Wd.map((_, j) => TRUE.some(T => encode(T)[j] > .05));
+    const draw = () => {
+      const S = cv.width, c = S / 2, R = S * .38;
+      ctx.clearRect(0, 0, S, S);
+      ctx.strokeStyle = C.line; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(c - S * .46, c); ctx.lineTo(c + S * .46, c); ctx.moveTo(c, c - S * .46); ctx.lineTo(c, c + S * .46); ctx.stroke();
+      ctx.fillStyle = C.soft; ctx.font = '600 28px "JetBrains Mono", monospace'; ctx.textAlign = 'left';
+      ctx.fillText('desk 1', c + S * .34, c - 14); ctx.fillText('desk 2', c + 14, c - S * .4);
+      ctx.fillStyle = C.soft; ctx.globalAlpha = .45;
+      dots.forEach(h => { ctx.beginPath(); ctx.arc(c + h[0] * R, c - h[1] * R, 6, 0, Math.PI * 2); ctx.fill(); });
+      ctx.globalAlpha = 1;
+      if (reveal) { ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.setLineDash([12, 12]); TRUE.forEach(T => { ctx.beginPath(); ctx.moveTo(c, c); ctx.lineTo(c + T[0] * R * 1.12, c - T[1] * R * 1.12); ctx.stroke(); }); ctx.setLineDash([]); }
+      const al = alive();
+      Wd.forEach((d, j) => arrow(ctx, c, c, c + d[0] * R, c - d[1] * R, al[j] ? C.feats[j % 6] : C.line, 13));
+      ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(c, c, 12, 0, Math.PI * 2); ctx.fill();
+      const found = TRUE.filter(T => Wd.some((d, j) => al[j] && d[0] * T[0] + d[1] * T[1] > .97)).length;
+      document.getElementById('saeFound').textContent = `${found} of 5`;
+      document.getElementById('saeUsed').textContent = usedAvg.toFixed(1);
+      document.getElementById('saeVerdict').innerHTML = found === 5 ? 'All five hidden concepts <span>found</span>, using only the desk readings.' : found ? `The autoencoder has pinned down <span>${found}</span> so far.` : 'The arrows are still searching.';
+      document.getElementById('saeStat').textContent = `Training steps: ${steps.toLocaleString()} · the true answer is about 0.6 concepts per moment · grey arrows never switch on`;
+      document.getElementById('saeStatus').textContent = playing ? 'Training…' : 'Paused';
+      drawTable(al);
+    };
+    const tbl = document.getElementById('respTable');
+    const cols = ['--tomato', '--sky', '--teal', '--marigold', '--pink', '--plum'];
+    const dot = (val, color) => { const sz = Math.round(6 + Math.min(1, Math.abs(val)) * 26); return `<td><i style="width:${sz}px;height:${sz}px;background:var(${color});opacity:${Math.abs(val) < .05 ? .15 : 1}"></i></td>`; };
+    const drawTable = al => {
+      const head = `<tr><th></th>${TRUE.map((_, i) => `<th>concept ${i + 1}</th>`).join('')}</tr>`;
+      const neurons = [0, 1].map(d => `<tr><th class="rowh">Neuron ${d + 1}</th>${TRUE.map(T => dot(T[d], '--ink-soft')).join('')}</tr>`).join('');
+      const feats = Wd.map((_, j) => al[j] ? `<tr class="${j === 0 ? 'sep' : ''}"><th class="rowh">Feature ${String.fromCharCode(65 + j)}</th>${TRUE.map(T => dot(encode(T)[j], cols[j % 6])).join('')}</tr>` : '').join('');
+      tbl.innerHTML = head + neurons + feats;
+    };
+    redrawers.push(draw);
+    const setPlay = vv => { playing = vv; document.getElementById('saePlay').textContent = vv ? 'Pause' : 'Train'; draw(); };
+    lr_.addEventListener('input', () => { lo.textContent = lams[+lr_.value].l; });
+    kSel.addEventListener('change', () => { init(); draw(); });
+    document.getElementById('saePlay').addEventListener('click', () => setPlay(!playing));
+    document.getElementById('saeReset').addEventListener('click', () => { init(); draw(); });
+    document.getElementById('saeReveal').addEventListener('click', e => { reveal = !reveal; e.target.setAttribute('aria-pressed', reveal); e.target.textContent = reveal ? 'Hide the true concepts' : 'Reveal the true concepts'; draw(); });
+    lo.textContent = lams[+lr_.value].l;
+    init();
+    for (let i = 0; i < 300; i++) step();
+    draw();
+    let visible = true, frame = 0;
+    new IntersectionObserver(es => { visible = es.some(e => e.isIntersecting); }).observe(cv);
+    const loop = () => { if (playing && visible) { for (let i = 0; i < STEPS_PER_FRAME; i++) step(); if (++frame % 2 === 0) draw(); } requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
   }
 
   /* ---------- scene 1: jumbled neuron ---------- */

@@ -14,7 +14,7 @@ This is an independent, unofficial project. It isn't affiliated with or endorsed
 | 1 | The Clerks and the Case File | A Mathematical Framework for Transformer Circuits (2021) | **Draft** |
 | 2 | The Copycat Trick | In-context Learning and Induction Heads (2022) | **Draft** |
 | 3 | The Crowded Office | Toy Models of Superposition (2022) | **Draft** |
-| 4 | Untangling the Desks | Towards Monosemanticity (2023) | Planned |
+| 4 | Untangling the Desks | Towards Monosemanticity (2023) | **Draft** |
 | 5 | The Golden Gate Bridge | Scaling Monosemanticity (2024) | Planned |
 | 6 | Watching It Think | On the Biology of a Large Language Model (2025) | Planned |
 | Epilogue | The Blank Spaces on the Map | Open problems | Planned |
