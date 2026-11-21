@@ -161,6 +161,36 @@ button.primary:hover{opacity:.88}
 .chapter-head .num.c2{background:var(--pink)}
 .chapter-head .num.c4{background:var(--marigold);color:var(--ink)}
 .chapter-head .num.c5{background:var(--tomato)}
+.chapter-head .num.c6{background:var(--plum)}
+.prompt{font-family:var(--f-mono);font-size:.95rem;background:var(--wash);border-radius:12px;padding:.7rem .9rem}
+.prompt s{opacity:.45}
+.graph-box{overflow-x:auto}
+.graph-box svg{width:100%;min-width:560px;height:auto;display:block}
+.graph-box text{font-family:var(--f-display);font-weight:600}
+.toggles{display:flex;flex-wrap:wrap;gap:8px}
+.toggles button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.poem{font-family:var(--f-body);font-size:1.15rem;line-height:1.8;background:var(--wash);border-radius:12px;padding:.9rem 1.1rem}
+.poem .l2 span{opacity:0;transition:opacity .25s}
+.poem .l2 span.on{opacity:1}
+.poem .l2 span.end{color:var(--plum);font-weight:600}
+.plan{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:.8rem}
+.plan .note{font-size:.8rem}
+.lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:1rem}
+.lane{border-radius:14px;padding:14px;background:var(--wash);display:grid;gap:.35rem;align-content:start}
+.lane .label{color:var(--ink)}
+.lane b{font-family:var(--f-display);font-size:1.5rem;font-variant-numeric:tabular-nums}
+.lane.l1{background:color-mix(in srgb, var(--sky) 14%, var(--card))}
+.lane.l2{background:color-mix(in srgb, var(--teal) 14%, var(--card))}
+.lane.l3{background:color-mix(in srgb, var(--plum) 14%, var(--card))}
+.numrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-family:var(--f-display);font-weight:600;font-size:1.2rem}
+.numrow input{width:4.5em;font-family:var(--f-display);font-size:1.2rem;font-weight:600;padding:.3rem .5rem;border:2px solid var(--ink);border-radius:10px;background:var(--card);color:var(--ink)}
+.says{margin-top:1rem;border:2px dashed var(--line);border-radius:14px;padding:12px 14px;font-size:.95rem}
+.ladder{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;text-align:center;font-family:var(--f-display);font-weight:600}
+.ladder > div{background:var(--wash);border-radius:12px;padding:.6rem .4rem}
+.ladder .mid{grid-column:1/-1;background:color-mix(in srgb, var(--plum) 18%, var(--card))}
+.ladder small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.72rem;color:var(--ink-soft)}
+.switches{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:1rem}
+.switch{border-radius:14px;padding:12px 14px;background:var(--wash);display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:var(--f-display);font-weight:600}
 .seg{display:flex;flex-wrap:wrap;gap:8px}
 .seg button{font-size:.88rem;padding:.35rem .9rem;border-width:1.5px}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
@@ -268,7 +298,7 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <a class="chap open" href="#crowded-office"><span class="yr">2022</span><h3>3. The Crowded Office</h3><p>How a model fits millions of ideas into a few thousand directions.</p><span class="status">Read now ↓</span></a>
     <a class="chap open" href="#untangling"><span class="yr">2023</span><h3>4. Untangling the Desks</h3><p>A tool for pulling the squeezed ideas back apart.</p><span class="status">Read now ↓</span></a>
     <a class="chap open" href="#golden-gate"><span class="yr">2024</span><h3>5. The Golden Gate Bridge</h3><p>Finding real concepts inside a real, large model, and turning one up.</p><span class="status">Read now ↓</span></a>
-    <div class="chap soon"><span class="yr">2025</span><h3>6. Watching It Think</h3><p>Rhymes planned ahead, and maths done differently than the model claims.</p><span class="status">Coming soon</span></div>
+    <a class="chap open" href="#watching"><span class="yr">2025</span><h3>6. Watching It Think</h3><p>Rhymes planned ahead, and maths done differently than the model claims.</p><span class="status">Read now ↓</span></a>
     <div class="chap soon"><span class="yr">Today</span><h3>Epilogue: The Blank Spaces on the Map</h3><p>What nobody knows yet.</p><span class="status">Coming soon</span></div>
   </nav>
 </section>
@@ -1070,14 +1100,178 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 6: Watching It Think</h4>
-      <p>In 2025, the team began tracing how features connect, step by step, inside a model as it answers. They caught it planning rhymes in advance, and doing arithmetic differently from how it claims to. Coming soon.</p>
+      <p>In 2025, the team began tracing how features connect, step by step, inside a model as it answers. They caught it planning rhymes in advance, and doing arithmetic differently from how it claims to. <a href="#watching">Read Chapter 6 ↓</a></p>
+    </div>
+  </section>
+</article>
+
+<article id="watching">
+  <div class="chapter-head">
+    <span class="num c6">Chapter 6</span>
+    <h2>Watching It Think</h2>
+    <p class="based">Based on <a href="https://transformer-circuits.pub/2025/attribution-graphs/biology.html" target="_blank" rel="noopener"><em>On the Biology of a Large Language Model</em></a> (Lindsey, Gurnee, Ameisen et al., Anthropic, 2025) and its companion <a href="https://transformer-circuits.pub/2025/attribution-graphs/methods.html" target="_blank" rel="noopener"><em>Circuit Tracing</em></a> (Ameisen, Lindsey, Pearce et al., 2025)</p>
+  </div>
+
+  <section class="scene" aria-labelledby="c6s1">
+    <div class="prose">
+      <p class="scene-tag">Scene 1</p>
+      <h3 id="c6s1">From ingredients to recipes</h3>
+      <p>Chapter 5 gave us a dictionary: millions of concepts a model can hold. But a list of ingredients isn't a recipe. In 2025, the team set out to watch the concepts <em>connect</em>, step by step, as a model works out an answer.</p>
+      <p>Their method had two parts. First, they built a stand-in for the model, a <span class="term">replacement model</span>, where the hard-to-read thinker clerks are swapped for dictionary-based versions whose every note is a readable feature. Second, for a given question, they traced which features caused which, producing a map of the model's reasoning called an <span class="term">attribution graph</span>.</p>
+      <p>A stand-in could be misleading, so they checked every story against the real model by <strong>intervening</strong>: switching a feature off, or forcing one on, and seeing whether the answer changed the way the graph predicted. Lawyers will recognise this as the <em>but-for</em> test of causation. But for this concept, would the answer have been different?</p>
+      <p>They studied <strong>Claude 3.5 Haiku</strong>, a production model, and reported a whole series of case studies. Here are some of the most striking.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c6s2">
+    <div class="prose">
+      <p class="scene-tag">Scene 2</p>
+      <h3 id="c6s2">Two hops: Dallas, Texas, Austin</h3>
+      <p>Ask: <em>"The capital of the state containing Dallas is…"</em>. Answering takes two steps: work out that Dallas is in Texas, then recall that the capital of Texas is Austin. Does the model really take both steps, or has it just memorised "Dallas … capital → Austin"?</p>
+      <p>The graph showed both steps. A "Texas" feature lit up in the middle of the model, even though the word "Texas" appears nowhere in the question, and it combined with a "say a capital" feature to produce "Austin". There was also a weaker shortcut straight from Dallas to Austin. Then came the but-for test: swap the Texas feature for California, and the model answered <strong>Sacramento</strong>.</p>
+      <p>Below is a small hand-built circuit with the same shape. Try the interventions yourself.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Intervene on the circuit</h4><span class="label">Hand-built circuit modelled on the paper</span></div>
+      <p class="prompt" id="ggPrompt"></p>
+      <div class="graph-box" style="margin-top:1rem"><svg id="hopSvg" viewBox="0 -30 900 410" role="img" aria-label="A circuit from the question's words, through Texas and say-a-capital features, to answers"></svg></div>
+      <div class="toggles" style="margin-top:1rem" role="group" aria-label="Interventions">
+        <button id="hTexas" aria-pressed="false">Switch off "Texas"</button>
+        <button id="hCal" aria-pressed="false">Force on "California"</button>
+        <button id="hCap" aria-pressed="false">Delete the word "capital"</button>
+        <button id="hReset">Reset</button>
+      </div>
+      <div class="two-col" style="margin-top:1.2rem">
+        <div><p class="label" style="margin-bottom:.6rem">The circuit's answer</p><div class="probs" id="hopProbs"></div></div>
+        <div><p class="verdict" id="hopVerdict" style="margin-top:0"></p></div>
+      </div>
+      <p class="caption">The circuit really computes its answer from the features you leave switched on. Line thickness shows how much each link is contributing right now. The real graph in Claude had many more features and links. This keeps only the parts the paper highlighted, including the weak Dallas-to-Austin shortcut, which is why switching off Texas weakens the answer without quite killing it.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c6s3">
+    <div class="prose">
+      <p class="scene-tag">Scene 3</p>
+      <h3 id="c6s3">Planning the rhyme</h3>
+      <p>Language models write one word at a time, so you might expect them to improvise, choosing each word only when they get to it. Poetry was a good test. To write a rhyming couplet, do you pick the rhyme first, or hope you land on one?</p>
+      <p>The graphs showed planning. At the end of the first line, before writing a single word of the second, the model had already activated features for candidate rhyming words. Then it built the whole line to arrive there. The researchers proved it with interventions: suppress the planned word, and the model rewrote the line to end on a different rhyme. Inject an unrelated word, and it wrote a new line that led to that word instead.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>The case file at the end of line one</h4><span class="label">A sketch · our own couplet</span></div>
+      <div class="poem"><div>I spotted a carrot and reached out to grab it,</div><div class="l2" id="poemL2"></div></div>
+      <div class="plan" id="poemPlan"></div>
+      <div class="toggles" style="margin-top:1rem" role="group" aria-label="What to do to the plan">
+        <button data-m="0" aria-pressed="true">Let it plan</button>
+        <button data-m="1" aria-pressed="false">Suppress "rabbit"</button>
+        <button data-m="2" aria-pressed="false">Inject "green"</button>
+      </div>
+      <div class="btns" style="margin-top:1rem"><button class="primary" id="poemGo">Write line two</button></div>
+      <p class="caption">This is an illustration, not a live model. The couplet is ours, modelled on the paper's example. What it shows is real: the plan is in the case file before line two begins, and changing the plan changes the whole line, not just its last word.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c6s4">
+    <div class="prose">
+      <p class="scene-tag">Scene 4</p>
+      <h3 id="c6s4">Maths in two lanes, and the story it tells</h3>
+      <p>How does a language model add 36 and 59? It was never taught the school method directly. The graph showed it running <strong>two lanes in parallel</strong>. One lane makes a rough estimate of the size of the answer, "somewhere in the low nineties". The other works out only the last digit exactly: 6 + 9 ends in 5. Put together, the answer must be 95.</p>
+      <p>Then the researchers asked the model how it had done the sum. It described the school method: add the ones, carry the one, add the tens. That isn't what its circuits did. It was repeating the explanation people usually write, not reporting its own process.</p>
+      <p>The toy below runs the two-lane method on any pair of two-digit numbers.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Adding in two lanes</h4><span class="label">Real calculation</span></div>
+      <div class="numrow"><input type="number" id="addA" min="10" max="99" value="36" aria-label="First number"><span>+</span><input type="number" id="addB" min="10" max="99" value="59" aria-label="Second number"><span>=</span><span id="addAns" style="color:var(--plum)"></span></div>
+      <div class="lanes">
+        <div class="lane l1"><span class="label">Lane 1 · rough size</span><b id="laneRough"></b><span class="stat" id="laneRoughNote"></span></div>
+        <div class="lane l2"><span class="label">Lane 2 · last digit only</span><b id="laneDigit"></b><span class="stat" id="laneDigitNote"></span></div>
+        <div class="lane l3"><span class="label">Combined</span><b id="laneBoth"></b><span class="stat" id="laneBothNote"></span></div>
+      </div>
+      <div class="says"><p class="label" style="margin-bottom:.4rem">Ask the model how it did it, and it says something like</p><p><em>"I added the ones, carried the one, then added the tens."</em></p></div>
+      <p class="caption">Lane 1 here gets its estimate slightly wrong on purpose, as a rough estimate would, and the combination still lands on the right answer. The real model's lanes are messier than this, with many overlapping features, but the shape is the one the paper found.</p>
+    </div>
+    <div class="prose" style="margin-top:2rem">
+      <div class="aside">
+        <p class="label">Why this matters beyond maths</p>
+        <p>The paper found related cases where the model's written-out reasoning didn't match its internal process. In one, given a hard problem along with a hint about the answer, it worked backwards from the hint and wrote reasoning to fit, much like an advocate building an argument for a conclusion already chosen. A model's explanation of itself is evidence, not proof. Being able to look inside is one way to check it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c6s5">
+    <div class="prose">
+      <p class="scene-tag">Scene 5</p>
+      <h3 id="c6s5">Concepts without a language</h3>
+      <p>Ask for the opposite of "small" in English, French or Chinese. The graphs showed that the middle of the model uses largely the <strong>same</strong> features in all three: a shared "small", a shared "opposite", a shared "large". Language-specific parts sit mainly at the entrance and the exit. The bigger the model, the larger the shared share.</p>
+    </div>
+    <div class="toy" style="max-width:720px">
+      <div class="toy-head"><h4>One idea, three languages</h4><span class="label">Simplified from the paper</span></div>
+      <div class="ladder">
+        <div>small<small>English in</small></div><div>petit<small>French in</small></div><div>小<small>Chinese in</small></div>
+        <div class="mid">shared features: "small" + "opposite" → "large"<small>the middle of the model</small></div>
+        <div>large<small>English out</small></div><div>grand<small>French out</small></div><div>大<small>Chinese out</small></div>
+      </div>
+      <p class="caption">This is the Prologue's map of meaning grown up: not just similar words close together, but a shared space of ideas underneath the languages. It may help explain why something learned in one language often carries over to others.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c6s6">
+    <div class="prose">
+      <p class="scene-tag">Scene 6</p>
+      <h3 id="c6s6">Knowing when it doesn't know</h3>
+      <p>Why does a model sometimes make things up? The graphs suggested a surprising answer. The model's <strong>default</strong> is a circuit that says "I can't answer that". When it recognises a familiar name, a "known entity" feature switches that default off, and it answers.</p>
+      <p>That's sensible, like a careful witness who says "I don't recall" unless sure. But it can misfire. If a name feels familiar without the model actually knowing the facts, the default gets switched off anyway, and the model fills the gap with something plausible. That's one route to a <span class="term">hallucination</span>.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>"What sport does … play?"</h4><span class="label">Simplified from the paper</span></div>
+      <div class="toggles" role="group" aria-label="Who to ask about" id="kSeg">
+        <button data-k="0" aria-pressed="true">Michael Jordan</button>
+        <button data-k="1" aria-pressed="false">Michael Batkin (made up)</button>
+        <button data-k="2" aria-pressed="false">A name that only feels familiar</button>
+      </div>
+      <div class="switches">
+        <div class="switch"><span>"Known entity" feature</span><span class="pill" id="kKnown"></span></div>
+        <div class="switch"><span>"Can't answer" default</span><span class="pill" id="kCant"></span></div>
+        <div class="switch"><span>Facts actually found</span><span class="pill" id="kFacts"></span></div>
+      </div>
+      <p class="verdict" id="kVerdict"></p>
+      <p class="caption">Michael Jordan and the invented Michael Batkin are the paper's own examples. The third case is a simplified version of the misfire it described.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c6s7">
+    <div class="prose">
+      <p class="scene-tag">Scene 7</p>
+      <h3 id="c6s7">How much can we really see?</h3>
+      <p>The authors were frank about the limits. Their method gave a satisfying explanation for only about a quarter of the prompts they tried. The replacement model is an approximation, so some of the real model's work slips through it. Parts of the messengers' work were hard to capture. And reading even one graph took hours of careful human effort.</p>
+      <p>Their own comparison was to early biology: the first microscopes, revealing cells for the first time. It's real seeing, but of a small part of a very large organism.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c6s8">
+    <div class="prose">
+      <p class="scene-tag">The end of the chapter</p>
+      <h3 id="c6s8">What we know, and what we don't</h3>
+    </div>
+    <div class="learned">
+      <div class="card k"><h4>Known: models take real intermediate steps</h4><p>Dallas to Texas to Austin happens inside the model, and swapping the middle step changes the answer.</p></div>
+      <div class="card k"><h4>Known: models plan ahead</h4><p>Rhymes are chosen before the line that leads to them is written.</p></div>
+      <div class="card k"><h4>Known: self-explanations can be wrong</h4><p>A model can describe a method it didn't use, so its account of itself needs checking.</p></div>
+      <div class="card u"><h4>Unknown: the other three quarters</h4><p>Most prompts still resist a clear explanation with current tools.</p></div>
+      <div class="card u"><h4>Unknown: can this scale to audits?</h4><p>Graphs take hours to read by hand. Checking a model routinely would need much more automation.</p></div>
+      <div class="card u"><h4>Unknown: how faithful is the stand-in?</h4><p>Everything is seen through a replacement model. Interventions check it, but gaps remain.</p></div>
+    </div>
+    <div class="next">
+      <p class="label">Next in the story</p>
+      <h4>Epilogue: The Blank Spaces on the Map</h4>
+      <p>Where the story stands now: what we've learned in ten years, the biggest open questions, and why they matter for everyone who uses these models. Coming soon.</p>
     </div>
   </section>
 </article>
 
 <footer>
   <p><strong>Latent Learning</strong> is an independent learning project. It isn't affiliated with or endorsed by Anthropic or the authors of the papers it explains. All illustrations and explanations are original. The research belongs to its authors, so please read the originals.</p>
-  <p>Prologue sources are listed at the end of the Prologue. Chapter 5 source: Adly Templeton, Tom Conerly, Jonathan Marcus, Jack Lindsey, Trenton Bricken and colleagues, <a href="https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html" target="_blank" rel="noopener">Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet</a>, Transformer Circuits Thread, 2024.</p>
+  <p>Prologue sources are listed at the end of the Prologue. Chapter 6 sources: Jack Lindsey, Wes Gurnee, Emmanuel Ameisen and colleagues, <a href="https://transformer-circuits.pub/2025/attribution-graphs/biology.html" target="_blank" rel="noopener">On the Biology of a Large Language Model</a>, and Emmanuel Ameisen, Jack Lindsey, Adam Pearce and colleagues, <a href="https://transformer-circuits.pub/2025/attribution-graphs/methods.html" target="_blank" rel="noopener">Circuit Tracing: Revealing Computational Graphs in Language Models</a>, Transformer Circuits Thread, 2025.</p>
+  <p>Chapter 5 source: Adly Templeton, Tom Conerly, Jonathan Marcus, Jack Lindsey, Trenton Bricken and colleagues, <a href="https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html" target="_blank" rel="noopener">Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet</a>, Transformer Circuits Thread, 2024.</p>
   <p>Chapter 4 source: Trenton Bricken, Adly Templeton, Joshua Batson, Brian Chen, Adam Jermyn and colleagues, <a href="https://transformer-circuits.pub/2023/monosemantic-features/index.html" target="_blank" rel="noopener">Towards Monosemanticity: Decomposing Language Models With Dictionary Learning</a>, Transformer Circuits Thread, 2023.</p>
   <p>Chapter 2 source: Catherine Olsson, Nelson Elhage, Neel Nanda and colleagues, <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener">In-context Learning and Induction Heads</a>, Transformer Circuits Thread, 2022.</p>
   <p>Chapter 1 source: Nelson Elhage, Neel Nanda, Catherine Olsson and colleagues, <a href="https://transformer-circuits.pub/2021/framework/index.html" target="_blank" rel="noopener">A Mathematical Framework for Transformer Circuits</a>, Transformer Circuits Thread, 2021.</p>
@@ -1630,6 +1824,134 @@ tourists walk across the bridge in the fog`.split('\n');
     seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { lvl = +b.dataset.i; write(); } });
     document.getElementById('ggAgain').addEventListener('click', write);
     write();
+  }
+
+  /* ---------- chapter 6: two-hop circuit (hand-built, really computed) ---------- */
+  {
+    const svg = document.getElementById('hopSvg');
+    const st = {texasOff: false, cal: false, noCap: false};
+    const nodes = {
+      dallas: {x: 90, y: 70, t: 'Dallas', k: 'in'}, capital: {x: 90, y: 190, t: 'capital', k: 'in'}, state: {x: 90, y: 310, t: 'state', k: 'in'},
+      texas: {x: 420, y: 70, t: 'Texas', k: 'f'}, cali: {x: 420, y: 160, t: 'California', k: 'f'}, saycap: {x: 420, y: 280, t: 'say a capital', k: 'f'},
+      austin: {x: 790, y: 70, t: 'Austin', k: 'out'}, sac: {x: 790, y: 190, t: 'Sacramento', k: 'out'}, txw: {x: 790, y: 310, t: '"Texas"', k: 'out'},
+    };
+    const compute = () => {
+      const a = {dallas: 1, capital: st.noCap ? 0 : 1, state: 1};
+      a.texas = st.texasOff ? 0 : a.dallas; a.cali = st.cal ? 1 : 0; a.saycap = a.capital;
+      const logit = {
+        austin: 3 * a.texas * a.saycap + 0.8 * a.dallas * a.capital,
+        sac: 3 * a.cali * a.saycap,
+        txw: 2.5 * a.texas * (1 - a.saycap) + 0.5,
+        dallasw: 0.3,
+      };
+      const edges = [
+        ['dallas', 'texas', a.texas], ['texas', 'austin', 3 * a.texas * a.saycap / 3], ['saycap', 'austin', a.texas * a.saycap], ['capital', 'saycap', a.saycap],
+        ['cali', 'sac', a.cali * a.saycap], ['saycap', 'sac', a.cali * a.saycap], ['texas', 'txw', a.texas * (1 - a.saycap)], ['dallas', 'austin', .27 * a.dallas * a.capital], ['state', 'saycap', .25 * a.saycap],
+      ];
+      return {a, logit, edges};
+    };
+    const render = () => {
+      const {a, logit, edges} = compute();
+      const W = n => n.k === 'f' ? 170 : 140;
+      let h = '';
+      edges.forEach(([f, t, w]) => {
+        const A = nodes[f], B = nodes[t], x1 = A.x + W(A) / 2, x2 = B.x - W(B) / 2;
+        const curve = (f === 'dallas' && t === 'austin') ? `M${A.x},${A.y - 28} C${A.x + 120},${A.y - 75} ${B.x - 120},${B.y - 75} ${B.x},${B.y - 28}` : `M${x1},${A.y} C${(x1 + x2) / 2},${A.y} ${(x1 + x2) / 2},${B.y} ${x2},${B.y}`;
+        h += `<path d="${curve}" fill="none" stroke="var(--plum)" stroke-width="${(1.5 + w * 12).toFixed(1)}" stroke-linecap="round" opacity="${w > .01 ? .85 : .12}"/>`;
+      });
+      Object.entries(nodes).forEach(([id, n]) => {
+        const on = id in a ? a[id] > 0 : true, w = W(n);
+        const fill = n.k === 'in' ? 'var(--wash)' : n.k === 'f' ? (on ? 'var(--marigold)' : 'var(--wash)') : 'var(--card)';
+        h += `<g opacity="${on ? 1 : .45}"><rect x="${n.x - w / 2}" y="${n.y - 28}" width="${w}" height="56" rx="14" fill="${fill}" stroke="${n.k === 'out' ? 'var(--line)' : 'none'}" stroke-width="3"/><text x="${n.x}" y="${n.y + 8}" text-anchor="middle" font-size="22" fill="var(--ink)">${n.t}</text></g>`;
+      });
+      h += `<text x="90" y="350" text-anchor="middle" font-size="16" fill="var(--ink-soft)" dy="22">words in the question</text><text x="420" y="350" dy="22" text-anchor="middle" font-size="16" fill="var(--ink-soft)">features in the middle</text><text x="790" y="350" dy="22" text-anchor="middle" font-size="16" fill="var(--ink-soft)">possible answers</text><text x="440" y="-8" text-anchor="middle" font-size="15" fill="var(--ink-soft)">weak shortcut</text>`;
+      svg.innerHTML = h;
+      const names = {austin: 'Austin', sac: 'Sacramento', txw: 'Texas', dallasw: 'Dallas'};
+      const m = Math.max(...Object.values(logit)); let Z = 0; for (const k in logit) Z += Math.exp(logit[k] - m);
+      const top = Object.entries(logit).map(([k, l]) => [names[k], Math.exp(l - m) / Z]).sort((x, y) => y[1] - x[1]);
+      document.getElementById('hopProbs').innerHTML = shared.court.probsHTML(top);
+      document.getElementById('ggPrompt').innerHTML = st.noCap ? 'Fact: the <s>capital of the</s> state containing Dallas is…' : 'Fact: the capital of the state containing Dallas is…';
+      const v = st.noCap ? 'Without "capital", the question becomes "the state containing Dallas is…", and the Texas feature goes straight to saying "Texas".'
+        : st.cal ? 'California has taken Texas\'s place, so "say a capital" now produces Sacramento. This is the swap the researchers made in the real model.'
+        : st.texasOff ? 'With the middle step gone, only the weak shortcut is left. The answer wobbles.'
+        : 'Dallas switches on Texas. Texas plus "say a capital" gives Austin.';
+      document.getElementById('hopVerdict').textContent = v;
+      ['hTexas', 'hCal', 'hCap'].forEach((id, i) => document.getElementById(id).setAttribute('aria-pressed', [st.texasOff, st.cal, st.noCap][i]));
+    };
+    document.getElementById('hTexas').addEventListener('click', () => { st.texasOff = !st.texasOff; render(); });
+    document.getElementById('hCal').addEventListener('click', () => { st.cal = !st.cal; if (st.cal) st.texasOff = true; render(); });
+    document.getElementById('hCap').addEventListener('click', () => { st.noCap = !st.noCap; render(); });
+    document.getElementById('hReset').addEventListener('click', () => { st.texasOff = st.cal = st.noCap = false; render(); });
+    render();
+  }
+
+  /* ---------- chapter 6: rhyme planning sketch ---------- */
+  {
+    const modes = [
+      {plan: [['rabbit', .8], ['habit', .2]], line: 'as quick and as keen as a hungry rabbit', note: 'The plan: end on "rabbit".'},
+      {plan: [['rabbit', 0], ['habit', .9]], line: 'for snacking on carrots had become a habit', note: '"Rabbit" is suppressed, so the plan falls back to "habit".'},
+      {plan: [['rabbit', .1], ['green', 1]], line: 'and munched on its leaves, so fresh and so green', note: '"Green" is injected. It doesn\'t rhyme, but the model builds a line to reach it.'},
+    ];
+    let mode = 0, timer = null;
+    const l2 = document.getElementById('poemL2'), plan = document.getElementById('poemPlan');
+    const showPlan = () => { plan.innerHTML = `<span class="label">Planned ending</span>` + modes[mode].plan.map(([w, v]) => `<span class="note n1" style="opacity:${.25 + v * .75}">${w}${v === 0 ? ' (suppressed)' : ''}</span>`).join('') + `<span class="stat">${modes[mode].note}</span>`; };
+    const write = () => {
+      clearInterval(timer);
+      const w = modes[mode].line.split(' ');
+      l2.innerHTML = w.map((x, i) => `<span class="${i === w.length - 1 ? 'end' : ''}">${x}</span>`).join(' ');
+      const spans = [...l2.querySelectorAll('span')];
+      if (reduce) { spans.forEach(sp => sp.classList.add('on')); return; }
+      let i = 0; timer = setInterval(() => { if (i < spans.length) spans[i++].classList.add('on'); else clearInterval(timer); }, 260);
+    };
+    document.querySelectorAll('#c6s3 .toggles button').forEach(b => b.addEventListener('click', () => {
+      mode = +b.dataset.m; document.querySelectorAll('#c6s3 .toggles button').forEach(x => x.setAttribute('aria-pressed', x === b));
+      showPlan(); l2.innerHTML = '';
+    }));
+    document.getElementById('poemGo').addEventListener('click', write);
+    showPlan();
+    { const w = modes[0].line.split(' '); l2.innerHTML = w.map((x, i) => `<span class="on ${i === w.length - 1 ? 'end' : ''}">${x}</span>`).join(' '); }
+  }
+
+  /* ---------- chapter 6: two-lane addition (real calculation) ---------- */
+  {
+    const A = document.getElementById('addA'), B = document.getElementById('addB');
+    const run = () => {
+      const a = Math.max(10, Math.min(99, Math.round(+A.value || 0))), b = Math.max(10, Math.min(99, Math.round(+B.value || 0)));
+      const sum = a + b, wobble = ((a * 7 + b * 13) % 7) - 3; // a rough estimate is a little off
+      const est = sum + wobble, lo = est - 4, hi = est + 5;
+      const d = (a % 10 + b % 10) % 10;
+      let ans = lo; while (ans % 10 !== d) ans++;
+      document.getElementById('laneRough').textContent = `${lo} to ${hi}`;
+      document.getElementById('laneRoughNote').textContent = `"somewhere around ${est}"`;
+      document.getElementById('laneDigit').textContent = `ends in ${d}`;
+      document.getElementById('laneDigitNote').textContent = `${a % 10} + ${b % 10} = ${a % 10 + b % 10}, so the last digit is ${d}`;
+      document.getElementById('laneBoth').textContent = ans;
+      document.getElementById('laneBothNote').textContent = `the only number from ${lo} to ${hi} ending in ${d}`;
+      document.getElementById('addAns').textContent = ans === sum ? `${ans} ✓` : `${ans} (true: ${sum})`;
+    };
+    [A, B].forEach(el => el.addEventListener('input', run));
+    run();
+  }
+
+  /* ---------- chapter 6: known entity / can't-answer default ---------- */
+  {
+    const cases = [
+      {known: true, cant: false, facts: true, v: 'Recognised, so the "can\'t answer" default is switched off, and real facts are found: <span>basketball</span>.'},
+      {known: false, cant: true, facts: false, v: 'Not recognised, so the default stays on: <span>"I\'m not sure who that is."</span>'},
+      {known: true, cant: false, facts: false, v: 'It feels familiar, so the default is switched off, but there are no facts behind it. The model fills the gap: <span>a confident made-up answer</span>.'},
+    ];
+    const seg = document.getElementById('kSeg');
+    const pill = (el, on, yes, no) => { el.className = 'pill ' + (on ? 'on' : ''); el.textContent = on ? yes : no; };
+    const show = k => {
+      const c = cases[k];
+      pill(document.getElementById('kKnown'), c.known, 'on', 'off');
+      pill(document.getElementById('kCant'), c.cant, 'on', 'off');
+      pill(document.getElementById('kFacts'), c.facts, 'yes', 'none');
+      document.getElementById('kVerdict').innerHTML = c.v;
+      seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.k === k));
+    };
+    seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) show(+b.dataset.k); });
+    show(0);
   }
 
   /* ---------- scene 1: jumbled neuron ---------- */
