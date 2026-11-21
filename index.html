@@ -156,6 +156,20 @@ button.primary:hover{opacity:.88}
 .card.u{border-top:6px solid var(--marigold)}
 .next{margin-top:3rem;border:2px dashed var(--line);border-radius:24px;padding:24px;display:grid;gap:.6rem}
 .next h4{font-size:1.4rem}
+.chapter-head .num.pro{background:var(--teal)}
+details.corpus{margin-top:1rem;font-size:.92rem}
+details.corpus summary{cursor:pointer;font-family:var(--f-display);font-weight:600}
+details.corpus ol{font-family:var(--f-mono);font-size:.8rem;columns:2 260px;column-gap:2rem;color:var(--ink-soft);margin:.8rem 0 0;padding-left:1.6rem}
+.checks{display:flex;flex-wrap:wrap;gap:8px 20px}
+.checks label{display:flex;gap:8px;align-items:center;font-size:.95rem;cursor:pointer}
+.checks input{width:18px;height:18px;accent-color:var(--plum)}
+select{font-family:var(--f-display);font-weight:600;font-size:.95rem;color:var(--ink);background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:.35rem .6rem}
+.sum{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-family:var(--f-display);font-weight:600}
+.circuit{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;text-align:center;font-size:.9rem}
+.circuit .part{background:var(--wash);border-radius:14px;padding:12px 8px}
+.circuit svg{width:100%;max-width:90px;height:auto}
+.circuit .whole{grid-column:1/-1;background:color-mix(in srgb, var(--teal) 14%, var(--card));border-radius:14px;padding:12px}
+.circuit .arrows{grid-column:1/-1;font-family:var(--f-mono);color:var(--ink-soft);font-size:.8rem}
 footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-size:.9rem;color:var(--ink-soft);display:grid;gap:.6rem}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -174,9 +188,9 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
 
 <section class="toc" aria-labelledby="toc-h">
   <h2 id="toc-h">The story so far</h2>
-  <p class="hint">Ten years of discoveries, in order. We're opening the book in the middle, at the most visual chapter. The rest are on their way.</p>
+  <p class="hint">Ten years of discoveries, in order. Start with the Prologue. Chapter 3 is also open if you'd like to skip ahead, and the rest are on their way.</p>
   <nav class="strip" aria-label="Chapters">
-    <div class="chap soon"><span class="yr">2013 – 2020</span><h3>Prologue: Words Become Arrows</h3><p>Meaning turns out to live in directions. Then, bigger models get predictably better.</p><span class="status">Coming soon</span></div>
+    <a class="chap open" href="#prologue"><span class="yr">2013 – 2020</span><h3>Prologue: Words Become Arrows</h3><p>Meaning turns out to live in directions. Then, bigger models get predictably better.</p><span class="status">Read now ↓</span></a>
     <div class="chap soon"><span class="yr">2021</span><h3>1. The Clerks and the Case File</h3><p>What actually happens inside a model, layer by layer.</p><span class="status">Coming soon</span></div>
     <div class="chap soon"><span class="yr">2022</span><h3>2. The Copycat Trick</h3><p>How a model learns new things in the middle of a conversation.</p><span class="status">Coming soon</span></div>
     <a class="chap open" href="#crowded-office"><span class="yr">2022</span><h3>3. The Crowded Office</h3><p>How a model fits millions of ideas into a few thousand directions.</p><span class="status">Read now ↓</span></a>
@@ -187,6 +201,147 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
   </nav>
 </section>
 
+<article id="prologue">
+  <div class="chapter-head">
+    <span class="num pro">Prologue</span>
+    <h2>Words Become Arrows</h2>
+    <p class="based">2013 to 2020. Based on word2vec (Mikolov et al., Google, 2013), <em>Scaling Laws for Neural Language Models</em> (Kaplan et al., OpenAI, 2020) and <em>Zoom In</em> (Olah et al., 2020). Links to all three are at the end of the chapter.</p>
+  </div>
+
+  <section class="scene" aria-labelledby="p1">
+    <div class="prose">
+      <p class="scene-tag">Scene 1</p>
+      <h3 id="p1">What does a word mean, to a computer?</h3>
+      <p>To a computer, a word is just a row of letters. "Cat" and "kitten" look nothing alike, and "cat" and "car" look almost the same. Spelling tells you very little about meaning.</p>
+      <p>The way out came from a 1957 idea by the linguist J. R. Firth: <em>"You shall know a word by the company it keeps."</em> You learn what a new word means by seeing where it turns up. If a word keeps appearing near "crown", "throne" and "palace", you can guess a lot about it without a dictionary.</p>
+      <p>So describe every word by its neighbours. Then words with similar neighbours get similar descriptions, and you can draw them as points on a map. Words that keep similar company land close together.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="p2">
+    <div class="prose">
+      <p class="scene-tag">Scene 2</p>
+      <h3 id="p2">Build a map of meaning</h3>
+      <p>Below is a real word map, built right now in your browser from 18 short sentences. It counts which words share a sentence, then squeezes those counts down to just two directions so we can draw them. Nobody told it what any word means.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>A map made only from company</h4><span class="label">Real calculation</span></div>
+      <div class="model-grid">
+        <canvas id="wordCanvas" width="880" height="880" aria-label="A map of four words positioned by the company they keep" role="img"></canvas>
+        <div style="display:grid;gap:1rem">
+          <div>
+            <p class="label" style="margin-bottom:.5rem">Which neighbour words can the map see?</p>
+            <div class="checks">
+              <label for="gGender"><input type="checkbox" id="gGender" checked> he, she, his, her</label>
+              <label for="gStatus"><input type="checkbox" id="gStatus" checked> crown, palace, farm, village…</label>
+            </div>
+          </div>
+          <div>
+            <p class="label" style="margin-bottom:.5rem">Arrow arithmetic</p>
+            <div class="sum">
+              <label for="aStart" class="label" hidden>Start word</label>
+              <span>Start at</span><select id="aStart"></select>
+              <span>and walk the arrow</span><select id="aDir" aria-label="Direction to walk"></select>
+            </div>
+          </div>
+          <p class="verdict" id="wordVerdict"></p>
+        </div>
+      </div>
+      <details class="corpus"><summary>Read the 18 sentences the map learned from</summary><ol id="corpusList"></ol></details>
+      <p class="caption">The sentences are deliberately tidy, so the pattern shows up with only four words. Real text is messy, which is why real systems needed billions of words. <strong>Try this:</strong> untick "he, she, his, her". King and queen collapse into one point, because without those words their company is identical. The map only knows what the neighbours tell it.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="p3">
+    <div class="prose">
+      <p class="scene-tag">Scene 3</p>
+      <h3 id="p3">2013: the arrow that means something</h3>
+      <p>In 2013, a team at Google led by Tomas Mikolov released <span class="term">word2vec</span>. It did the same thing as the toy above, on a far bigger scale: billions of words of news text, and a few hundred directions instead of two. (Word2vec learns by predicting a word's neighbours rather than by counting them, but researchers later showed the two approaches are closely related.)</p>
+      <p>Then they noticed something nobody had designed. Take the point for <strong>king</strong>, subtract <strong>man</strong>, add <strong>woman</strong>, and you land right next to <strong>queen</strong>. The step from "man" to "woman" is an arrow, and the same arrow leads from "king" to "queen", from "uncle" to "aunt", from "actor" to "actress".</p>
+      <p>Other arrows turned up too. One led from countries to their capitals, another from a verb to its past tense. <strong>Meaning wasn't just stored as points. Directions meant things.</strong> That single idea runs through every chapter of this book.</p>
+      <div class="aside">
+        <p class="label">Two fine-print details</p>
+        <p><strong>The famous example is one of the neatest.</strong> Many analogies work less cleanly, and the standard test quietly leaves out the three words you started with. Without that rule, the nearest word to king − man + woman is often just "king".</p>
+        <p style="margin-top:.6rem"><strong>The arrows learned our prejudices too.</strong> A 2016 paper showed the same arithmetic completed "man is to computer programmer as woman is to…" with "homemaker". The map reflects the company words keep in human writing, stereotypes included. It was an early warning that these systems absorb what's in their training text, good and bad.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="p4">
+    <div class="prose">
+      <p class="scene-tag">Scene 4</p>
+      <h3 id="p4">From word maps to word machines</h3>
+      <p>Word2vec gave every word one fixed point. But "bank" means something different in "river bank" and "bank account". A fixed map can't tell them apart.</p>
+      <p>In 2017, another Google team introduced the <span class="term">transformer</span>, in a paper called <em>Attention Is All You Need</em>. A transformer reads a whole passage at once and builds a fresh arrow for every word <em>in its context</em>, so the two banks end up in different places. It's the design behind nearly every chatbot today, and the subject of Chapter 1.</p>
+      <p>Between 2018 and 2020, OpenAI trained a series of transformers called GPT, GPT-2 and GPT-3, each far bigger than the last. All of them had a single job: read some text and predict the next word. And each one was surprisingly better than the one before.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="p5">
+    <div class="prose">
+      <p class="scene-tag">Scene 5</p>
+      <h3 id="p5">2020: bigger is predictably better</h3>
+      <p>In 2020, a team at OpenAI led by Jared Kaplan measured exactly how much better. They trained hundreds of models of different sizes and found something rare in science: a near-perfect pattern. Every time you multiply the computing power by ten, the model's error drops by about the same fraction. That held across a huge range, from tiny models to the biggest they could build.</p>
+      <p>This pattern is called a <span class="term">scaling law</span>. It's the reason AI companies now spend billions on bigger models with confidence. They can predict roughly how good a model will be before they build it.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>The scaling law</h4><span class="label">Shape from Kaplan et al., 2020</span></div>
+      <div class="canvas-box"><canvas id="scaleCanvas" width="1800" height="800" aria-label="A chart of model error falling as computing power grows" role="img"></canvas></div>
+      <div class="controls">
+        <div class="ctl"><label for="budget">Computing budget</label><input type="range" id="budget" min="0" max="8" step="1" value="2"><output id="budgetOut" for="budget"></output></div>
+        <div class="btns"><button id="axisBtn">Show on a ruler scale</button></div>
+      </div>
+      <p class="verdict" id="scaleVerdict"></p>
+      <p class="caption">The curve follows the paper's formula, where error shrinks with compute raised to the power −0.05. The units are illustrative. On a "times ten" scale, where each step is ten times bigger than the last, the curve becomes a straight line. Press the button to see the same numbers on an ordinary ruler scale, where almost all the improvement seems to happen at the very start.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="p6">
+    <div class="prose">
+      <p class="scene-tag">Scene 6</p>
+      <h3 id="p6">Grown, not built</h3>
+      <p>So by 2020, people knew the recipe: a transformer, a mountain of text, the goal of predicting the next word, and a rule that nudges billions of numbers whenever a guess is wrong. They could even predict how good the result would be.</p>
+      <p>What they didn't know was <em>what had grown inside</em>. Nobody wrote the rules the model follows. They emerged during training, in a space of thousands of unlabelled directions.</p>
+      <p>A small group of researchers led by Chris Olah had already started looking. They took models that recognise images and studied them neuron by neuron. They found neurons that detect curves, and saw how they connect. In their 2020 article <em>Zoom In</em>, they showed a "car detector" assembled from simpler parts: windows near the top, a car body in the middle, wheels at the bottom.</p>
+    </div>
+    <div class="toy" style="max-width:640px">
+      <div class="toy-head"><h4>A circuit, in miniature</h4><span class="label">After Olah et al., 2020</span></div>
+      <div class="circuit">
+        <div class="part"><svg viewBox="0 0 90 60" aria-hidden="true"><rect x="10" y="14" width="30" height="24" rx="5" fill="var(--sky)"/><rect x="50" y="14" width="30" height="24" rx="5" fill="var(--sky)"/></svg><div>Windows on top</div></div>
+        <div class="part"><svg viewBox="0 0 90 60" aria-hidden="true"><rect x="6" y="20" width="78" height="22" rx="10" fill="var(--tomato)"/></svg><div>Body in the middle</div></div>
+        <div class="part"><svg viewBox="0 0 90 60" aria-hidden="true"><circle cx="24" cy="32" r="14" fill="var(--ink)"/><circle cx="66" cy="32" r="14" fill="var(--ink)"/><circle cx="24" cy="32" r="5" fill="var(--wash)"/><circle cx="66" cy="32" r="5" fill="var(--wash)"/></svg><div>Wheels below</div></div>
+        <div class="arrows">↓ combine ↓</div>
+        <div class="whole"><svg viewBox="0 0 120 70" style="max-width:150px" aria-hidden="true"><rect x="30" y="8" width="56" height="22" rx="8" fill="var(--sky)"/><rect x="8" y="26" width="104" height="24" rx="10" fill="var(--tomato)"/><circle cx="32" cy="52" r="12" fill="var(--ink)"/><circle cx="88" cy="52" r="12" fill="var(--ink)"/></svg><div><strong>A car detector</strong></div></div>
+      </div>
+      <p class="caption">They called these wiring patterns <strong>circuits</strong>, and they made a bold bet: that models are made of understandable parts, if only we look carefully enough.</p>
+    </div>
+    <div class="prose" style="margin-top:2rem">
+      <p>In 2021, that group began asking the same question of transformers, the models that read and write language. They published their findings as a running series of articles called the <em>Transformer Circuits Thread</em>. This book follows that series, one discovery at a time.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="p7">
+    <div class="prose">
+      <p class="scene-tag">The end of the prologue</p>
+      <h3 id="p7">What we know, and what we don't</h3>
+    </div>
+    <div class="learned">
+      <div class="card k"><h4>Known: you can know a word by its company</h4><p>Describing words by their neighbours gives a map where similar meanings sit close together.</p></div>
+      <div class="card k"><h4>Known: directions carry meaning</h4><p>Steps through the map, like man to woman or country to capital, mean the same thing wherever you take them.</p></div>
+      <div class="card k"><h4>Known: scale brings predictable gains</h4><p>More compute, data and size reduce a model's error along a smooth, predictable curve.</p></div>
+      <div class="card u"><h4>Unknown: what grows inside?</h4><p>In 2020, nobody could explain how a big language model actually produces its answers.</p></div>
+      <div class="card u"><h4>Unknown: why does scaling work so well?</h4><p>The curve was measured, not explained. Why it holds, and how far it will keep holding, are still debated.</p></div>
+      <div class="card u"><h4>Unknown: are models made of readable parts?</h4><p>Circuits had been found in image models. Whether language models could be read the same way was the open bet.</p></div>
+    </div>
+    <div class="next">
+      <p class="label">Next in the story</p>
+      <h4>Chapter 1: The Clerks and the Case File</h4>
+      <p>What happens inside a transformer, layer by layer: the case file, the clerks, and the notes they add. Coming soon. Chapter 3 is already open below if you'd like to skip ahead.</p>
+      <p class="stat">Sources: <a href="https://arxiv.org/abs/1301.3781" target="_blank" rel="noopener">Mikolov et al., 2013 (word2vec)</a> · <a href="https://aclanthology.org/N13-1090/" target="_blank" rel="noopener">Mikolov, Yih &amp; Zweig, 2013 (word analogies)</a> · <a href="https://arxiv.org/abs/1607.06520" target="_blank" rel="noopener">Bolukbasi et al., 2016 (bias in word maps)</a> · <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Vaswani et al., 2017 (the transformer)</a> · <a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">Kaplan et al., 2020 (scaling laws)</a> · <a href="https://distill.pub/2020/circuits/zoom-in/" target="_blank" rel="noopener">Olah et al., 2020 (Zoom In)</a></p>
+    </div>
+  </section>
+</article>
+
 <article id="crowded-office">
   <div class="chapter-head">
     <span class="num">Chapter 3</span>
@@ -195,7 +350,7 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
   </div>
 
   <div class="prose">
-    <p>Before we start, here are the characters you'll meet in every chapter. Inside a language model, every idea it can think about is stored as an <span class="term">arrow</span>: a direction in a vast space. The space is the model's private filing system. Researchers call it <span class="term">latent space</span>, which just means "hidden space", because nobody labelled any of its directions.</p>
+    <p>Here's a reminder of the characters you'll meet in every chapter. Inside a language model, every idea it can think about is stored as an <span class="term">arrow</span>: a direction in a vast space. The space is the model's private filing system. Researchers call it <span class="term">latent space</span>, which just means "hidden space", because nobody labelled any of its directions.</p>
   </div>
 
   <div class="cast" role="list">
@@ -361,7 +516,7 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
 
 <footer>
   <p><strong>Latent Learning</strong> is an independent learning project. It isn't affiliated with or endorsed by Anthropic or the authors of the papers it explains. All illustrations and explanations are original. The research belongs to its authors, so please read the originals.</p>
-  <p>Source paper for this chapter: Nelson Elhage, Tristan Hume, Catherine Olsson, Nicholas Schiefer, Tom Henighan, Shauna Kravec, Zac Hatfield-Dodds, Robert Lasenby, Dawn Drain, Carol Chen, Roger Grosse, Sam McCandlish, Jared Kaplan, Dario Amodei, Martin Wattenberg and Christopher Olah. <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener">Toy Models of Superposition</a>, Transformer Circuits Thread, 2022.</p>
+  <p>Prologue sources are listed at the end of the Prologue. Chapter 3 source: Nelson Elhage, Tristan Hume, Catherine Olsson, Nicholas Schiefer, Tom Henighan, Shauna Kravec, Zac Hatfield-Dodds, Robert Lasenby, Dawn Drain, Carol Chen, Roger Grosse, Sam McCandlish, Jared Kaplan, Dario Amodei, Martin Wattenberg and Christopher Olah. <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener">Toy Models of Superposition</a>, Transformer Circuits Thread, 2022.</p>
 </footer>
 </div>
 
@@ -408,6 +563,141 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     };
     redrawers.push(draw); draw();
     if (!reduce) { const loop = () => { t++; draw(); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
+  }
+
+  /* ---------- prologue: word map from co-occurrence (PPMI + PCA) ---------- */
+  {
+    const S = `the king wears his crown in the palace
+the queen wears her crown in the palace
+the king sits on his throne and rules the kingdom
+the queen sits on her throne and rules the kingdom
+he is the king of the realm
+she is the queen of the realm
+the man works on his farm in the village
+the woman works on her farm in the village
+the man buys bread at the market
+the woman buys bread at the market
+he is a man from the village
+she is a woman from the village
+the king and the queen feast at the palace
+the man and the woman walk to the market
+the king rides his horse to the palace
+the queen rides her horse to the palace
+the man rides his horse to the village
+the woman rides her horse to the village`.split('\n');
+    const stop = new Set('the a in at to of on is and with from'.split(' '));
+    const T = ['king', 'queen', 'man', 'woman'];
+    const col = {king: '--tomato', queen: '--plum', man: '--sky', woman: '--teal'};
+    const gender = ['he', 'she', 'his', 'her'];
+    const cv = document.getElementById('wordCanvas'), ctx = cv.getContext('2d');
+    const gG = document.getElementById('gGender'), gS = document.getElementById('gStatus');
+    const aStart = document.getElementById('aStart'), aDir = document.getElementById('aDir');
+    const dirs = [{f: 'man', t: 'woman'}, {f: 'woman', t: 'man'}, {f: 'man', t: 'king'}, {f: 'king', t: 'man'}];
+    aStart.innerHTML = T.map(w => `<option value="${w}">${w}</option>`).join('');
+    aDir.innerHTML = dirs.map((d, i) => `<option value="${i}">${d.f} → ${d.t}</option>`).join('');
+    aStart.value = 'king';
+    document.getElementById('corpusList').innerHTML = S.map(s => `<li>${s}</li>`).join('');
+    let P = {};
+    const build = () => {
+      const allowed = c => (gender.includes(c) ? gG.checked : gS.checked);
+      const M = {}; T.forEach(t => M[t] = {}); const ctxs = new Set();
+      for (const s of S) {
+        const w = s.split(' ').filter(x => !stop.has(x));
+        for (const t of w) if (T.includes(t)) for (const c of w) {
+          if (c === t || T.includes(c) || !allowed(c)) continue;
+          M[t][c] = (M[t][c] || 0) + 1; ctxs.add(c);
+        }
+      }
+      const Cx = [...ctxs]; let tot = 0; const rs = {}, cs = {};
+      T.forEach(t => Cx.forEach(c => { const v = M[t][c] || 0; tot += v; rs[t] = (rs[t] || 0) + v; cs[c] = (cs[c] || 0) + v; }));
+      const X = T.map(t => Cx.map(c => { const v = M[t][c] || 0; return v ? Math.max(0, Math.log(v * tot / (rs[t] * cs[c]))) : 0; }));
+      const mean = Cx.map((_, j) => X.reduce((a, r) => a + r[j], 0) / T.length);
+      X.forEach(r => r.forEach((v, j) => r[j] = v - mean[j]));
+      let A = T.map((_, i) => T.map((_, k) => X[i].reduce((a, v, j) => a + v * X[k][j], 0)));
+      const coords = T.map(() => [0, 0]);
+      for (let e = 0; e < 2; e++) {
+        let v = T.map((_, i) => Math.sin(i * 1.7 + e + 1));
+        for (let it = 0; it < 300; it++) { const w = A.map(r => r.reduce((a, x, j) => a + x * v[j], 0)); const nn = Math.hypot(...w) || 1; v = w.map(x => x / nn); }
+        const lam = v.reduce((a, x, i) => a + x * A[i].reduce((b, y, j) => b + y * v[j], 0), 0);
+        if (lam > 1e-6) T.forEach((_, i) => coords[i][e] = v[i] * Math.sqrt(lam));
+        A = A.map((r, i) => r.map((x, j) => x - lam * v[i] * v[j]));
+      }
+      const ki = 0;
+      [0, 1].forEach(e => { if (coords[ki][e] < -1e-9) coords.forEach(c => c[e] = -c[e]); });
+      const mx = Math.max(1e-9, ...coords.flat().map(Math.abs));
+      P = {}; T.forEach((t, i) => P[t] = [coords[i][0] / mx, coords[i][1] / mx]);
+      draw();
+    };
+    const draw = () => {
+      const W = cv.width, c = W / 2, R = W * .36;
+      const X = p => c + p[0] * R, Y = p => c - p[1] * R;
+      ctx.clearRect(0, 0, W, W);
+      ctx.strokeStyle = C.line; ctx.lineWidth = 3; ctx.setLineDash([10, 14]);
+      ctx.strokeRect(c - W * .44, c - W * .44, W * .88, W * .88); ctx.setLineDash([]);
+      const s = aStart.value, d = dirs[+aDir.value];
+      const step = [P[d.t][0] - P[d.f][0], P[d.t][1] - P[d.f][1]];
+      const land = [P[s][0] + step[0], P[s][1] + step[1]];
+      // the direction arrow (faint) and the walk (bold)
+      ctx.globalAlpha = .45; arrow(ctx, X(P[d.f]), Y(P[d.f]), X(P[d.t]), Y(P[d.t]), C.ink, 7); ctx.globalAlpha = 1;
+      arrow(ctx, X(P[s]), Y(P[s]), X(land), Y(land), C.ink, 9);
+      ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.setLineDash([6, 8]);
+      ctx.beginPath(); ctx.arc(X(land), Y(land), 34, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+      // words, nudging overlapping labels apart
+      const placed = [];
+      T.forEach(t => {
+        const px = X(P[t]), py = Y(P[t]);
+        const dup = placed.filter(q => Math.hypot(q[0] - px, q[1] - py) < 30).length;
+        placed.push([px, py]);
+        ctx.fillStyle = css(col[t]); ctx.beginPath(); ctx.arc(px, py, 20, 0, Math.PI * 2); ctx.fill();
+        ctx.font = '800 46px "Bricolage Grotesque", system-ui, sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(t, px, py + (dup ? 82 : -36) + dup * 40);
+      });
+      const best = T.filter(t => t !== s && t !== d.f && t !== d.t).map(t => [t, Math.hypot(P[t][0] - land[0], P[t][1] - land[1])]).sort((a, b) => a[1] - b[1])[0]
+        || T.map(t => [t, Math.hypot(P[t][0] - land[0], P[t][1] - land[1])]).sort((a, b) => a[1] - b[1])[0];
+      document.getElementById('wordVerdict').innerHTML = `${s} − ${d.f} + ${d.t} lands nearest <span>${best[0]}</span>.`;
+    };
+    redrawers.push(draw);
+    [gG, gS].forEach(el => el.addEventListener('change', build));
+    [aStart, aDir].forEach(el => el.addEventListener('change', draw));
+    build();
+  }
+
+  /* ---------- prologue: scaling law (error ∝ compute^-0.05, Kaplan et al. 2020) ---------- */
+  {
+    const cv = document.getElementById('scaleCanvas'), ctx = cv.getContext('2d');
+    const br = document.getElementById('budget'), bo = document.getElementById('budgetOut');
+    let logScale = true;
+    const L = c => 4 * Math.pow(c, -0.05);
+    const draw = () => {
+      const W = cv.width, H = cv.height, pl = 150, pr = 60, pt = 40, pb = 110, cw = W - pl - pr, ch = H - pt - pb;
+      const Lmin = L(1e8), Lmax = L(1);
+      const xOf = c => pl + (logScale ? Math.log10(c) / 8 : c / 1e8) * cw;
+      const yOf = l => pt + (logScale ? (Math.log10(Lmax) - Math.log10(l)) / (Math.log10(Lmax) - Math.log10(Lmin)) : (Lmax - l) / (Lmax - Lmin)) * ch;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = C.line; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(pl, pt); ctx.lineTo(pl, pt + ch); ctx.lineTo(pl + cw, pt + ch); ctx.stroke();
+      ctx.font = '600 32px "JetBrains Mono", monospace'; ctx.fillStyle = C.soft;
+      ctx.textAlign = 'center';
+      if (logScale) { for (let k = 0; k <= 8; k += 2) ctx.fillText(k === 0 ? '1×' : `10^${k}×`, xOf(10 ** k), pt + ch + 50); }
+      else { [0, .25, .5, .75, 1].forEach(f => ctx.fillText(f === 0 ? '0' : `${f * 100}M×`, pl + f * cw, pt + ch + 50)); }
+      ctx.fillText('computing power →', pl + cw / 2, pt + ch + 98);
+      ctx.save(); ctx.translate(48, pt + ch / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('error →  lower is better', 0, 0); ctx.restore();
+      ctx.strokeStyle = C.feats[1]; ctx.lineWidth = 9; ctx.lineCap = 'round'; ctx.beginPath();
+      for (let i = 0; i <= 400; i++) { const c = logScale ? 10 ** (8 * i / 400) : Math.max(1, 1e8 * i / 400); const x = xOf(c), y = yOf(L(c)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke();
+      const cNow = 10 ** +br.value, x = xOf(cNow), y = yOf(L(cNow));
+      ctx.fillStyle = C.feats[0]; ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = C.card; ctx.lineWidth = 6; ctx.stroke();
+      const k = +br.value;
+      bo.textContent = k === 0 ? 'The starting budget' : `${(10 ** k).toLocaleString()} times the starting budget`;
+      const pct = Math.round((1 - L(cNow) / L(1)) * 100);
+      document.getElementById('scaleVerdict').innerHTML = k === 0 ? 'Slide right to multiply the budget by ten, again and again.' : `Error is down <span>${pct}%</span> from the start. Each ten-times step cuts it by about 11%.`;
+      document.getElementById('axisBtn').textContent = logScale ? 'Show on a ruler scale' : 'Show on a times-ten scale';
+    };
+    redrawers.push(draw);
+    br.addEventListener('input', draw);
+    document.getElementById('axisBtn').addEventListener('click', () => { logScale = !logScale; draw(); });
+    draw();
   }
 
   /* ---------- scene 1: jumbled neuron ---------- */
