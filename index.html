@@ -158,6 +158,19 @@ button.primary:hover{opacity:.88}
 .next h4{font-size:1.4rem}
 .chapter-head .num.pro{background:var(--teal)}
 .chapter-head .num.c1{background:var(--sky)}
+.chapter-head .num.c2{background:var(--pink)}
+.seq{display:flex;flex-wrap:wrap;gap:6px}
+.seq span{font-family:var(--f-mono);font-size:.85rem;padding:.3rem .55rem;border-radius:8px;background:var(--wash);border:2px solid transparent}
+.seq span.ok{background:color-mix(in srgb, var(--good) 22%, var(--card));border-color:var(--good)}
+.seq span.miss{background:color-mix(in srgb, var(--bad) 12%, var(--card))}
+.seq span.half{margin-left:10px;border-left:3px solid var(--ink)}
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:1rem}
+.score{background:var(--wash);border-radius:14px;padding:12px 14px}
+.score b{font-family:var(--f-display);font-size:1.6rem;font-variant-numeric:tabular-nums;display:block}
+.score small{font-family:var(--f-mono);font-size:.75rem;color:var(--ink-soft)}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .6rem;border-radius:999px;background:var(--wash);color:var(--ink-soft)}
+.pill.on{background:color-mix(in srgb, var(--good) 22%, var(--card));color:var(--good)}
+.pill.mid{background:color-mix(in srgb, var(--marigold) 28%, var(--card));color:var(--ink)}
 .files-scroll{overflow-x:auto;padding-bottom:6px}
 .files{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;min-width:560px}
 .file{background:color-mix(in srgb, var(--marigold) 16%, var(--card));border:2px solid transparent;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px;min-height:210px;transition:border-color .3s, box-shadow .3s}
@@ -222,7 +235,7 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
   <nav class="strip" aria-label="Chapters">
     <a class="chap open" href="#prologue"><span class="yr">2013 – 2020</span><h3>Prologue: Words Become Arrows</h3><p>Meaning turns out to live in directions. Then, bigger models get predictably better.</p><span class="status">Read now ↓</span></a>
     <a class="chap open" href="#clerks"><span class="yr">2021</span><h3>1. The Clerks and the Case File</h3><p>What actually happens inside a model, layer by layer.</p><span class="status">Read now ↓</span></a>
-    <div class="chap soon"><span class="yr">2022</span><h3>2. The Copycat Trick</h3><p>How a model learns new things in the middle of a conversation.</p><span class="status">Coming soon</span></div>
+    <a class="chap open" href="#copycat"><span class="yr">2022</span><h3>2. The Copycat Trick</h3><p>How a model learns new things in the middle of a conversation.</p><span class="status">Read now ↓</span></a>
     <a class="chap open" href="#crowded-office"><span class="yr">2022</span><h3>3. The Crowded Office</h3><p>How a model fits millions of ideas into a few thousand directions.</p><span class="status">Read now ↓</span></a>
     <div class="chap soon"><span class="yr">2023</span><h3>4. Untangling the Desks</h3><p>A tool for pulling the squeezed ideas back apart.</p><span class="status">Coming soon</span></div>
     <div class="chap soon"><span class="yr">2024</span><h3>5. The Golden Gate Bridge</h3><p>Finding real concepts inside a real, large model, and turning one up.</p><span class="status">Coming soon</span></div>
@@ -501,7 +514,138 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 2: The Copycat Trick</h4>
-      <p>In 2022, the same team showed that induction heads appear suddenly during training, at the same moment models get much better at learning from the text in front of them. Coming soon. <a href="#crowded-office">Chapter 3 is ready below ↓</a></p>
+      <p>In 2022, the same team showed that induction heads appear suddenly during training, at the same moment models get much better at learning from the text in front of them. <a href="#copycat">Read Chapter 2 ↓</a></p>
+    </div>
+  </section>
+</article>
+
+<article id="copycat">
+  <div class="chapter-head">
+    <span class="num c2">Chapter 2</span>
+    <h2>The Copycat Trick</h2>
+    <p class="based">Based on <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener"><em>In-context Learning and Induction Heads</em></a> (Olsson, Elhage, Nanda et al., Anthropic, 2022)</p>
+  </div>
+
+  <section class="scene" aria-labelledby="c2s1">
+    <div class="prose">
+      <p class="scene-tag">Scene 1</p>
+      <h3 id="c2s1">Learning without changing</h3>
+      <p>Here's a puzzle. Once a model has finished training, its billions of numbers are frozen. Nothing about it changes while you talk to it. And yet it clearly learns from what you tell it.</p>
+      <p>Lawyers do this with every contract. Write <em>"Northwind Logistics Ltd (the 'Supplier')"</em> on page one, and from then on a good reader knows exactly who "the Supplier" is. A language model does the same thing. Introduce a made-up name, a new term or an odd format, and a few lines later it's using it correctly.</p>
+      <p>Researchers call this <span class="term">in-context learning</span>: learning from the text in front of you, rather than from training. You can measure it. A model guesses the 500th word of a document much better than the 50th, because by then it has 450 more words of context to learn from.</p>
+      <p>The 2022 paper asked: <strong>which clerks make this possible?</strong> Their answer was the induction heads we met at the end of Chapter 1.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c2s2">
+    <div class="prose">
+      <p class="scene-tag">Scene 2</p>
+      <h3 id="c2s2">The copycat rule</h3>
+      <p>An induction head follows one simple rule:</p>
+      <p style="font-family:var(--f-display);font-weight:600;font-size:1.25rem;text-align:center">If you've seen <span style="color:var(--tomato)">A</span> followed by <span style="color:var(--sky)">B</span> before, then the next time you see <span style="color:var(--tomato)">A</span>, guess <span style="color:var(--sky)">B</span>.</p>
+      <p>That sounds almost too simple to matter. But it's exactly the trick you need for "the Supplier", for names, for repeated phrases, and for any pattern that appears earlier in the same text.</p>
+      <p>The researchers' favourite test makes the point vividly. Take a list of <em>random</em> words, so there's no meaning or grammar to lean on, and repeat it. The first time through, nothing can predict what comes next. The second time through, a model with induction heads gets almost every word right.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>The repeated-nonsense test</h4><span class="label">Real calculation</span></div>
+      <p class="label" style="margin-bottom:.5rem">A random list, then the same list again. Green means the copycat rule guessed that word correctly.</p>
+      <div class="seq" id="nonsenseSeq"></div>
+      <div class="scores">
+        <div class="score"><small>Copycat rule, first time through</small><b id="sc1">0%</b></div>
+        <div class="score"><small>Copycat rule, second time through</small><b id="sc2">0%</b></div>
+        <div class="score"><small>Random guessing</small><b id="sc3">0%</b></div>
+      </div>
+      <div class="btns" style="margin-top:1rem"><button class="primary" id="nonsenseNew">New nonsense</button></div>
+      <p class="caption">This toy runs the copycat rule exactly as written above: for each word, find where it appeared before, and guess whatever came after it. It isn't a trained model, but it's the same rule the paper found trained models carrying out. Real models aren't quite this perfect, but they show the same dramatic jump on the second pass.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c2s3">
+    <div class="prose">
+      <p class="scene-tag">Scene 3</p>
+      <h3 id="c2s3">Two clerks, one trick</h3>
+      <p>Remember the mix-up at the end of Chapter 1? In "mr osei and ms novak spoke then the judge thanked ms", a single messenger found both names but couldn't tell which one belonged to "ms".</p>
+      <p>An induction head is a team of two clerks:</p>
+      <p><strong>Clerk 1, in an early row</strong>, works on every file and writes down one fact: "the word just before me was…". So the file for "novak" gets the note <em>"before me: ms"</em>.</p>
+      <p><strong>Clerk 2, in a later row</strong>, works on the last file, "ms". It asks: "which earlier file has the note <em>before me: ms</em>?" That's the file for "novak", so it copies "novak" forward.</p>
+      <p>Clerk 2 can only ask that question because Clerk 1 left the note. This is the <span class="term">composition</span> from Chapter 1: one clerk's notes changing where another clerk looks.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Chapter 1's mix-up, fixed</h4><span class="label">Real calculation · hand-set clerks</span></div>
+      <div class="presets" id="c2Presets" role="group" aria-label="Example sentences"></div>
+      <div style="margin-top:.8rem"><label for="c2Text" class="label">Or type your own (lowercase words)</label><input type="text" id="c2Text" spellcheck="false" autocomplete="off"></div>
+      <div class="checks" style="margin-top:1rem" role="radiogroup" aria-label="Which copying clerk">
+        <label for="c2ModeOld"><input type="radio" name="c2Mode" id="c2ModeOld" value="old"> Chapter 1's single messenger</label>
+        <label for="c2ModeInd"><input type="radio" name="c2Mode" id="c2ModeInd" value="ind" checked> The induction team</label>
+      </div>
+      <div class="two-col" style="margin-top:1.2rem">
+        <div>
+          <p class="label">Where the copying clerk is looking</p>
+          <div class="spot" id="c2Spot"></div>
+          <p class="stat" style="margin-top:.6rem" id="c2Q"></p>
+        </div>
+        <div>
+          <p class="label" style="margin-bottom:.6rem">The model's guesses for the next word</p>
+          <div class="probs" id="c2Probs"></div>
+        </div>
+      </div>
+      <p class="verdict" id="c2Verdict"></p>
+      <p class="caption">Both settings also use the one-word guesser from Chapter 1. When nothing earlier matches, the induction team looks at the "start" position, which copies nothing. Real models often use the first position as this kind of "look nowhere" option. <strong>Try this:</strong> switch between the two clerks on the first example, then type a sentence of your own that repeats a pair of words.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c2s4">
+    <div class="prose">
+      <p class="scene-tag">Scene 4</p>
+      <h3 id="c2s4">The bump in the curve</h3>
+      <p>Here's what made the paper famous. When you train a model, its error usually falls smoothly. But the researchers spotted a small <strong>bump</strong> early in training, where progress stalls and then lurches forward.</p>
+      <p>When they looked closely, three things happened at the same moment, in model after model:</p>
+      <p><strong>1.</strong> Induction heads suddenly formed. <strong>2.</strong> The model's in-context learning jumped: it got much better at using earlier text. <strong>3.</strong> The bump appeared in the training curve.</p>
+      <p>And models with only <em>one</em> layer, which can't build the two-clerk team, showed no bump and no jump. Scrub through training below to see the pattern.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>A model's training, replayed</h4><span class="label">Shape from the paper · illustrative numbers</span></div>
+      <div class="canvas-box"><canvas id="phaseCanvas" width="1800" height="820" aria-label="Training curves showing a sudden phase change" role="img"></canvas></div>
+      <div class="controls">
+        <div class="ctl"><label for="phaseT">Training so far</label><input type="range" id="phaseT" min="0" max="100" step="1" value="20"><output id="phaseOut" for="phaseT"></output></div>
+        <div class="checks"><label for="phaseOne"><input type="checkbox" id="phaseOne"> Show a one-layer model instead</label></div>
+      </div>
+      <p class="verdict" id="phaseVerdict"></p>
+      <p class="caption">The blue line is the model's overall error. The pink line is its in-context learning score: how much better it guesses late words than early ones. The shaded band is the phase change, which in the paper's models came early, after a few billion words of training. The curves here are drawn to match the shape the paper reported, not taken from its data.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c2s5">
+    <div class="prose">
+      <p class="scene-tag">Scene 5</p>
+      <h3 id="c2s5">More than copying</h3>
+      <p>In bigger models, the researchers found induction heads doing looser versions of the trick. Instead of "A followed by B", it becomes "something <em>like</em> A, followed by something <em>like</em> B". Some heads helped with translation, lining up a word in one language with its partner in another. Others continued patterns that were similar in meaning rather than identical in spelling.</p>
+      <p>That led to the paper's bold suggestion: induction heads might be the mechanism behind <strong>most</strong> of the in-context learning in large models, not just the literal copying.</p>
+      <div class="aside">
+        <p class="label">How strong is the evidence?</p>
+        <p>The authors were careful to grade their own claims. In small models with no thinker layers, the evidence was <strong>causal</strong>: switch the induction heads off, and in-context learning largely disappears. They even changed the architecture so a one-layer model could form induction heads, and the bump moved with them.</p>
+        <p style="margin-top:.6rem">In large models, the evidence was mostly <strong>correlational</strong>: induction heads and in-context learning arrive together, but that doesn't prove one causes the other. As a lawyer might put it, a strong circumstantial case, not a confession.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c2s6">
+    <div class="prose">
+      <p class="scene-tag">The end of the chapter</p>
+      <h3 id="c2s6">What we know, and what we don't</h3>
+    </div>
+    <div class="learned">
+      <div class="card k"><h4>Known: models learn from context</h4><p>Without changing their weights, models get better the more of a document they read.</p></div>
+      <div class="card k"><h4>Known: induction heads copy patterns</h4><p>A two-clerk team carries out "A then B, so after A guess B", using one clerk's notes to direct another's attention.</p></div>
+      <div class="card k"><h4>Known: they arrive suddenly</h4><p>Induction heads, better in-context learning and a bump in the training curve appear together, early in training.</p></div>
+      <div class="card u"><h4>Unknown: is this most of it?</h4><p>Whether induction heads explain most in-context learning in large models was a well-argued hypothesis, not a proof.</p></div>
+      <div class="card u"><h4>Unknown: what about the thinkers?</h4><p>These results were cleanest in models without MLP "thinker" layers. Real models are full of them.</p></div>
+      <div class="card u"><h4>Unknown: why are the thinkers so hard to read?</h4><p>Their neurons kept responding to unrelated things at once. Explaining that puzzle is the next chapter.</p></div>
+    </div>
+    <div class="next">
+      <p class="label">Next in the story</p>
+      <h4>Chapter 3: The Crowded Office</h4>
+      <p>Why do the thinkers' neurons look so jumbled? Because the model is squeezing far more ideas than it has room for into the same space. <a href="#crowded-office">Read Chapter 3 ↓</a></p>
     </div>
   </section>
 </article>
@@ -680,7 +824,8 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
 
 <footer>
   <p><strong>Latent Learning</strong> is an independent learning project. It isn't affiliated with or endorsed by Anthropic or the authors of the papers it explains. All illustrations and explanations are original. The research belongs to its authors, so please read the originals.</p>
-  <p>Prologue sources are listed at the end of the Prologue. Chapter 1 source: Nelson Elhage, Neel Nanda, Catherine Olsson and colleagues, <a href="https://transformer-circuits.pub/2021/framework/index.html" target="_blank" rel="noopener">A Mathematical Framework for Transformer Circuits</a>, Transformer Circuits Thread, 2021.</p>
+  <p>Prologue sources are listed at the end of the Prologue. Chapter 2 source: Catherine Olsson, Nelson Elhage, Neel Nanda and colleagues, <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener">In-context Learning and Induction Heads</a>, Transformer Circuits Thread, 2022.</p>
+  <p>Chapter 1 source: Nelson Elhage, Neel Nanda, Catherine Olsson and colleagues, <a href="https://transformer-circuits.pub/2021/framework/index.html" target="_blank" rel="noopener">A Mathematical Framework for Transformer Circuits</a>, Transformer Circuits Thread, 2021.</p>
   <p>Chapter 3 source: Nelson Elhage, Tristan Hume, Catherine Olsson, Nicholas Schiefer, Tom Henighan, Shauna Kravec, Zac Hatfield-Dodds, Robert Lasenby, Dawn Drain, Carol Chen, Roger Grosse, Sam McCandlish, Jared Kaplan, Dario Amodei, Martin Wattenberg and Christopher Olah. <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener">Toy Models of Superposition</a>, Transformer Circuits Thread, 2022.</p>
 </footer>
 </div>
@@ -694,6 +839,7 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     feats:[css('--tomato'), css('--sky'), css('--teal'), css('--marigold'), css('--pink'), css('--plum')], plum:css('--plum'), bad:css('--bad')}; };
   readColors();
   const redrawers = [];
+  const shared = {};
   const onTheme = () => { readColors(); redrawers.forEach(f => f()); };
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onTheme);
   new MutationObserver(onTheme).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
@@ -930,6 +1076,7 @@ the jury heard the evidence`.split('\n');
       return Object.entries(logit).map(([c, l]) => [c, Math.exp(l - m) / Z]).sort((a, b) => b[1] - a[1]).slice(0, k);
     };
     const probsHTML = top => top.map(([w, p]) => `<div class="prob"><span>${w}</span><span class="bar"><i style="width:${(p * 100).toFixed(1)}%"></i></span><span>${Math.round(p * 100)}%</span></div>`).join('');
+    shared.court = {bigramLogits, softmaxTop, probsHTML, V};
 
     // scene 2 chips
     const chipWords = ['the', 'ms', 'mr', 'dr', 'court', 'witness', 'thanked', 'said'];
@@ -978,6 +1125,112 @@ the jury heard the evidence`.split('\n');
     [txt].forEach(el => el.addEventListener('input', run));
     [dOn, hOn].forEach(el => el.addEventListener('change', run));
     txt.value = presets[0]; run();
+  }
+
+  /* ---------- chapter 2: repeated-nonsense test (induction rule) ---------- */
+  {
+    const vocab = 'blick frum zorp wix taddle plim gorf snerp quab dral vint mosk yemp kib lunt'.split(' ');
+    const el = document.getElementById('nonsenseSeq');
+    const make = () => {
+      const pool = vocab.slice().sort(() => Math.random() - .5), half = pool.slice(0, 10), seq = [...half, ...half];
+      let ok1 = 0, ok2 = 0, rnd1 = 0;
+      const marks = seq.map((w, i) => {
+        if (i === 0) return '';
+        let guess = null;
+        for (let j = i - 2; j >= 0; j--) if (seq[j] === seq[i - 1]) { guess = seq[j + 1]; break; }
+        const right = guess === w;
+        if (i < 10) ok1 += right; else ok2 += right;
+        if (vocab[Math.floor(Math.random() * vocab.length)] === w) rnd1++;
+        return right ? 'ok' : 'miss';
+      });
+      el.innerHTML = seq.map((w, i) => `<span class="${marks[i]} ${i === 10 ? 'half' : ''}">${w}</span>`).join('');
+      document.getElementById('sc1').textContent = Math.round(ok1 / 9 * 100) + '%';
+      document.getElementById('sc2').textContent = Math.round(ok2 / 10 * 100) + '%';
+      document.getElementById('sc3').textContent = Math.round(100 / vocab.length) + '%';
+    };
+    document.getElementById('nonsenseNew').addEventListener('click', make);
+    make();
+  }
+
+  /* ---------- chapter 2: induction team vs single messenger ---------- */
+  {
+    const {bigramLogits, softmaxTop, probsHTML, V} = shared.court;
+    const names = ['reyes', 'chen', 'patel', 'okafor', 'novak', 'osei', 'garcia', 'singh', 'tanaka'];
+    const titles = ['ms', 'mr', 'dr'];
+    const presets = [
+      'mr osei and ms novak spoke then the judge thanked ms',
+      'mr osei and ms novak spoke then the judge thanked mr',
+      'the court of appeal heard the case and the court of',
+    ];
+    const pre = document.getElementById('c2Presets'), txt = document.getElementById('c2Text');
+    pre.innerHTML = presets.map((p, i) => `<button data-i="${i}">Example ${i + 1}</button>`).join('');
+    const STRENGTH = 8;
+    const run = () => {
+      const mode = document.querySelector('input[name="c2Mode"]:checked').value;
+      const w = txt.value.toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean).slice(-30);
+      const spot = document.getElementById('c2Spot'), probs = document.getElementById('c2Probs'), verdict = document.getElementById('c2Verdict');
+      if (!w.length) { spot.innerHTML = ''; probs.innerHTML = ''; verdict.textContent = 'Type a few words to see a guess.'; return; }
+      const last = w[w.length - 1], earlier = w.slice(0, -1);
+      // positions: 0 = "start" (copies nothing), then each earlier word
+      let scores;
+      if (mode === 'ind') scores = [2, ...earlier.map((t, j) => (j > 0 && earlier[j - 1] === last) ? 6 : 0)];
+      else scores = [0, ...earlier.map(t => (titles.includes(last) && names.includes(t)) ? 4 : 0)];
+      const mx = Math.max(...scores), ex = scores.map(x => Math.exp(x - mx)), Z = ex.reduce((a, b) => a + b, 0), att = ex.map(e => e / Z);
+      const cand = new Set([...V, ...w]), logit = bigramLogits(last, cand);
+      earlier.forEach((t, j) => logit[t] += STRENGTH * att[j + 1]);
+      const top = softmaxTop(logit, 5);
+      const shade = a => `background:color-mix(in srgb, var(--pink) ${Math.round(a * 90)}%, var(--wash))`;
+      spot.innerHTML = `<span style="${shade(att[0])}" title="${Math.round(att[0] * 100)}% attention"><em>start</em></span>` + earlier.map((t, j) => `<span style="${shade(att[j + 1])}" title="${Math.round(att[j + 1] * 100)}% attention">${t}</span>`).join('') + `<span class="now">${last}</span>`;
+      document.getElementById('c2Q').textContent = mode === 'ind'
+        ? `Clerk 2 asks: which earlier file has the note "before me: ${last}"?`
+        : (titles.includes(last) ? `The single messenger asks: is there a name earlier on?` : `The single messenger only looks for names after ms, mr or dr.`);
+      probs.innerHTML = probsHTML(top);
+      verdict.innerHTML = `Best guess: <span>${top[0][0]}</span> (${Math.round(top[0][1] * 100)}%).`;
+    };
+    pre.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { txt.value = presets[+b.dataset.i]; run(); } });
+    txt.addEventListener('input', run);
+    document.querySelectorAll('input[name="c2Mode"]').forEach(r => r.addEventListener('change', run));
+    txt.value = presets[0]; run();
+  }
+
+  /* ---------- chapter 2: phase-change replay (illustrative shape) ---------- */
+  {
+    const cv = document.getElementById('phaseCanvas'), ctx = cv.getContext('2d');
+    const tr = document.getElementById('phaseT'), one = document.getElementById('phaseOne'), out = document.getElementById('phaseOut');
+    const P0 = 30, P1 = 45; // phase-change window, as % of training shown
+    const sig = (x, c, k) => 1 / (1 + Math.exp(-(x - c) / k));
+    const loss = (t, oneLayer) => {
+      const base = 3.2 * Math.exp(-t / 9) + 2.6 - 0.004 * t;
+      if (oneLayer) return base + 0.35;
+      return base + 0.12 * Math.exp(-((t - 34) ** 2) / 18) - 0.4 * sig(t, 39, 2.5);
+    };
+    const icl = (t, oneLayer) => oneLayer ? 0.12 * sig(t, 12, 5) : 0.12 * sig(t, 12, 5) + 0.38 * sig(t, 38, 2.2);
+    const draw = () => {
+      const W = cv.width, H = cv.height, pl = 120, pr = 120, pt = 40, pb = 110, cw = W - pl - pr, ch = H - pt - pb;
+      const T = +tr.value, oneLayer = one.checked;
+      ctx.clearRect(0, 0, W, H);
+      const x = t => pl + t / 100 * cw;
+      if (!oneLayer) { ctx.fillStyle = C.wash; ctx.fillRect(x(P0), pt, x(P1) - x(P0), ch); ctx.fillStyle = C.soft; ctx.font = '600 30px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.fillText('phase change', x((P0 + P1) / 2), pt + 34); }
+      ctx.strokeStyle = C.line; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(pl, pt); ctx.lineTo(pl, pt + ch); ctx.lineTo(pl + cw, pt + ch); ctx.lineTo(pl + cw, pt); ctx.stroke();
+      const yL = v => pt + (1 - (v - 1.6) / 4.4) * ch, yI = v => pt + (1 - v / 0.6) * ch;
+      const curve = (f, y, color) => { ctx.strokeStyle = color; ctx.lineWidth = 8; ctx.lineCap = 'round'; ctx.beginPath(); for (let i = 0; i <= T * 4; i++) { const t = i / 4; i ? ctx.lineTo(x(t), y(f(t, oneLayer))) : ctx.moveTo(x(t), y(f(t, oneLayer))); } ctx.stroke(); ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x(T), y(f(T, oneLayer)), 16, 0, Math.PI * 2); ctx.fill(); };
+      ctx.globalAlpha = .18; ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.setLineDash([8, 12]);
+      ctx.beginPath(); for (let t = 0; t <= 100; t++) t ? ctx.lineTo(x(t), yL(loss(t, oneLayer))) : ctx.moveTo(x(t), yL(loss(t, oneLayer))); ctx.stroke();
+      ctx.beginPath(); for (let t = 0; t <= 100; t++) t ? ctx.lineTo(x(t), yI(icl(t, oneLayer))) : ctx.moveTo(x(t), yI(icl(t, oneLayer))); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+      curve(loss, yL, C.feats[1]); curve(icl, yI, C.feats[4]);
+      ctx.font = '600 30px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.fillStyle = C.soft;
+      ctx.fillText('training →', pl + cw / 2, pt + ch + 60);
+      ctx.save(); ctx.translate(60, pt + ch / 2); ctx.rotate(-Math.PI / 2); ctx.fillStyle = C.feats[1]; ctx.fillText('error (lower is better)', 0, 0); ctx.restore();
+      ctx.save(); ctx.translate(W - 60, pt + ch / 2); ctx.rotate(Math.PI / 2); ctx.fillStyle = C.feats[4]; ctx.fillText('in-context learning', 0, 0); ctx.restore();
+      const stage = oneLayer ? 'none' : T < P0 ? 'none' : T < P1 ? 'forming' : 'present';
+      out.textContent = T === 0 ? 'Not started' : `${T}% of the way through`;
+      const pill = stage === 'present' ? '<span class="pill on">Induction heads: present</span>' : stage === 'forming' ? '<span class="pill mid">Induction heads: forming</span>' : '<span class="pill">Induction heads: none yet</span>';
+      document.getElementById('phaseVerdict').innerHTML = pill + ' ' + (oneLayer ? 'A one-layer model can\'t build the two-clerk team, so there\'s no bump and no jump.' : stage === 'none' ? 'The model is learning which words follow which, but barely uses earlier text.' : stage === 'forming' ? 'Progress stalls, then lurches: the two-clerk teams are assembling.' : 'Induction heads are in place, and the model now learns far more from the text in front of it.');
+    };
+    redrawers.push(draw);
+    tr.addEventListener('input', draw); one.addEventListener('change', draw);
+    draw();
   }
 
   /* ---------- scene 1: jumbled neuron ---------- */

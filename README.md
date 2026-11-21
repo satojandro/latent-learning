@@ -12,7 +12,7 @@ This is an independent, unofficial project. It isn't affiliated with or endorsed
 |---|---|---|---|
 | Prologue | Words Become Arrows | word2vec (2013), scaling laws (2020), Zoom In (2020) | **Draft** |
 | 1 | The Clerks and the Case File | A Mathematical Framework for Transformer Circuits (2021) | **Draft** |
-| 2 | The Copycat Trick | In-context Learning and Induction Heads (2022) | Planned |
+| 2 | The Copycat Trick | In-context Learning and Induction Heads (2022) | **Draft** |
 | 3 | The Crowded Office | Toy Models of Superposition (2022) | **Draft** |
 | 4 | Untangling the Desks | Towards Monosemanticity (2023) | Planned |
 | 5 | The Golden Gate Bridge | Scaling Monosemanticity (2024) | Planned |
