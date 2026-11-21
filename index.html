@@ -157,6 +157,36 @@ button.primary:hover{opacity:.88}
 .next{margin-top:3rem;border:2px dashed var(--line);border-radius:24px;padding:24px;display:grid;gap:.6rem}
 .next h4{font-size:1.4rem}
 .chapter-head .num.pro{background:var(--teal)}
+.chapter-head .num.c1{background:var(--sky)}
+.files-scroll{overflow-x:auto;padding-bottom:6px}
+.files{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;min-width:560px}
+.file{background:color-mix(in srgb, var(--marigold) 16%, var(--card));border:2px solid transparent;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px;min-height:210px;transition:border-color .3s, box-shadow .3s}
+.file h5{font-family:var(--f-display);font-size:1.05rem;margin:0}
+.file .pos{font-family:var(--f-mono);font-size:.7rem;color:var(--ink-soft)}
+.note{font-family:var(--f-mono);font-size:.72rem;line-height:1.35;background:var(--card);border-radius:7px;padding:5px 7px;border-left:4px solid var(--line)}
+.note.n0{border-left-color:var(--ink-soft)}
+.note.n1{border-left-color:var(--sky)}
+.note.n2{border-left-color:var(--teal)}
+.note.new{animation:pop .4s ease}
+.file.src{border-color:var(--sky);box-shadow:0 0 0 4px color-mix(in srgb, var(--sky) 25%, transparent)}
+.file.dst{border-color:var(--plum)}
+.file.out{border-color:var(--tomato)}
+.stepcap{font-family:var(--f-display);font-weight:600;font-size:1.08rem;margin-top:1rem;min-height:3.2em}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--f-mono);font-size:.88rem;border:2px solid var(--line);border-radius:999px;padding:.3rem .75rem;background:var(--card);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.spot{display:flex;flex-wrap:wrap;gap:6px;margin-top:.4rem}
+.spot span{font-family:var(--f-mono);font-size:.9rem;padding:.25rem .5rem;border-radius:8px;position:relative}
+.spot span.now{outline:2px dashed var(--plum);outline-offset:2px}
+.probs{display:grid;gap:8px}
+.prob{display:grid;grid-template-columns:110px minmax(0,1fr) 48px;gap:10px;align-items:center;font-family:var(--f-mono);font-size:.88rem}
+.prob .bar{height:16px;border-radius:99px;background:var(--wash);overflow:hidden}
+.prob .bar i{display:block;height:100%;border-radius:99px;background:var(--sky);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.prob:first-child .bar i{background:var(--plum)}
+.prob span:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.5rem}
+@media (max-width:720px){.two-col{grid-template-columns:1fr}}
+input[type=text]{font-family:var(--f-mono);font-size:.9rem;width:100%;padding:.5rem .7rem;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink)}
 details.corpus{margin-top:1rem;font-size:.92rem}
 details.corpus summary{cursor:pointer;font-family:var(--f-display);font-weight:600}
 details.corpus ol{font-family:var(--f-mono);font-size:.8rem;columns:2 260px;column-gap:2rem;color:var(--ink-soft);margin:.8rem 0 0;padding-left:1.6rem}
@@ -191,7 +221,7 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
   <p class="hint">Ten years of discoveries, in order. Start with the Prologue. Chapter 3 is also open if you'd like to skip ahead, and the rest are on their way.</p>
   <nav class="strip" aria-label="Chapters">
     <a class="chap open" href="#prologue"><span class="yr">2013 – 2020</span><h3>Prologue: Words Become Arrows</h3><p>Meaning turns out to live in directions. Then, bigger models get predictably better.</p><span class="status">Read now ↓</span></a>
-    <div class="chap soon"><span class="yr">2021</span><h3>1. The Clerks and the Case File</h3><p>What actually happens inside a model, layer by layer.</p><span class="status">Coming soon</span></div>
+    <a class="chap open" href="#clerks"><span class="yr">2021</span><h3>1. The Clerks and the Case File</h3><p>What actually happens inside a model, layer by layer.</p><span class="status">Read now ↓</span></a>
     <div class="chap soon"><span class="yr">2022</span><h3>2. The Copycat Trick</h3><p>How a model learns new things in the middle of a conversation.</p><span class="status">Coming soon</span></div>
     <a class="chap open" href="#crowded-office"><span class="yr">2022</span><h3>3. The Crowded Office</h3><p>How a model fits millions of ideas into a few thousand directions.</p><span class="status">Read now ↓</span></a>
     <div class="chap soon"><span class="yr">2023</span><h3>4. Untangling the Desks</h3><p>A tool for pulling the squeezed ideas back apart.</p><span class="status">Coming soon</span></div>
@@ -336,8 +366,142 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 1: The Clerks and the Case File</h4>
-      <p>What happens inside a transformer, layer by layer: the case file, the clerks, and the notes they add. Coming soon. Chapter 3 is already open below if you'd like to skip ahead.</p>
+      <p>What happens inside a transformer, layer by layer: the case file, the clerks, and the notes they add. <a href="#clerks">Read Chapter 1 ↓</a></p>
       <p class="stat">Sources: <a href="https://arxiv.org/abs/1301.3781" target="_blank" rel="noopener">Mikolov et al., 2013 (word2vec)</a> · <a href="https://aclanthology.org/N13-1090/" target="_blank" rel="noopener">Mikolov, Yih &amp; Zweig, 2013 (word analogies)</a> · <a href="https://arxiv.org/abs/1607.06520" target="_blank" rel="noopener">Bolukbasi et al., 2016 (bias in word maps)</a> · <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Vaswani et al., 2017 (the transformer)</a> · <a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">Kaplan et al., 2020 (scaling laws)</a> · <a href="https://distill.pub/2020/circuits/zoom-in/" target="_blank" rel="noopener">Olah et al., 2020 (Zoom In)</a></p>
+    </div>
+  </section>
+</article>
+
+<article id="clerks">
+  <div class="chapter-head">
+    <span class="num c1">Chapter 1</span>
+    <h2>The Clerks and the Case File</h2>
+    <p class="based">Based on <a href="https://transformer-circuits.pub/2021/framework/index.html" target="_blank" rel="noopener"><em>A Mathematical Framework for Transformer Circuits</em></a> (Elhage, Nanda, Olsson et al., Anthropic, 2021)</p>
+  </div>
+
+  <div class="prose">
+    <p>The Prologue ended with a bet: that language models are made of parts we can understand. In late 2021, the first big article in the Transformer Circuits series set out to test it. The researchers began with the simplest transformers they could build, ones with zero, one or two layers, and tried to explain <em>exactly</em> what each one does. To keep things simple, they also removed one kind of part, which we'll meet below.</p>
+    <p>To follow along, picture a courthouse.</p>
+  </div>
+
+  <section class="scene" aria-labelledby="c1s1">
+    <div class="prose">
+      <p class="scene-tag">Scene 1</p>
+      <h3 id="c1s1">One case file per word</h3>
+      <p>When a transformer reads your sentence, every word gets its own <span class="term">case file</span>. The files are lined up on a long table, in order. At first each file holds very little: which word it is, and where it sits in the sentence.</p>
+      <p>Then <span class="term">clerks</span> work through the files, one row of clerks per layer. Each clerk reads, then adds notes. Clerks almost never throw notes away, so the file keeps growing. Researchers call this growing file the <span class="term">residual stream</span>.</p>
+      <p>There are two kinds of clerk:</p>
+      <p><strong>Messengers</strong> look across at <em>earlier</em> files and copy useful notes into the one they're working on. Researchers call them <span class="term">attention heads</span>. They are the only way information travels between words.</p>
+      <p><strong>Thinkers</strong> work on one file alone, mulling over what's already in it and adding conclusions. These are the <span class="term">MLP layers</span>. They're the part this paper set aside to keep things simple.</p>
+      <p>When the clerks are finished, someone reads the <em>last</em> file and uses it to guess the next word. Step through a sketch of that below.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>The case files for "Ms Okafor … thanked Ms"</h4><span class="label">A sketch</span></div>
+      <div class="files-scroll"><div class="files" id="files"></div></div>
+      <p class="stepcap" id="fileCap"></p>
+      <div class="btns"><button class="primary" id="fileNext">Next clerk</button><button id="fileReset">Start over</button></div>
+      <p class="caption">This is an illustration, not a real model's notes. Real notes aren't words: they're arrows in a space with thousands of directions, as in the Prologue. The structure is real, though: one file per word, messengers moving notes between files, thinkers working within a file, and the last file used for the guess.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c1s2">
+    <div class="prose">
+      <p class="scene-tag">Scene 2</p>
+      <h3 id="c1s2">Zero clerks: the one-word guesser</h3>
+      <p>Start with the simplest case: a transformer with no clerks at all. The last file holds only one note, the current word. So the model can only learn "after this word, that word usually comes next." Nothing earlier in the sentence can reach it.</p>
+      <p>The paper showed that's exactly what a zero-layer transformer learns: a table of which word tends to follow which. Here's a real one, learned from a 25-sentence courtroom story. Pick a word to see what it guesses comes next.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>The one-word guesser</h4><span class="label">Real calculation</span></div>
+      <div class="two-col">
+        <div>
+          <p class="label" style="margin-bottom:.6rem">The current word is…</p>
+          <div class="chips" id="bigramChips" role="group" aria-label="Pick the current word"></div>
+        </div>
+        <div>
+          <p class="label" style="margin-bottom:.6rem">Its guesses for the next word</p>
+          <div class="probs" id="bigramProbs"></div>
+        </div>
+      </div>
+      <details class="corpus"><summary>Read the courtroom story it learned from</summary><ol id="courtList"></ol></details>
+      <p class="caption">Notice that after "ms" it always says "reyes", because Ms Reyes is the only Ms in the story. It can't do any better, because it can't see the rest of your sentence. For that, it needs a messenger.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c1s3">
+    <div class="prose">
+      <p class="scene-tag">Scene 3</p>
+      <h3 id="c1s3">The messenger: where to look, and what to copy</h3>
+      <p>Give the model one layer of messengers. Now, while working on the last file, a messenger can look back at every earlier file and decide which ones are worth copying from.</p>
+      <p>The paper's key insight was that each messenger does <strong>two separate jobs</strong>, and you can study each on its own:</p>
+      <p><strong>Where to look.</strong> The current file asks a question, such as "is there a name earlier on?". Every earlier file carries a label that says what it holds. Where question and label match, the messenger pays attention. Researchers call this the <span class="term">QK circuit</span>, for "query" and "key".</p>
+      <p><strong>What to copy.</strong> Having looked, the messenger writes something into the current file. Often it simply copies the word it found, making that word more likely to come next. This is the <span class="term">OV circuit</span>, for "output" and "value".</p>
+      <p>A one-layer model is full of messengers like this. The paper found they learn patterns of the form "A … B → C": when you see A, look back for B, and predict C. One real example was "keep … in → mind" and "keep … at → bay".</p>
+      <div class="aside">
+        <p class="label">A bug that shows how it works</p>
+        <p>Because "where to look" and "what to copy" are separate, these patterns get mixed up. A messenger that learned "keep … in → mind" and "keep … at → bay" also nudges the model towards "keep … in → bay" and "keep … at → mind". It can't remember which pairs belong together. The paper found exactly this kind of mistake, which was good evidence that the explanation was right.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c1s4">
+    <div class="prose">
+      <p class="scene-tag">Scene 4</p>
+      <h3 id="c1s4">Every clerk casts a vote</h3>
+      <p>Here's the other big insight. Because clerks only ever add notes, the final guess is simply <strong>the sum of every clerk's contribution</strong>. So you can take a model apart: switch one clerk off, and see what it was adding.</p>
+      <p>Below is a tiny real model with two contributors. The <strong>one-word guesser</strong> from Scene 2 is the direct path. A <strong>messenger</strong> looks back for names and nouns and copies them forward. Its "where to look" and "what to copy" settings are a handful of numbers we set by hand, but the attention maths is the real thing.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Two clerks, one guess</h4><span class="label">Real calculation · hand-set messenger</span></div>
+      <div class="presets" id="c1Presets" role="group" aria-label="Example sentences"></div>
+      <div style="margin-top:.8rem"><label for="c1Text" class="label">Or type your own (lowercase words, the last word is the one being completed)</label><input type="text" id="c1Text" spellcheck="false" autocomplete="off"></div>
+      <div class="checks" style="margin-top:1rem">
+        <label for="c1Direct"><input type="checkbox" id="c1Direct" checked> One-word guesser</label>
+        <label for="c1Head"><input type="checkbox" id="c1Head" checked> Messenger clerk</label>
+      </div>
+      <div class="two-col" style="margin-top:1.2rem">
+        <div>
+          <p class="label">Where the messenger is looking</p>
+          <div class="spot" id="c1Spot"></div>
+          <p class="stat" style="margin-top:.6rem" id="c1Q"></p>
+        </div>
+        <div>
+          <p class="label" style="margin-bottom:.6rem">The model's guesses for the next word</p>
+          <div class="probs" id="c1Probs"></div>
+        </div>
+      </div>
+      <p class="verdict" id="c1Verdict"></p>
+      <p class="caption"><strong>Try this:</strong> on the first example, switch the messenger off and the guess falls back to "reyes". Then try the second example, which has two unfamiliar names. The messenger finds both, but it can't tell which name went with "ms", so it splits its vote between them, and the old habit "reyes" sneaks into first place. A one-layer model can't do better. Fixing that takes a second layer.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c1s5">
+    <div class="prose">
+      <p class="scene-tag">Scene 5</p>
+      <h3 id="c1s5">Two layers: clerks who read each other's notes</h3>
+      <p>With two layers, something new becomes possible. A second-row messenger can read notes that a first-row messenger left behind, and use them to decide where to look. The paper called this <span class="term">composition</span>.</p>
+      <p>Here's how that fixes the mix-up above. A first-row messenger in every file writes down "the word before me was…". Now the file for "okafor" carries the note "the word before me was <em>ms</em>". When a second-row messenger working on a later "ms" asks "which file came right after an earlier <em>ms</em>?", that note answers it, and it copies "okafor".</p>
+      <p>That two-clerk team is called an <span class="term">induction head</span>. The paper found induction heads in its two-layer models, and suspected they mattered far more than their simple job suggests. Chapter 2 is the story of finding out how much.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c1s6">
+    <div class="prose">
+      <p class="scene-tag">The end of the chapter</p>
+      <h3 id="c1s6">What we know, and what we don't</h3>
+    </div>
+    <div class="learned">
+      <div class="card k"><h4>Known: the case file is a shared workspace</h4><p>Each word's file collects notes from every layer, and the final guess is read from the last file.</p></div>
+      <div class="card k"><h4>Known: messengers do two separable jobs</h4><p>Where to look and what to copy can be studied one at a time, and small models can be explained this way exactly.</p></div>
+      <div class="card k"><h4>Known: contributions add up</h4><p>Because clerks add rather than overwrite, you can split a guess into each clerk's vote and switch clerks off to test them.</p></div>
+      <div class="card u"><h4>Unknown: the thinkers</h4><p>The paper left out the MLP "thinker" layers, where much of a real model's work happens. They're much harder to read, for reasons Chapter 3 explains.</p></div>
+      <div class="card u"><h4>Unknown: does this scale?</h4><p>Exact explanations worked for one and two layers. Real models have dozens of layers and thousands of clerks.</p></div>
+      <div class="card u"><h4>Unknown: how much do induction heads matter?</h4><p>They were a neat find in tiny models. Whether they were central to big models was the next question.</p></div>
+    </div>
+    <div class="next">
+      <p class="label">Next in the story</p>
+      <h4>Chapter 2: The Copycat Trick</h4>
+      <p>In 2022, the same team showed that induction heads appear suddenly during training, at the same moment models get much better at learning from the text in front of them. Coming soon. <a href="#crowded-office">Chapter 3 is ready below ↓</a></p>
     </div>
   </section>
 </article>
@@ -516,7 +680,8 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
 
 <footer>
   <p><strong>Latent Learning</strong> is an independent learning project. It isn't affiliated with or endorsed by Anthropic or the authors of the papers it explains. All illustrations and explanations are original. The research belongs to its authors, so please read the originals.</p>
-  <p>Prologue sources are listed at the end of the Prologue. Chapter 3 source: Nelson Elhage, Tristan Hume, Catherine Olsson, Nicholas Schiefer, Tom Henighan, Shauna Kravec, Zac Hatfield-Dodds, Robert Lasenby, Dawn Drain, Carol Chen, Roger Grosse, Sam McCandlish, Jared Kaplan, Dario Amodei, Martin Wattenberg and Christopher Olah. <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener">Toy Models of Superposition</a>, Transformer Circuits Thread, 2022.</p>
+  <p>Prologue sources are listed at the end of the Prologue. Chapter 1 source: Nelson Elhage, Neel Nanda, Catherine Olsson and colleagues, <a href="https://transformer-circuits.pub/2021/framework/index.html" target="_blank" rel="noopener">A Mathematical Framework for Transformer Circuits</a>, Transformer Circuits Thread, 2021.</p>
+  <p>Chapter 3 source: Nelson Elhage, Tristan Hume, Catherine Olsson, Nicholas Schiefer, Tom Henighan, Shauna Kravec, Zac Hatfield-Dodds, Robert Lasenby, Dawn Drain, Carol Chen, Roger Grosse, Sam McCandlish, Jared Kaplan, Dario Amodei, Martin Wattenberg and Christopher Olah. <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener">Toy Models of Superposition</a>, Transformer Circuits Thread, 2022.</p>
 </footer>
 </div>
 
@@ -698,6 +863,121 @@ the woman rides her horse to the village`.split('\n');
     br.addEventListener('input', draw);
     document.getElementById('axisBtn').addEventListener('click', () => { logScale = !logScale; draw(); });
     draw();
+  }
+
+  /* ---------- chapter 1: case-file sketch ---------- */
+  {
+    const words = ['ms', 'okafor', '…', 'thanked', 'ms'];
+    const steps = [
+      {cap: 'Every word gets its own case file. At first, each one only says which word it is and where it sits.', add: words.map((w, i) => [i, 0, w === '…' ? 'more words here' : `I am "${w}"`]).concat(words.map((w, i) => [i, 0, `position ${i + 1}`]))},
+      {cap: 'Row 1, a messenger. Working on the last file, it looks back for a name and copies a note from the file for "okafor".', add: [[4, 1, 'earlier name: okafor'], [3, 1, 'someone is being thanked']], src: 1, dst: 4},
+      {cap: 'Row 2, a thinker. It works on each file alone. In the last file it concludes that a surname should come next.', add: [[4, 2, 'a surname comes next'], [1, 2, 'this is a surname']]},
+      {cap: 'The clerks are done. The model reads the last file and guesses the next word: "okafor".', add: [], out: 4},
+    ];
+    const el = document.getElementById('files'), cap = document.getElementById('fileCap'), next = document.getElementById('fileNext');
+    let k = 0;
+    const render = () => {
+      const notes = words.map(() => []);
+      let src = -1, dst = -1, out = -1;
+      for (let s = 0; s < k; s++) { steps[s].add.forEach(([i, n, t]) => notes[i].push([n, t, s === k - 1])); if (s === k - 1) { src = steps[s].src ?? -1; dst = steps[s].dst ?? -1; out = steps[s].out ?? -1; } }
+      el.innerHTML = words.map((w, i) => `<div class="file ${i === src ? 'src' : ''} ${i === dst ? 'dst' : ''} ${i === out ? 'out' : ''}"><h5>${w}</h5><span class="pos">${i === src ? 'copied from here' : i === dst ? 'copied to here' : i === out ? 'read for the guess' : 'case file'}</span>${notes[i].map(([n, t, fresh]) => `<span class="note n${n} ${fresh ? 'new' : ''}">${t}</span>`).join('')}</div>`).join('');
+      cap.textContent = k === 0 ? 'Press "Next clerk" to begin.' : steps[k - 1].cap;
+      next.disabled = k >= steps.length; next.style.opacity = k >= steps.length ? .4 : 1;
+    };
+    next.addEventListener('click', () => { if (k < steps.length) { k++; render(); } });
+    document.getElementById('fileReset').addEventListener('click', () => { k = 0; render(); });
+    k = 1; render();
+  }
+
+  /* ---------- chapter 1: one-word guesser + messenger (one-layer attention-only toy) ---------- */
+  {
+    const story = `the court will now come to order
+the judge entered the court and sat down
+ms reyes stood up and called the first witness
+the witness took the oath
+ms reyes asked the witness about the contract
+the witness said the contract was signed in march
+mr chen objected to the question
+the judge said the objection was overruled
+ms reyes thanked the witness
+mr chen asked the witness about the money
+the witness said the money was never paid
+the judge asked the jury to leave the court
+ms reyes said the evidence was clear
+mr chen said the evidence was weak
+the jury returned to the court
+the judge thanked the jury
+the court of appeal heard the case in june
+the court of appeal read the contract
+dr patel gave evidence about the injury
+ms reyes thanked dr patel
+the judge thanked ms reyes and mr chen
+the case was adjourned until monday
+the witness left the court
+mr chen called dr patel
+the jury heard the evidence`.split('\n');
+    document.getElementById('courtList').innerHTML = story.map(s => `<li>${s}</li>`).join('');
+    const big = {}, V = new Set();
+    story.forEach(s => { const w = s.split(' '); w.forEach((x, i) => { V.add(x); if (i + 1 < w.length) { big[x] = big[x] || {}; big[x][w[i + 1]] = (big[x][w[i + 1]] || 0) + 1; } }); });
+    const ALPHA = 0.1;
+    const bigramLogits = (last, cand) => {
+      const row = big[last] || {}, tot = Object.values(row).reduce((a, b) => a + b, 0), out = {};
+      cand.forEach(c => out[c] = Math.log((row[c] || 0) + ALPHA) - Math.log(tot + ALPHA * cand.size));
+      return out;
+    };
+    const softmaxTop = (logit, k) => {
+      const m = Math.max(...Object.values(logit)); let Z = 0; for (const c in logit) Z += Math.exp(logit[c] - m);
+      return Object.entries(logit).map(([c, l]) => [c, Math.exp(l - m) / Z]).sort((a, b) => b[1] - a[1]).slice(0, k);
+    };
+    const probsHTML = top => top.map(([w, p]) => `<div class="prob"><span>${w}</span><span class="bar"><i style="width:${(p * 100).toFixed(1)}%"></i></span><span>${Math.round(p * 100)}%</span></div>`).join('');
+
+    // scene 2 chips
+    const chipWords = ['the', 'ms', 'mr', 'dr', 'court', 'witness', 'thanked', 'said'];
+    const chips = document.getElementById('bigramChips'), bp = document.getElementById('bigramProbs');
+    const pick = w => {
+      chips.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.w === w));
+      bp.innerHTML = probsHTML(softmaxTop(bigramLogits(w, V), 5));
+    };
+    chips.innerHTML = chipWords.map(w => `<button class="chip" data-w="${w}" aria-pressed="false">${w}</button>`).join('');
+    chips.addEventListener('click', e => { const b = e.target.closest('button'); if (b) pick(b.dataset.w); });
+    pick('ms');
+
+    // scene 4: messenger. Hand-set "where to look" (query x key) and "what to copy" strengths.
+    const titles = ['ms', 'mr', 'dr'], names = ['reyes', 'chen', 'patel', 'okafor', 'novak', 'garcia', 'singh', 'osei', 'tanaka'];
+    const func = 'the a an and of to in at on then with for by her his she he it was is about until now up down this that'.split(' ');
+    const verbs = 'called thanked asked said saw heard described entered left questioned signed read met objected took gave returned spoke stood sat paid'.split(' ');
+    const cat = w => titles.includes(w) ? 'title' : names.includes(w) ? 'name' : func.includes(w) ? 'func' : verbs.includes(w) ? 'verb' : 'noun';
+    const QUESTION = {title: {name: 4}, func: {noun: 2.5, name: .5}, verb: {noun: 1.5, name: 1.5}, noun: {noun: .5}, name: {}};
+    const ASKS = {title: 'is there a name earlier on?', func: 'is there a noun earlier on?', verb: 'is there a name or noun earlier on?', noun: 'is there another noun earlier on?', name: 'nothing in particular'};
+    const COPY = {name: 1, noun: 1, title: .2, func: .1, verb: .2}, STRENGTH = 8;
+    const presets = [
+      'ms okafor called the witness and the judge thanked ms',
+      'mr osei and ms novak spoke then the judge thanked ms',
+      'the witness described the money and the judge asked about the',
+    ];
+    const pre = document.getElementById('c1Presets'), txt = document.getElementById('c1Text');
+    const dOn = document.getElementById('c1Direct'), hOn = document.getElementById('c1Head');
+    pre.innerHTML = presets.map((p, i) => `<button data-i="${i}">Example ${i + 1}</button>`).join('');
+    const run = () => {
+      const w = txt.value.toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean).slice(-30);
+      const spot = document.getElementById('c1Spot'), probs = document.getElementById('c1Probs'), verdict = document.getElementById('c1Verdict');
+      if (!w.length) { spot.innerHTML = ''; probs.innerHTML = ''; verdict.textContent = 'Type a few words to see a guess.'; return; }
+      const last = w[w.length - 1], earlier = w.slice(0, -1);
+      const sc = earlier.map(t => QUESTION[cat(last)][cat(t)] || 0), mx = Math.max(0, ...sc);
+      const ex = sc.map(s => Math.exp(s - mx)), Z = ex.reduce((a, b) => a + b, 0) || 1, att = ex.map(e => e / Z);
+      const cand = new Set([...V, ...w]);
+      const logit = dOn.checked ? bigramLogits(last, cand) : Object.fromEntries([...cand].map(c => [c, 0]));
+      if (hOn.checked) earlier.forEach((t, i) => logit[t] += STRENGTH * att[i] * COPY[cat(t)]);
+      const top = softmaxTop(logit, 5);
+      spot.innerHTML = earlier.map((t, i) => `<span style="background:color-mix(in srgb, var(--sky) ${hOn.checked ? Math.round(att[i] * 90) : 0}%, var(--wash))" title="${Math.round(att[i] * 100)}% attention">${t}</span>`).join('') + `<span class="now">${last}</span>`;
+      document.getElementById('c1Q').textContent = hOn.checked ? `Working on "${last}", the messenger asks: ${ASKS[cat(last)]}` : 'The messenger is switched off.';
+      probs.innerHTML = probsHTML(top);
+      verdict.innerHTML = !dOn.checked && !hOn.checked ? 'With both clerks off, the model has no idea. Every word is equally likely.' : `Best guess: <span>${top[0][0]}</span> (${Math.round(top[0][1] * 100)}%).`;
+    };
+    pre.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { txt.value = presets[+b.dataset.i]; run(); } });
+    [txt].forEach(el => el.addEventListener('input', run));
+    [dOn, hOn].forEach(el => el.addEventListener('change', run));
+    txt.value = presets[0]; run();
   }
 
   /* ---------- scene 1: jumbled neuron ---------- */

@@ -12,6 +12,10 @@ An interactive storybook that retells the Transformer Circuits papers (transform
 ## The recurring cast (keep consistent across chapters)
 - **The case file**: the residual stream, what the model is thinking about right now.
 - **The clerks**: the layers. Each reads the file, adds notes, passes it on.
+  - **Messengers** = attention heads: look at *earlier* files and copy notes across. Two jobs: where to look (QK) and what to copy (OV).
+  - **Thinkers** = MLP layers: work on one file alone.
+- **One file per word**: each token has its own case file; the last file is read for the next-word guess.
+- Chapter 1's running example: "Ms Okafor … thanked Ms" and a 25-sentence courtroom story (Ms Reyes, Mr Chen, Dr Patel). Reuse it in Chapter 2 for induction heads.
 - **The concepts**: features, stored as arrows (directions).
 - **The desks**: the available dimensions/directions.
 - Analogies already used: hot-desking (superposition), see-saw (antipodal pairs), "ignoring the whispers" (ReLU filtering out interference).
