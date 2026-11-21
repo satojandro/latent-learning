@@ -160,6 +160,20 @@ button.primary:hover{opacity:.88}
 .chapter-head .num.c1{background:var(--sky)}
 .chapter-head .num.c2{background:var(--pink)}
 .chapter-head .num.c4{background:var(--marigold);color:var(--ink)}
+.chapter-head .num.c5{background:var(--tomato)}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{font-size:.88rem;padding:.35rem .9rem;border-width:1.5px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:1.5rem auto 0;max-width:960px}
+.feat{background:var(--card);border-radius:var(--r);padding:18px;display:grid;gap:.6rem;align-content:start;border-top:6px solid var(--tomato)}
+.feat h4{font-size:1.1rem}
+.feat dl{margin:0;display:grid;gap:.5rem}
+.feat dt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.feat dd{margin:0;font-size:.93rem;line-height:1.5}
+.feat.safety{border-top-color:var(--plum)}
+.gen{display:grid;gap:10px;margin-top:1rem}
+.gen p{font-family:var(--f-mono);font-size:.92rem;background:var(--wash);border-radius:12px;padding:.7rem .9rem;line-height:1.6}
+.gen b{color:var(--tomato);font-weight:600}
 .resp{overflow-x:auto}
 .resp table{border-collapse:separate;border-spacing:6px;font-size:.88rem;min-width:420px;width:100%}
 .resp th{font-family:var(--f-mono);font-weight:600;font-size:.75rem;color:var(--ink-soft);text-align:center}
@@ -253,7 +267,7 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <a class="chap open" href="#copycat"><span class="yr">2022</span><h3>2. The Copycat Trick</h3><p>How a model learns new things in the middle of a conversation.</p><span class="status">Read now ↓</span></a>
     <a class="chap open" href="#crowded-office"><span class="yr">2022</span><h3>3. The Crowded Office</h3><p>How a model fits millions of ideas into a few thousand directions.</p><span class="status">Read now ↓</span></a>
     <a class="chap open" href="#untangling"><span class="yr">2023</span><h3>4. Untangling the Desks</h3><p>A tool for pulling the squeezed ideas back apart.</p><span class="status">Read now ↓</span></a>
-    <div class="chap soon"><span class="yr">2024</span><h3>5. The Golden Gate Bridge</h3><p>Finding real concepts inside a real, large model, and turning one up.</p><span class="status">Coming soon</span></div>
+    <a class="chap open" href="#golden-gate"><span class="yr">2024</span><h3>5. The Golden Gate Bridge</h3><p>Finding real concepts inside a real, large model, and turning one up.</p><span class="status">Read now ↓</span></a>
     <div class="chap soon"><span class="yr">2025</span><h3>6. Watching It Think</h3><p>Rhymes planned ahead, and maths done differently than the model claims.</p><span class="status">Coming soon</span></div>
     <div class="chap soon"><span class="yr">Today</span><h3>Epilogue: The Blank Spaces on the Map</h3><p>What nobody knows yet.</p><span class="status">Coming soon</span></div>
   </nav>
@@ -952,14 +966,119 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 5: The Golden Gate Bridge</h4>
-      <p>In 2024, the team ran dictionary learning on Claude 3 Sonnet, a large production model, and found millions of features. One of them was the Golden Gate Bridge, and turning it up had memorable results. Coming soon.</p>
+      <p>In 2024, the team ran dictionary learning on Claude 3 Sonnet, a large production model, and found millions of features. One of them was the Golden Gate Bridge, and turning it up had memorable results. <a href="#golden-gate">Read Chapter 5 ↓</a></p>
+    </div>
+  </section>
+</article>
+
+<article id="golden-gate">
+  <div class="chapter-head">
+    <span class="num c5">Chapter 5</span>
+    <h2>The Golden Gate Bridge</h2>
+    <p class="based">Based on <a href="https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html" target="_blank" rel="noopener"><em>Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet</em></a> (Templeton, Conerly, Marcus, Lindsey, Bricken et al., Anthropic, 2024)</p>
+  </div>
+
+  <section class="scene" aria-labelledby="c5s1">
+    <div class="prose">
+      <p class="scene-tag">Scene 1</p>
+      <h3 id="c5s1">From a toy to the real thing</h3>
+      <p>Chapter 4's dictionary worked on a tiny model with one layer and 512 neurons. Sceptics had a fair question: would it survive contact with a real, large model? Or would big models turn out to be an unreadable mess?</p>
+      <p>In May 2024, the team tried it on <strong>Claude 3 Sonnet</strong>, one of Anthropic's production models at the time. They pointed their dictionary at the case file <em>halfway through</em> the model, where the clerks are in the middle of their work, and trained dictionaries of three sizes: 1 million, 4 million and 34 million features.</p>
+      <p>To get a feel for that jump in scale, each dot below is one Chapter 4 dictionary of about 4,000 features.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>How big were the dictionaries?</h4><span class="label">To scale</span></div>
+      <div class="seg" id="scaleSeg" role="group" aria-label="Dictionary size"></div>
+      <div class="canvas-box" style="margin-top:1rem"><canvas id="dotsCanvas" width="1800" height="760" aria-label="Dots comparing dictionary sizes" role="img"></canvas></div>
+      <p class="verdict" id="dotsVerdict"></p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c5s2">
+    <div class="prose">
+      <p class="scene-tag">Scene 2</p>
+      <h3 id="c5s2">A bridge in every language</h3>
+      <p>It worked. The dictionaries were full of clear, single-meaning features, and many were far more abstract than Chapter 4's.</p>
+      <p>The star was a feature for the <strong>Golden Gate Bridge</strong>. It switched on when text mentioned the bridge in English, and also in Japanese, Chinese, Greek, Vietnamese, Russian and more. It even switched on for <em>pictures</em> of the bridge, although the dictionary had only ever been trained on text. The model wasn't storing the words "Golden Gate Bridge". It was storing the idea.</p>
+      <p>Features also had neighbours. Concepts stored in nearby directions tended to be related, so near the bridge sat features for Alcatraz and other parts of San Francisco. The map of meaning from the Prologue was there, at enormous scale.</p>
+      <p>Here are a few of the features the paper described.</p>
+    </div>
+    <div class="gallery">
+      <div class="feat"><h4>The Golden Gate Bridge</h4><dl><dt>Switches on for</dt><dd>The bridge, in many languages, and in images.</dd><dt>When turned up</dt><dd>The model brought up the bridge constantly, and even described itself as the bridge.</dd></dl></div>
+      <div class="feat"><h4>Bugs in code</h4><dl><dt>Switches on for</dt><dd>Mistakes in computer code, across different programming languages.</dd></dl></div>
+      <div class="feat"><h4>Inner conflict</h4><dl><dt>Switches on for</dt><dd>Descriptions of someone torn between two loyalties or choices.</dd></dl></div>
+      <div class="feat safety"><h4>Flattery</h4><dl><dt>Switches on for</dt><dd>Over-the-top, insincere praise.</dd><dt>When turned up</dt><dd>The model showered the user with praise.</dd></dl></div>
+      <div class="feat safety"><h4>Keeping secrets</h4><dl><dt>Switches on for</dt><dd>Text about hiding information or keeping something secret.</dd></dl></div>
+      <div class="feat safety"><h4>Scam emails</h4><dl><dt>Switches on for</dt><dd>Fraudulent emails.</dd><dt>When turned up</dt><dd>Turned up far enough, it overrode the model's usual refusal to write one.</dd></dl></div>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c5s3">
+    <div class="prose">
+      <p class="scene-tag">Scene 3</p>
+      <h3 id="c5s3">Turning the dial</h3>
+      <p>Finding a feature is one thing. Proving it matters is another. So the researchers <span class="term">clamped</span> features: they held one at a high value in the case file, at every word, so every later clerk read a file shouting about it.</p>
+      <p>Clamp the Golden Gate Bridge feature, and the model couldn't stop talking about it. Ask for a recipe, and the bridge would wander in. Ask what it looked like, and it would say it was the bridge. Anthropic briefly let the public try it as "Golden Gate Claude". It was a vivid demonstration that a feature isn't just a label someone stuck on: it's part of how the model thinks, and changing it changes the model.</p>
+      <p>We can't run Claude here, but we can turn a dial on a much smaller model. Below is Chapter 1's one-word guesser. This time it has read the courtroom story plus a few lines about a bridge, and it can dial a group of bridge words up.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Golden Gate Guesser</h4><span class="label">Real calculation · a tiny stand-in</span></div>
+      <div class="seg" id="ggSeg" role="group" aria-label="How far the bridge dial is turned up"></div>
+      <div class="gen" id="ggOut" aria-live="polite"></div>
+      <div class="btns" style="margin-top:1rem"><button class="primary" id="ggAgain">Write three more sentences</button></div>
+      <p class="stat" id="ggStat" style="margin-top:.6rem"></p>
+      <details class="corpus"><summary>Read the bridge lines it learned from</summary><ol id="ggList"></ol></details>
+      <p class="caption">This is a stand-in, not the real method. Our dial adds a boost to a hand-picked group of bridge words, while the researchers turned up a single feature deep inside Claude, which changed the model's thinking rather than just its word choice. But the pattern matches what they saw: off, nothing happens; a little, the bridge sneaks into unrelated sentences; clamped high, it takes over. Bridge words are shown in <b>orange</b>.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c5s4">
+    <div class="prose">
+      <p class="scene-tag">Scene 4</p>
+      <h3 id="c5s4">Features that matter for safety</h3>
+      <p>The paper looked deliberately for features relevant to safety, and found them. There were features for deception, for flattery, for secrecy, for bias, for power-seeking, and for dangerous subjects such as weapons. Turning some of them up visibly changed the model's behaviour.</p>
+      <p>That opened an exciting possibility. If you can see these concepts switching on inside a model, you might be able to <em>check</em> what it's doing, not just trust what it says. For anyone who thinks about audit, compliance or liability, that's a big deal.</p>
+      <div class="aside">
+        <p class="label">Knowing about something isn't doing it</p>
+        <p>The authors stressed that a deception feature doesn't make a model deceptive. A model can represent the idea of deception, just as a lawyer understands fraud without committing it, and anyone who has read a crime novel can picture a lie. What matters is when and how the feature gets used. That question needs more than a dictionary, and it's the subject of the next chapter.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c5s5">
+    <div class="prose">
+      <p class="scene-tag">Scene 5</p>
+      <h3 id="c5s5">What 34 million features still miss</h3>
+      <p>Even the biggest dictionary didn't catch everything. Common concepts got features early, but rarer ones only appeared in the larger dictionaries, and the researchers judged that many concepts the model knows were still missing at 34 million. Part of the model's activity also slipped through unexplained.</p>
+      <p>And a dictionary is a list of ingredients, not a recipe. It tells you which concepts are present, but not how the model combines them to reach an answer.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c5s6">
+    <div class="prose">
+      <p class="scene-tag">The end of the chapter</p>
+      <h3 id="c5s6">What we know, and what we don't</h3>
+    </div>
+    <div class="learned">
+      <div class="card k"><h4>Known: the method scales</h4><p>Dictionary learning found millions of readable features in a large production model.</p></div>
+      <div class="card k"><h4>Known: features are abstract</h4><p>The same feature can respond across languages, and even to images, so it stores the idea rather than the words.</p></div>
+      <div class="card k"><h4>Known: features steer behaviour</h4><p>Clamping a feature changes what the model says and does, from bridge obsession to flattery.</p></div>
+      <div class="card u"><h4>Unknown: how much is still missing?</h4><p>Many concepts didn't have a feature even at 34 million, and finding them all may take far bigger dictionaries.</p></div>
+      <div class="card u"><h4>Unknown: can this be used for safety checks?</h4><p>Safety-relevant features exist. Turning that into reliable monitoring was, and is, unfinished work.</p></div>
+      <div class="card u"><h4>Unknown: how do features combine?</h4><p>A list of concepts isn't an explanation. Tracing how they connect into reasoning was the next challenge.</p></div>
+    </div>
+    <div class="next">
+      <p class="label">Next in the story</p>
+      <h4>Chapter 6: Watching It Think</h4>
+      <p>In 2025, the team began tracing how features connect, step by step, inside a model as it answers. They caught it planning rhymes in advance, and doing arithmetic differently from how it claims to. Coming soon.</p>
     </div>
   </section>
 </article>
 
 <footer>
   <p><strong>Latent Learning</strong> is an independent learning project. It isn't affiliated with or endorsed by Anthropic or the authors of the papers it explains. All illustrations and explanations are original. The research belongs to its authors, so please read the originals.</p>
-  <p>Prologue sources are listed at the end of the Prologue. Chapter 4 source: Trenton Bricken, Adly Templeton, Joshua Batson, Brian Chen, Adam Jermyn and colleagues, <a href="https://transformer-circuits.pub/2023/monosemantic-features/index.html" target="_blank" rel="noopener">Towards Monosemanticity: Decomposing Language Models With Dictionary Learning</a>, Transformer Circuits Thread, 2023.</p>
+  <p>Prologue sources are listed at the end of the Prologue. Chapter 5 source: Adly Templeton, Tom Conerly, Jonathan Marcus, Jack Lindsey, Trenton Bricken and colleagues, <a href="https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html" target="_blank" rel="noopener">Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet</a>, Transformer Circuits Thread, 2024.</p>
+  <p>Chapter 4 source: Trenton Bricken, Adly Templeton, Joshua Batson, Brian Chen, Adam Jermyn and colleagues, <a href="https://transformer-circuits.pub/2023/monosemantic-features/index.html" target="_blank" rel="noopener">Towards Monosemanticity: Decomposing Language Models With Dictionary Learning</a>, Transformer Circuits Thread, 2023.</p>
   <p>Chapter 2 source: Catherine Olsson, Nelson Elhage, Neel Nanda and colleagues, <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener">In-context Learning and Induction Heads</a>, Transformer Circuits Thread, 2022.</p>
   <p>Chapter 1 source: Nelson Elhage, Neel Nanda, Catherine Olsson and colleagues, <a href="https://transformer-circuits.pub/2021/framework/index.html" target="_blank" rel="noopener">A Mathematical Framework for Transformer Circuits</a>, Transformer Circuits Thread, 2021.</p>
   <p>Chapter 3 source: Nelson Elhage, Tristan Hume, Catherine Olsson, Nicholas Schiefer, Tom Henighan, Shauna Kravec, Zac Hatfield-Dodds, Robert Lasenby, Dawn Drain, Carol Chen, Roger Grosse, Sam McCandlish, Jared Kaplan, Dario Amodei, Martin Wattenberg and Christopher Olah. <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener">Toy Models of Superposition</a>, Transformer Circuits Thread, 2022.</p>
@@ -1212,7 +1331,7 @@ the jury heard the evidence`.split('\n');
       return Object.entries(logit).map(([c, l]) => [c, Math.exp(l - m) / Z]).sort((a, b) => b[1] - a[1]).slice(0, k);
     };
     const probsHTML = top => top.map(([w, p]) => `<div class="prob"><span>${w}</span><span class="bar"><i style="width:${(p * 100).toFixed(1)}%"></i></span><span>${Math.round(p * 100)}%</span></div>`).join('');
-    shared.court = {bigramLogits, softmaxTop, probsHTML, V};
+    shared.court = {bigramLogits, softmaxTop, probsHTML, V, story};
 
     // scene 2 chips
     const chipWords = ['the', 'ms', 'mr', 'dr', 'court', 'witness', 'thanked', 'said'];
@@ -1449,6 +1568,68 @@ the jury heard the evidence`.split('\n');
     new IntersectionObserver(es => { visible = es.some(e => e.isIntersecting); }).observe(cv);
     const loop = () => { if (playing && visible) { for (let i = 0; i < STEPS_PER_FRAME; i++) step(); if (++frame % 2 === 0) draw(); } requestAnimationFrame(loop); };
     requestAnimationFrame(loop);
+  }
+
+  /* ---------- chapter 5: dictionary sizes to scale ---------- */
+  {
+    const sizes = [{n: 4096, l: 'Chapter 4: ~4 thousand'}, {n: 1e6, l: '1 million'}, {n: 4e6, l: '4 million'}, {n: 34e6, l: '34 million'}];
+    const seg = document.getElementById('scaleSeg'), cv = document.getElementById('dotsCanvas'), ctx = cv.getContext('2d');
+    let cur = 3;
+    seg.innerHTML = sizes.map((z, i) => `<button data-i="${i}" aria-pressed="${i === cur}">${z.l}</button>`).join('');
+    const draw = () => {
+      const W = cv.width, H = cv.height, total = Math.round(sizes[cur].n / 4096), maxDots = Math.round(sizes[3].n / 4096);
+      const cell = Math.sqrt(W * H / maxDots) * .94, cols = Math.floor(W / cell);
+      ctx.clearRect(0, 0, W, H);
+      for (let i = 0; i < total; i++) {
+        const x = (i % cols) * cell + cell / 2, y = Math.floor(i / cols) * cell + cell / 2;
+        ctx.fillStyle = i === 0 ? C.feats[3] : C.feats[0];
+        ctx.beginPath(); ctx.arc(x, y, i === 0 ? cell * .9 : cell * .36, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(cell / 2, cell / 2, Math.max(18, cell * 1.6), 0, Math.PI * 2); ctx.stroke();
+      document.getElementById('dotsVerdict').innerHTML = cur === 0 ? 'One dot (circled, top left): the whole dictionary from Chapter 4.' : `<span>${total.toLocaleString()}</span> dots: about ${total.toLocaleString()} times the size of Chapter 4's dictionary, which is the circled dot in the corner.`;
+      seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.i === cur));
+    };
+    seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { cur = +b.dataset.i; draw(); } });
+    redrawers.push(draw); draw();
+  }
+
+  /* ---------- chapter 5: Golden Gate Guesser (bigram + steering a word group) ---------- */
+  {
+    const bridge = `the bridge is painted international orange
+fog rolls in under the bridge every morning
+the bridge spans the strait at the golden gate
+cars cross the bridge into the city
+the fog hides the towers of the bridge
+ships sail under the bridge into the bay
+the wind sings through the cables of the bridge
+tourists walk across the bridge in the fog`.split('\n');
+    const FEAT = new Set('bridge fog orange towers cables strait golden gate bay ships tourists wind international'.split(' '));
+    const levels = [{v: 0, l: 'Off'}, {v: 1.5, l: 'A little'}, {v: 3, l: 'Noticeable'}, {v: 4.5, l: 'Strong'}, {v: 7, l: 'Clamped high'}];
+    const big = {}, Vs = new Set(['</s>']);
+    const add = (line, wt) => { const t = ['<s>', ...line.split(' '), '</s>']; t.forEach(x => Vs.add(x)); for (let i = 0; i + 1 < t.length; i++) { big[t[i]] = big[t[i]] || {}; big[t[i]][t[i + 1]] = (big[t[i]][t[i + 1]] || 0) + wt; } };
+    shared.court.story.forEach(l => add(l, 1));
+    bridge.forEach(l => add(l, 0.12)); // the bridge is a small part of what it read
+    Vs.delete('<s>'); const VV = [...Vs], A = 0.0005;
+    const next = (prev, str) => {
+      const row = big[prev] || {}, tot = Object.values(row).reduce((a, b) => a + b, 0);
+      const l = VV.map(w => Math.log((row[w] || 0) + A) - Math.log(tot + A * VV.length) + (FEAT.has(w) ? str : 0));
+      const m = Math.max(...l), p = l.map(x => Math.exp(x - m)), Z = p.reduce((a, b) => a + b, 0);
+      let r = Math.random() * Z; for (let i = 0; i < p.length; i++) { r -= p[i]; if (r <= 0) return VV[i]; } return VV[VV.length - 1];
+    };
+    const sentence = str => { let w = '<s>'; const o = []; for (let i = 0; i < 14; i++) { w = next(w, str); if (w === '</s>') break; o.push(w); } return o.length ? o : ['the', 'court']; };
+    const seg = document.getElementById('ggSeg'), out = document.getElementById('ggOut');
+    let lvl = 2;
+    seg.innerHTML = levels.map((z, i) => `<button data-i="${i}" aria-pressed="${i === lvl}">${z.l}</button>`).join('');
+    document.getElementById('ggList').innerHTML = bridge.map(l => `<li>${l}</li>`).join('');
+    const write = () => {
+      const str = levels[lvl].v; let fc = 0, tot = 0;
+      out.innerHTML = [0, 1, 2].map(() => { const w = sentence(str); tot += w.length; fc += w.filter(x => FEAT.has(x)).length; return `<p>${w.map(x => FEAT.has(x) ? `<b>${x}</b>` : x).join(' ')}</p>`; }).join('');
+      document.getElementById('ggStat').textContent = `Bridge dial: ${levels[lvl].l} · ${Math.round(fc / tot * 100)}% of these words are bridge words`;
+      seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.i === lvl));
+    };
+    seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { lvl = +b.dataset.i; write(); } });
+    document.getElementById('ggAgain').addEventListener('click', write);
+    write();
   }
 
   /* ---------- scene 1: jumbled neuron ---------- */

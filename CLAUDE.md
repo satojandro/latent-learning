@@ -18,7 +18,7 @@ An interactive storybook that retells the Transformer Circuits papers (transform
 - Chapter 1's running example: "Ms Okafor … thanked Ms" and a 25-sentence courtroom story (Ms Reyes, Mr Chen, Dr Patel). Reuse it in Chapter 2 for induction heads.
 - **The concepts**: features, stored as arrows (directions).
 - **The desks**: the available dimensions/directions.
-- Analogies already used: hot-desking (superposition), see-saw (antipodal pairs), "ignoring the whispers" (ReLU filtering out interference), the detective/judge preferring the account with the fewest moving parts (sparsity in dictionary learning), the roster of who sits at each desk (the feature dictionary), legal taxonomy (feature splitting).
+- Analogies already used: hot-desking (superposition), see-saw (antipodal pairs), "ignoring the whispers" (ReLU filtering out interference), the detective/judge preferring the account with the fewest moving parts (sparsity in dictionary learning), the roster of who sits at each desk (the feature dictionary), legal taxonomy (feature splitting), a dial / clamping (feature steering), "a lawyer understands fraud without committing it" (representing a concept is not acting on it).
 
 ## Structure of a chapter
 Story hook (the puzzle researchers faced), scenes with interactive toys, "Known / Unknown" cards, a teaser for the next chapter, credits.
