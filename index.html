@@ -326,10 +326,93 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
 </section>
 
 <article id="prologue">
+  <style>
+    #prologue .deeper{background:var(--wash);border-radius:var(--r);padding:0;border:2px solid transparent}
+    #prologue .deeper[open]{border-color:var(--line);background:color-mix(in srgb, var(--wash) 55%, var(--card))}
+    #prologue .deeper > summary{cursor:pointer;list-style:none;padding:14px 18px;font-family:var(--f-display);font-weight:600;font-size:1.02rem;display:flex;gap:.6rem;align-items:baseline}
+    #prologue .deeper > summary::-webkit-details-marker{display:none}
+    #prologue .deeper > summary::before{content:"+";font-family:var(--f-mono);color:var(--plum);font-weight:600;width:1ch}
+    #prologue .deeper[open] > summary::before{content:"−"}
+    #prologue .deeper > summary small{font-family:var(--f-mono);font-weight:400;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-left:auto;white-space:nowrap}
+    #prologue .deeper .in{padding:0 18px 18px;display:grid;gap:.9rem;font-size:1rem}
+    #prologue .deeper .deeper{background:var(--card)}
+    #prologue .inpaper{font-family:var(--f-mono);font-size:.8rem;color:var(--ink-soft);border-left:4px solid var(--teal);padding:.2rem 0 .2rem .7rem}
+    #prologue .inpaper em{font-family:var(--f-body)}
+    #prologue .formula{font-family:var(--f-mono);font-size:.92rem;background:var(--card);border-radius:12px;padding:.7rem .9rem;overflow-x:auto;white-space:nowrap}
+    #prologue blockquote{margin:0;border-left:4px solid var(--plum);padding:.2rem 0 .2rem 1rem;font-style:italic}
+    #prologue blockquote cite{display:block;font-style:normal;font-family:var(--f-mono);font-size:.78rem;color:var(--ink-soft);margin-top:.3rem}
+    #prologue .predict{border:2px dashed var(--plum);border-radius:var(--r);padding:16px 18px;display:grid;gap:.7rem;background:var(--card)}
+    #prologue .predict .label{color:var(--plum)}
+    #prologue .predict .q{font-family:var(--f-display);font-weight:600;font-size:1.08rem;line-height:1.3}
+    #prologue .opts{display:flex;flex-wrap:wrap;gap:8px}
+    #prologue .opts button{font-size:.9rem;padding:.35rem .9rem;border-width:1.5px}
+    #prologue .opts button.right{background:color-mix(in srgb, var(--good) 22%, var(--card));border-color:var(--good)}
+    #prologue .opts button.wrong{background:color-mix(in srgb, var(--bad) 14%, var(--card));border-color:var(--bad)}
+    #prologue .reveal{font-size:.98rem;line-height:1.55}
+    #prologue .reveal b.ok{color:var(--good)}
+    #prologue .reveal b.no{color:var(--bad)}
+    #prologue .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+    #prologue .grid2 > div{background:var(--card);border-radius:14px;padding:14px;display:grid;gap:.4rem;align-content:start}
+    #prologue .grid2 h5{font-family:var(--f-display);font-size:1rem;margin:0}
+    #prologue .grid2 p{font-size:.93rem;color:var(--ink-soft);line-height:1.5}
+    #prologue .spotlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px}
+    #prologue .spot-item{display:flex;justify-content:space-between;gap:10px;align-items:center;text-align:left;border-radius:12px;font-family:var(--f-body);font-weight:400;font-size:.92rem;padding:.5rem .8rem;border-width:1.5px;line-height:1.35}
+    #prologue .spot-item b{font-family:var(--f-display);font-weight:600}
+    #prologue .spot-item[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+    #prologue .spot-item.hit{background:color-mix(in srgb, var(--good) 22%, var(--card));color:var(--ink);border-color:var(--good)}
+    #prologue .spot-item.miss{background:color-mix(in srgb, var(--bad) 14%, var(--card));color:var(--ink);border-color:var(--bad)}
+    #prologue .spot-item .why{display:block;font-family:var(--f-mono);font-size:.72rem;color:var(--ink-soft);margin-top:.2rem}
+    #prologue .stats{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--f-mono);font-size:.8rem;color:var(--ink-soft)}
+    #prologue .stats b{color:var(--ink);font-weight:600}
+    #prologue .dials{display:grid;gap:6px}
+    #prologue .dial{display:grid;grid-template-columns:96px minmax(0,1fr) 58px;gap:10px;align-items:center;font-family:var(--f-mono);font-size:.8rem}
+    #prologue .dial .track{position:relative;height:14px;border-radius:99px;background:var(--wash)}
+    #prologue .dial .track::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--line)}
+    #prologue .dial .track i{position:absolute;top:0;bottom:0;border-radius:99px;background:var(--line);transition:left .3s,width .3s}
+    #prologue .dial.main .track i{background:var(--plum)}
+    #prologue .dial.main{font-weight:600}
+    #prologue .dial span:last-child{text-align:right;font-variant-numeric:tabular-nums}
+    #prologue .car{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:1.5rem;align-items:center}
+    @media (max-width:640px){#prologue .car{grid-template-columns:1fr}}
+    #prologue .slots3{display:grid;gap:8px}
+    #prologue .slot{display:grid;grid-template-columns:64px minmax(0,1fr);gap:8px;align-items:center}
+    #prologue .slot > span{font-family:var(--f-mono);font-size:.75rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em}
+    #prologue .slot button{border-radius:14px;height:64px;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 .6rem;border-width:2px;border-style:dashed}
+    #prologue .slot button svg{width:72px;height:40px}
+    #prologue .fire{display:grid;gap:.5rem}
+    #prologue .fire .bar{height:22px;border-radius:99px;background:var(--wash);overflow:hidden}
+    #prologue .fire .bar i{display:block;height:100%;width:0;border-radius:99px;background:var(--tomato);transition:width .4s cubic-bezier(.2,.8,.2,1)}
+    #prologue .fire .big{font-family:var(--f-display);font-weight:800;font-size:2rem;font-variant-numeric:tabular-nums}
+    #prologue .wtable{border-collapse:separate;border-spacing:4px;font-family:var(--f-mono);font-size:.78rem}
+    #prologue .wtable th{font-weight:600;color:var(--ink-soft);text-align:left;padding-right:6px}
+    #prologue .wtable td{background:var(--wash);border-radius:6px;padding:.15rem .45rem;text-align:right}
+    #prologue .wtable td.pos{background:color-mix(in srgb, var(--good) 20%, var(--card))}
+    #prologue .wtable td.neg{background:color-mix(in srgb, var(--bad) 14%, var(--card))}
+    #prologue .evidence{counter-reset:ev;display:grid;gap:8px;margin:0;padding:0;list-style:none}
+    #prologue .evidence li{counter-increment:ev;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;font-size:.95rem;line-height:1.5}
+    #prologue .evidence li::before{content:counter(ev);font-family:var(--f-display);font-weight:800;color:#fff;background:var(--teal);border-radius:50%;width:26px;height:26px;display:grid;place-items:center;font-size:.85rem}
+    #prologue .claims{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    #prologue .claims > div{border-radius:14px;padding:14px;background:var(--wash);display:grid;gap:.35rem;align-content:start}
+    #prologue .claims .label{color:var(--teal)}
+    #prologue .claims p{font-size:.95rem;line-height:1.5}
+    #prologue .claims .x{background:color-mix(in srgb, var(--bad) 10%, var(--card))}
+    #prologue .mini{font-size:.9rem;color:var(--ink-soft)}
+    #prologue .scaleRead{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:1rem}
+    #prologue .scaleRead > div{background:var(--wash);border-radius:12px;padding:10px 12px}
+    #prologue .scaleRead b{display:block;font-family:var(--f-display);font-size:1.35rem;font-variant-numeric:tabular-nums}
+    #prologue .scaleRead small{font-family:var(--f-mono);font-size:.72rem;color:var(--ink-soft)}
+    #prologue .biasbox canvas{width:100%;max-width:560px;display:block;margin:0 auto;aspect-ratio:7/5}
+  </style>
+
   <div class="chapter-head">
     <span class="num pro">Prologue</span>
     <h2>Words Become Arrows</h2>
-    <p class="based">2013 to 2020. Based on word2vec (Mikolov et al., Google, 2013), <em>Scaling Laws for Neural Language Models</em> (Kaplan et al., OpenAI, 2020) and <em>Zoom In</em> (Olah et al., 2020). Links to all three are at the end of the chapter.</p>
+    <p class="based">2013 to 2020. Based on two 2013 papers by Tomas Mikolov and colleagues (the word-analogy paper and word2vec), Bolukbasi et al. on bias in word maps (2016), Kaplan et al., <em>Scaling Laws for Neural Language Models</em> (OpenAI, 2020) and Olah et al., <em>Zoom In</em> (2020). Every source is linked at the end of the chapter.</p>
+  </div>
+
+  <div class="prose">
+    <p>This book is about a strange situation. People have built machines that write essays, pass exams and argue about poetry, and nobody can fully say how they do it. The machines weren't programmed with rules. They were grown, and the rules grew inside them.</p>
+    <p>The story of reading those rules starts with a small, odd discovery about words, made in 2013. It ends, seven years later, with two bets: one that bigger machines would keep getting better at a predictable rate, and one that their insides could be read like a book. Both bets set up everything that follows.</p>
   </div>
 
   <section class="scene" aria-labelledby="p1">
@@ -337,8 +420,9 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
       <p class="scene-tag">Scene 1</p>
       <h3 id="p1">What does a word mean, to a computer?</h3>
       <p>To a computer, a word is just a row of letters. "Cat" and "kitten" look nothing alike, and "cat" and "car" look almost the same. Spelling tells you very little about meaning.</p>
-      <p>The way out came from a 1957 idea by the linguist J. R. Firth: <em>"You shall know a word by the company it keeps."</em> You learn what a new word means by seeing where it turns up. If a word keeps appearing near "crown", "throne" and "palace", you can guess a lot about it without a dictionary.</p>
-      <p>So describe every word by its neighbours. Then words with similar neighbours get similar descriptions, and you can draw them as points on a map. Words that keep similar company land close together.</p>
+      <p>For decades, most language software simply gave each word a number in a list. Word 4,071 might be "cat" and word 4,072 "catalogue". The numbers carried no meaning at all. As the word2vec paper put it in 2013, these systems treated words <em>"as atomic units"</em>, with <em>"no notion of similarity between words"</em>. Learning something about "cat" taught the system nothing about "kitten".</p>
+      <p>The way out came from a 1957 line by the linguist J. R. Firth: <em>"You shall know a word by the company it keeps."</em> You learn what a new word means by seeing where it turns up. If a word keeps appearing near "crown", "throne" and "palace", you can guess a lot about it without a dictionary.</p>
+      <p>So describe every word by its neighbours. Words with similar neighbours get similar descriptions, and you can draw them as points on a map. Words that keep similar company land close together.</p>
     </div>
   </section>
 
@@ -346,7 +430,17 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="prose">
       <p class="scene-tag">Scene 2</p>
       <h3 id="p2">Build a map of meaning</h3>
-      <p>Below is a real word map, built right now in your browser from 18 short sentences. It counts which words share a sentence, then squeezes those counts down to just two directions so we can draw them. Nobody told it what any word means.</p>
+      <p>Below is a real word map, built in your browser from 18 short sentences. It counts which words share a sentence, then squeezes those counts down to two directions so we can draw them. Nobody told it what any word means.</p>
+      <div class="predict" data-quiz>
+        <p class="label">Predict before you press</p>
+        <p class="q">The map can only see the company words keep. If you hide the words "he, she, his, her" from it, what happens to king and queen?</p>
+        <div class="opts">
+          <button data-right="0">Nothing changes</button>
+          <button data-right="1">They land on the same spot</button>
+          <button data-right="0">They swap places</button>
+        </div>
+        <p class="reveal" hidden><b class="ok">They merge.</b> Read the sentences: apart from those four words, king and queen keep exactly the same company. With nothing left to tell them apart, the map can't. Try it below and watch them collapse into one dot. Then tick the box again and untick the other one.</p>
+      </div>
     </div>
     <div class="toy">
       <div class="toy-head"><h4>A map made only from company</h4><span class="label">Real calculation</span></div>
@@ -369,10 +463,24 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
             </div>
           </div>
           <p class="verdict" id="wordVerdict"></p>
+          <p class="stats" id="wordStats"></p>
         </div>
       </div>
       <details class="corpus"><summary>Read the 18 sentences the map learned from</summary><ol id="corpusList"></ol></details>
-      <p class="caption">The sentences are deliberately tidy, so the pattern shows up with only four words. Real text is messy, which is why real systems needed billions of words. <strong>Try this:</strong> untick "he, she, his, her". King and queen collapse into one point, because without those words their company is identical. The map only knows what the neighbours tell it.</p>
+      <p class="caption">The sentences are deliberately tidy, so the pattern shows up with only four words. Real text is messy, which is why real systems needed billions of words. Notice that the two arrows aren't perfectly equal even here: king sits a little further from queen than man does from woman, because "his" and "her" appear more often in the royal sentences. Real word maps are full of small mismatches like this.</p>
+    </div>
+    <div class="prose" style="margin-top:1.5rem">
+      <details class="deeper">
+        <summary>Go deeper: what the toy actually computes <small>Level 2</small></summary>
+        <div class="in">
+          <p><strong>Step 1, counting.</strong> For each of our four words, the toy counts how often each other word shares a sentence with it, after dropping filler like "the" and "of". That gives every word a long row of counts, one column per neighbour.</p>
+          <p><strong>Step 2, surprise.</strong> Raw counts overrate common neighbours. So each count is replaced by its <span class="term">pointwise mutual information</span>: how much more often the two words meet than you'd expect if they were scattered at random.</p>
+          <p class="formula">PMI(word, neighbour) = log [ P(word and neighbour together) ÷ ( P(word) × P(neighbour) ) ]</p>
+          <p>In plain words: if "crown" turns up with "king" four times as often as chance predicts, the score is log 4. Negative scores (meeting less than chance) are set to zero, which makes it <em>positive</em> PMI, or PPMI.</p>
+          <p><strong>Step 3, squeezing.</strong> Each word now has 22 numbers. To draw them, the toy finds the two directions along which the four words differ most, using <span class="term">principal component analysis</span>, and plots each word's position along those two. <span id="wordPca">With every neighbour visible, the first direction holds 80% of the spread between the words and lines up with royalty. The second holds 20% and lines up with gender. Together they keep over 99% of it, so this flat picture loses almost nothing.</span></p>
+          <p>Notice what nobody did. No step mentions royalty or gender. The two directions fall out of the counting. That is the whole trick of this chapter, in miniature.</p>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -380,90 +488,511 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="prose">
       <p class="scene-tag">Scene 3</p>
       <h3 id="p3">2013: the arrow that means something</h3>
-      <p>In 2013, a team at Google led by Tomas Mikolov released <span class="term">word2vec</span>. It did the same thing as the toy above, on a far bigger scale: billions of words of news text, and a few hundred directions instead of two. (Word2vec learns by predicting a word's neighbours rather than by counting them, but researchers later showed the two approaches are closely related.)</p>
-      <p>Then they noticed something nobody had designed. Take the point for <strong>king</strong>, subtract <strong>man</strong>, add <strong>woman</strong>, and you land right next to <strong>queen</strong>. The step from "man" to "woman" is an arrow, and the same arrow leads from "king" to "queen", from "uncle" to "aunt", from "actor" to "actress".</p>
-      <p>Other arrows turned up too. One led from countries to their capitals, another from a verb to its past tense. <strong>Meaning wasn't just stored as points. Directions meant things.</strong> That single idea runs through every chapter of this book.</p>
-      <div class="aside">
-        <p class="label">Two fine-print details</p>
-        <p><strong>The famous example is one of the neatest.</strong> Many analogies work less cleanly, and the standard test quietly leaves out the three words you started with. Without that rule, the nearest word to king − man + woman is often just "king".</p>
-        <p style="margin-top:.6rem"><strong>The arrows learned our prejudices too.</strong> A 2016 paper showed the same arithmetic completed "man is to computer programmer as woman is to…" with "homemaker". The map reflects the company words keep in human writing, stereotypes included. It was an early warning that these systems absorb what's in their training text, good and bad.</p>
-      </div>
+      <p>In 2013, Tomas Mikolov, then working with Wen-tau Yih and Geoffrey Zweig at Microsoft Research, looked inside a language model that had been trained on 320 million words of broadcast news. Its only job was to guess the next word. Along the way it had given every word a list of numbers, a point in a space of up to 1,600 directions.</p>
+      <p>They found something nobody had designed. Take the point for <strong>king</strong>, subtract <strong>man</strong>, add <strong>woman</strong>, and you land very close to <strong>queen</strong>. The step from "man" to "woman" is an arrow, and roughly the same arrow leads from "king" to "queen". In their words, each relationship <em>"is characterized by a relation-specific vector offset"</em>. Plural nouns had their own arrow (apple to apples, car to cars). So did past tenses and comparatives.</p>
+      <blockquote>"The model itself has no knowledge of syntax or morphology or semantics. Remarkably, training such a purely lexical model to maximize likelihood will induce word representations with striking syntactic and semantic properties."<cite>Mikolov, Yih &amp; Zweig, 2013, §3</cite></blockquote>
+      <p>The same year, Mikolov moved to Google and, with Kai Chen, Greg Corrado and Jeffrey Dean, released <span class="term">word2vec</span>. Its insight was to throw away most of the network. Instead of a full language model, it trained a very simple one: given a word, guess its neighbours (or given the neighbours, guess the word). That was cheap enough to run on about 6 billion words of Google News. The arrows got sharper. Paris − France + Italy landed on Rome.</p>
+      <p><strong>Meaning wasn't just stored as points. Directions meant things.</strong> That single idea runs through every chapter of this book.</p>
+    </div>
+
+    <div class="toy">
+      <div class="toy-head"><h4>Spot the model's mistakes</h4><span class="label">Real outputs, from word2vec's Table 8</span></div>
+      <p class="mini" style="margin-bottom:1rem">These are answers the best word2vec model gave in the paper. Each line uses the arrow from the first pair and applies it to a new word. We picked twelve. Some are right and some are wrong. Tap every one you think is wrong, then check.</p>
+      <div class="spotlist" id="spotList" role="group" aria-label="Analogy answers to judge"></div>
+      <div class="btns" style="margin-top:1rem"><button class="primary" id="spotCheck">Check my answers</button><button id="spotReset">Start over</button></div>
+      <p class="verdict" id="spotVerdict" aria-live="polite"></p>
+      <p class="caption">The paper says that by strict exact-match scoring its whole table would score <em>"only about 60%"</em>. Look at the wrong answers once they're revealed. None of them is random. Plutonium is uranium's close neighbour. "Larger" is a sibling of "smaller". Yahoo was Google's rival. Each wrong answer lands in the right part of the map, just on the wrong word. That's exactly what you'd expect if the map is made of company.</p>
+    </div>
+
+    <div class="prose" style="margin-top:1.5rem">
+      <details class="deeper">
+        <summary>Go deeper: how good were the arrows, really? <small>Level 2</small></summary>
+        <div class="in">
+          <p class="inpaper">In the papers: Mikolov, Yih &amp; Zweig, §5 <em>The Vector Offset Method</em> and §6 <em>Experimental Results</em>; word2vec, §4.1 <em>Task Description</em> and §4.4 <em>Large Scale Parallel Training of Models</em>.</p>
+          <p>To answer "a is to b as c is to ?", you take the arrow from a to b, add it to c, and look for the nearest word. The 2013 paper writes it like this:</p>
+          <p class="formula">y = x<sub>b</sub> − x<sub>a</sub> + x<sub>c</sub> ,&nbsp;&nbsp; answer = the word w whose x<sub>w</sub> points most nearly the same way as y</p>
+          <p>In plain words: walk the arrow, then pick the word whose own arrow points most nearly in the same direction as where you ended up. "Nearest" here is measured by angle (cosine similarity), not distance.</p>
+          <p><strong>The scores.</strong> On 8,000 grammar questions (good is to better as rough is to ?), the best 2013 recurrent model got 39.6% exactly right. Guessing gets a small fraction of one percent. Word2vec's own test had 8,869 meaning questions (Athens is to Greece as Oslo is to ?) and 10,675 grammar questions. Its best model, the "skip-gram" version with 1,000 dimensions trained on 6 billion words, got 65.6% overall. Synonyms counted as wrong, so the real quality is a bit higher than the score.</p>
+          <p><strong>Two tricks that help.</strong> Averaging the arrow over ten example pairs instead of one improved accuracy by about 10 percentage points. And bigger maps need more text: Table 2 of the word2vec paper shows that adding dimensions without adding data, or data without dimensions, soon stops helping. Hold that thought for Scene 7.</p>
+          <details class="deeper">
+            <summary>Deeper still: the fine print on king − man + woman <small>Level 3</small></summary>
+            <div class="in">
+              <p><strong>The test quietly removes the starting words.</strong> Word2vec's paper says so in one parenthesis: <em>"we discard the input question words during this search"</em>. That matters. A 2016 paper (Bolukbasi et al., Appendix A) points out that for many questions, the nearest word to the landing point is the word you started from. Without the rule, king − man + woman often lands nearest to "king" itself. The arrow moves you toward queen, but not always past king.</p>
+              <p><strong>The famous example is one of the neatest.</strong> Grammar arrows (plural, past tense) tend to be cleaner than arrows for facts. So when you see "king − man + woman = queen", read it as "the step from man to woman points roughly the same way as the step from king to queen". That's still remarkable. It just isn't magic.</p>
+              <p><strong>Why directions are so powerful.</strong> If "lawyer", "cross-examining", "robot" and "moon" each have a direction, the model can represent a lawyer cross-examining a robot on the moon by combining them, even if no text ever described that scene. A list of word numbers can't do that. A space of meaningful directions can, and later chapters show that language models lean on this heavily.</p>
+            </div>
+          </details>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="p4">
     <div class="prose">
       <p class="scene-tag">Scene 4</p>
-      <h3 id="p4">From word maps to word machines</h3>
-      <p>Word2vec gave every word one fixed point. But "bank" means something different in "river bank" and "bank account". A fixed map can't tell them apart.</p>
-      <p>In 2017, another Google team introduced the <span class="term">transformer</span>, in a paper called <em>Attention Is All You Need</em>. A transformer reads a whole passage at once and builds a fresh arrow for every word <em>in its context</em>, so the two banks end up in different places. It's the design behind nearly every chatbot today, and the subject of Chapter 1.</p>
-      <p>Between 2018 and 2020, OpenAI trained a series of transformers called GPT, GPT-2 and GPT-3, each far bigger than the last. All of them had a single job: read some text and predict the next word. And each one was surprisingly better than the one before.</p>
+      <h3 id="p4">The arrows learned our prejudices</h3>
+      <p>In 2016, Tolga Bolukbasi, Kai-Wei Chang, James Zou, Venkatesh Saligrama and Adam Kalai took the most popular public word2vec map, 300 directions trained on Google News, and asked it to complete analogies. Their paper's title gives away what came back: <em>Man is to Computer Programmer as Woman is to Homemaker?</em> Ask it "he is to doctor as she is to ?" and it answered "nurse".</p>
+      <p>They found that gender wasn't scattered randomly through the map. It was largely <strong>one direction</strong>, roughly the arrow from "he" to "she". Lay every job along that arrow and the extremes on the "she" end were homemaker, nurse, receptionist, librarian and socialite. On the "he" end: maestro, skipper, protégé, philosopher and captain. A map made from the company words keep in the news had absorbed the company that jobs keep with pronouns.</p>
+      <p>Then came the hopeful part. If bias is a direction, you can measure it, and you can take it out.</p>
+    </div>
+    <div class="toy biasbox">
+      <div class="toy-head"><h4>Take the gender direction out</h4><span class="label">Hand-placed words, real projection</span></div>
+      <canvas id="biasCanvas" width="980" height="700" aria-label="Words placed on a map, with a gender direction running left to right" role="img"></canvas>
+      <div class="controls">
+        <div class="btns"><button class="primary" id="biasGo">Neutralise the job words</button><button id="biasReset">Put them back</button></div>
+      </div>
+      <p class="verdict" id="biasVerdict" aria-live="polite"></p>
+      <p class="caption">The positions are set by hand to echo the paper's lists. The arithmetic is real: the gender arrow is computed from "he" and "she", and pressing the button subtracts each job word's shadow along that arrow, exactly as the paper's "neutralise" step does in 300 dimensions. Words that are gendered by definition, like king and queen, are left alone. Look at what survives, too: the jobs still sit in two clumps up and down the map.</p>
+    </div>
+    <div class="prose" style="margin-top:1.5rem">
+      <details class="deeper">
+        <summary>Go deeper: direct bias, indirect bias, and a lawyer's vocabulary <small>Level 2</small></summary>
+        <div class="in">
+          <p class="inpaper">In the paper: §4 <em>Gender stereotypes in word embeddings</em>, §5 <em>Geometry of Gender and Bias</em>, §6 <em>Debiasing algorithms</em>.</p>
+          <p>The authors borrowed two terms from discrimination law. <span class="term">Direct bias</span> is a neutral word leaning toward one gender, like "receptionist" sitting closer to "she" than to "he". <span class="term">Indirect bias</span> is subtler: two neutral words pulled together because both lean the same way. Their example: on the arrow from "football" to "softball", the jobs nearest the softball end included bookkeeper, receptionist and waitress. Neither sport nor job is gendered by definition. The pull comes through gender anyway, the way a hiring rule can discriminate through a proxy without ever mentioning sex.</p>
+          <p><strong>Did people agree?</strong> They asked ten US crowd workers per item. Of 150 analogies the map generated for the she–he arrow, 29 (19%) were judged stereotyped by a majority. After their "hard debiasing", which neutralises job words and makes pairs like grandmother and grandfather equally far from every neutral word, only 6% were. "He is to doctor as she is to ?" now answered "physician". Standard accuracy tests barely moved.</p>
+          <blockquote>"Surprisingly, not only does the embedding capture bias, but it also contains sufficient information to reduce this bias."<cite>Bolukbasi et al., 2016, §1</cite></blockquote>
+          <p><strong>A later warning.</strong> In 2019, Hila Gonen and Yoav Goldberg showed that this kind of debiasing mostly hides bias. After the gender arrow is removed, words that used to lean "she" still cluster together, and a simple classifier can still sort them. That's the second clump in the toy above. Removing one direction doesn't remove everything that direction was correlated with.</p>
+          <p>Keep this scene in mind for Chapter 5. "A concept is a direction, and you can turn it down" will come back, in a much bigger model, as a dial.</p>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="p5">
     <div class="prose">
       <p class="scene-tag">Scene 5</p>
-      <h3 id="p5">2020: bigger is predictably better</h3>
-      <p>In 2020, a team at OpenAI led by Jared Kaplan measured exactly how much better. They trained hundreds of models of different sizes and found something rare in science: a near-perfect pattern. Every time you multiply the computing power by ten, the model's error drops by about the same fraction. That held across a huge range, from tiny models to the biggest they could build.</p>
-      <p>This pattern is called a <span class="term">scaling law</span>. It's the reason AI companies now spend billions on bigger models with confidence. They can predict roughly how good a model will be before they build it.</p>
-    </div>
-    <div class="toy">
-      <div class="toy-head"><h4>The scaling law</h4><span class="label">Shape from Kaplan et al., 2020</span></div>
-      <div class="canvas-box"><canvas id="scaleCanvas" width="1800" height="800" aria-label="A chart of model error falling as computing power grows" role="img"></canvas></div>
-      <div class="controls">
-        <div class="ctl"><label for="budget">Computing budget</label><input type="range" id="budget" min="0" max="8" step="1" value="2"><output id="budgetOut" for="budget"></output></div>
-        <div class="btns"><button id="axisBtn">Show on a ruler scale</button></div>
+      <h3 id="p5">From word maps to word machines</h3>
+      <p>Word2vec gave every word one fixed point. But "bank" means something different in "river bank" and "bank account". A fixed map can't tell them apart.</p>
+      <p>In 2017, a Google team introduced the <span class="term">transformer</span>, in a paper called <em>Attention Is All You Need</em>. A transformer reads a whole passage and builds a fresh arrow for every word <em>in its context</em>, so the two banks end up in different places. It's the design behind nearly every chatbot today, and the subject of Chapter 1.</p>
+      <p>Between 2018 and 2020, OpenAI trained a series of transformers called GPT, GPT-2 and GPT-3, each far bigger than the last. GPT-2 had 1.5 billion numbers to tune; GPT-3 had 175 billion. All of them had a single job: read some text and predict the next word.</p>
+      <p>That job sounds shallow. It isn't. Try being the model.</p>
+      <div class="predict" data-quiz>
+        <p class="label">Be the model: predict the next word</p>
+        <p class="prompt" style="font-family:var(--f-body);line-height:1.6">The evidence locker had one key. Mr Chen reported his copy lost on Monday. Dr Patel spent the whole week at a conference in Geneva. On Thursday, Ms Reyes signed the key out at nine and returned it at ten. At ten past nine, the guard heard the locker door. The person who opened it was ___</p>
+        <div class="opts">
+          <button data-right="0">Mr Chen</button>
+          <button data-right="0">Dr Patel</button>
+          <button data-right="1">Ms Reyes</button>
+        </div>
+        <p class="reveal" hidden><b class="ok">Ms Reyes.</b> To get one word right you had to track three people, one key, a city and a timeline, and rule two people out. A model that gets this kind of word right, across millions of stories, is being pushed to keep track of who did what. That's why "predict the next word" turned out to be such a demanding teacher. How much real understanding it produces is one of the questions this book keeps returning to.</p>
       </div>
-      <p class="verdict" id="scaleVerdict"></p>
-      <p class="caption">The curve follows the paper's formula, where error shrinks with compute raised to the power −0.05. The units are illustrative. On a "times ten" scale, where each step is ten times bigger than the last, the curve becomes a straight line. Press the button to see the same numbers on an ordinary ruler scale, where almost all the improvement seems to happen at the very start.</p>
+    </div>
+    <div class="prose" style="margin-top:1.5rem">
+      <details class="deeper">
+        <summary>Go deeper: the dials and the case file <small>Level 2</small></summary>
+        <div class="in">
+          <p>Two kinds of numbers live inside a model, and it helps to keep them apart from the start.</p>
+          <div class="grid2">
+            <div><h5>Weights: the dials</h5><p>Billions of numbers set during training, then frozen. They are the clerks' trained habits, the "laws of physics" of the model. GPT-3's 175 billion are weights. Every conversation uses the same ones.</p></div>
+            <div><h5>Activations: the case file</h5><p>The numbers the model computes while reading <em>your</em> text, one bundle per word. They're the objects moving through those laws. They exist for this conversation only. Chapter 1 calls each word's bundle its case file.</p></div>
+          </div>
+          <p>The word arrows from Scene 3 are activations of a very simple kind. In a transformer, every word's arrow is rebuilt layer by layer as it reads. The width of that arrow, the number of directions available, is what the 2020 scaling paper calls <em>d</em><sub>model</sub>, "the dimension of the residual stream". In this book, those directions are the <strong>desks</strong>.</p>
+          <p><strong>A measured reason the transformer won.</strong> The scaling paper compared transformers with the older "LSTM" design. LSTMs did as well on the first words of a passage but stopped improving after fewer than 100 words of context. Transformers kept getting better at predicting words right up to the 1,024th. They use long context far better (Kaplan et al., §3.2.1, Figure 7).</p>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="p6">
     <div class="prose">
       <p class="scene-tag">Scene 6</p>
-      <h3 id="p6">Grown, not built</h3>
-      <p>So by 2020, people knew the recipe: a transformer, a mountain of text, the goal of predicting the next word, and a rule that nudges billions of numbers whenever a guess is wrong. They could even predict how good the result would be.</p>
-      <p>What they didn't know was <em>what had grown inside</em>. Nobody wrote the rules the model follows. They emerged during training, in a space of thousands of unlabelled directions.</p>
-      <p>A small group of researchers led by Chris Olah had already started looking. They took models that recognise images and studied them neuron by neuron. They found neurons that detect curves, and saw how they connect. In their 2020 article <em>Zoom In</em>, they showed a "car detector" assembled from simpler parts: windows near the top, a car body in the middle, wheels at the bottom.</p>
-    </div>
-    <div class="toy" style="max-width:640px">
-      <div class="toy-head"><h4>A circuit, in miniature</h4><span class="label">After Olah et al., 2020</span></div>
-      <div class="circuit">
-        <div class="part"><svg viewBox="0 0 90 60" aria-hidden="true"><rect x="10" y="14" width="30" height="24" rx="5" fill="var(--sky)"/><rect x="50" y="14" width="30" height="24" rx="5" fill="var(--sky)"/></svg><div>Windows on top</div></div>
-        <div class="part"><svg viewBox="0 0 90 60" aria-hidden="true"><rect x="6" y="20" width="78" height="22" rx="10" fill="var(--tomato)"/></svg><div>Body in the middle</div></div>
-        <div class="part"><svg viewBox="0 0 90 60" aria-hidden="true"><circle cx="24" cy="32" r="14" fill="var(--ink)"/><circle cx="66" cy="32" r="14" fill="var(--ink)"/><circle cx="24" cy="32" r="5" fill="var(--wash)"/><circle cx="66" cy="32" r="5" fill="var(--wash)"/></svg><div>Wheels below</div></div>
-        <div class="arrows">↓ combine ↓</div>
-        <div class="whole"><svg viewBox="0 0 120 70" style="max-width:150px" aria-hidden="true"><rect x="30" y="8" width="56" height="22" rx="8" fill="var(--sky)"/><rect x="8" y="26" width="104" height="24" rx="10" fill="var(--tomato)"/><circle cx="32" cy="52" r="12" fill="var(--ink)"/><circle cx="88" cy="52" r="12" fill="var(--ink)"/></svg><div><strong>A car detector</strong></div></div>
+      <h3 id="p6">Grown more than built</h3>
+      <p>By 2020 people knew the recipe: a transformer, a mountain of text, the goal of predicting the next word, and a rule that nudges every dial a tiny amount whenever a guess is wrong. Repeat a few hundred thousand times.</p>
+      <p>Engineers design all of those conditions. They don't design what results. They're more like gardeners than architects: they choose the seed, the soil and the trellis, and then the plant grows. <strong>We know how to grow it. We don't know what grows.</strong></p>
+      <p>Here is the puzzle. The nudging rule is blind. It never sees a concept. Each nudge only says "turn these dials a little so this one guess would have been better". So why would anything orderly, like a "plural" direction, come out of billions of blind nudges? Run it and see.</p>
+      <div class="predict" data-quiz>
+        <p class="label">Predict before you press</p>
+        <p class="q">In the toy below, each example nudges one shared "plural" dial by 0.2, and also nudges a random one-off quirk dial by a full 1.0, up or down. The quirk nudges are five times bigger. After 1,000 examples, which dial is biggest?</p>
+        <div class="opts">
+          <button data-right="0">A quirk dial</button>
+          <button data-right="1">The shared plural dial</button>
+          <button data-right="0">They come out about equal</button>
+        </div>
+        <p class="reveal" hidden><b class="ok">The shared dial, by far.</b> Every example pushes it the same way, so its nudges add up: 1,000 × 0.2 = 200. The quirk nudges point in random directions and mostly cancel. Each quirk dial gets about a hundred of them, and a hundred random ±1 steps usually leave you only about ten steps from where you began. Press the buttons and check.</p>
       </div>
-      <p class="caption">They called these wiring patterns <strong>circuits</strong>, and they made a bold bet: that models are made of understandable parts, if only we look carefully enough.</p>
     </div>
-    <div class="prose" style="margin-top:2rem">
-      <p>In 2021, that group began asking the same question of transformers, the models that read and write language. They published their findings as a running series of articles called the <em>Transformer Circuits Thread</em>. This book follows that series, one discovery at a time.</p>
+    <div class="toy">
+      <div class="toy-head"><h4>Why blind nudges build structure</h4><span class="label">Real calculation, simplified picture</span></div>
+      <div class="dials" id="dials"></div>
+      <div class="controls">
+        <div class="btns"><button id="nudge1">Feed 1 example</button><button id="nudge100">Feed 100</button><button class="primary" id="nudge1000">Feed 1,000</button><button id="nudgeReset">Start over</button></div>
+      </div>
+      <p class="verdict" id="nudgeVerdict" aria-live="polite"></p>
+      <p class="caption">After one example a quirk wins, because its nudge is bigger. After hundreds, the shared dial towers over the rest, because a pattern that helps millions of predictions gets pushed the same way every time, and one-off accidents don't. Real training is vastly more complicated. This is the core of why it produces structure at all: <strong>structure wins because it's reusable.</strong></p>
+    </div>
+    <div class="prose" style="margin-top:1.5rem">
+      <div class="aside">
+        <p class="label">Order without an orderer</p>
+        <p>This isn't the only place where simple local rules produce structure that nobody designed.</p>
+        <p style="margin-top:.6rem"><strong>The common law.</strong> No legislator drafted the doctrine of negligence. Judges decided individual cases, and the principles that kept working in case after case survived and hardened into law.</p>
+        <p style="margin-top:.6rem"><strong>Bitcoin.</strong> A short list of rules, followed by strangers who don't trust each other, keeps a global ledger stable with nobody in charge of it.</p>
+        <p style="margin-top:.6rem"><strong>Evolution.</strong> One blunt rule, keep what reproduces, plus a very long time, produced the eye.</p>
+        <p style="margin-top:.6rem">Training a model belongs to this family. Which is exactly why its results need to be studied, rather than looked up.</p>
+      </div>
+    </div>
+    <div class="prose" style="margin-top:1.5rem">
+      <details class="deeper">
+        <summary>Go deeper: the world, seen through its shadows <small>Level 2</small></summary>
+        <div class="in">
+          <p>A language model never sees the world. It sees text. But text is a shadow of the world, cast by billions of people who did see it, and wrote down what happened, where and when. In a sense, people are the model's sensors. Even the scaling paper's training set was filtered by people: it was built from web pages linked on Reddit that at least three readers had upvoted.</p>
+          <p>Can a model rebuild the world from its shadows? Two later studies, beyond this prologue's dates, give a striking partial answer.</p>
+          <p><strong>Othello (Li et al., 2022).</strong> A small transformer was shown only lists of moves from the board game Othello, like "C4, D3, E6", never a board or a rule. It learned to suggest legal moves, with an error rate of 0.01% (an untrained copy: 93%). It wasn't just memorising: trained on games with a quarter of all openings removed, it still made legal moves on those openings 99.98% of the time. Inside, the researchers found a representation of the board, and editing it changed the moves the model suggested. Their probe needed to be non-linear. A 2023 follow-up by Neel Nanda and colleagues found the board <em>is</em> stored as straight directions, once you describe squares as "mine" and "the opponent's" rather than "black" and "white".</p>
+          <p><strong>Space and time (Gurnee &amp; Tegmark, 2023).</strong> In the Llama-2 family of models, simple straight-line probes could read off the latitude and longitude of places, and the dates of historical figures, artworks and news headlines, from the model's activations. They even found individual "space neurons" and "time neurons". The authors are careful: this is a map and a timeline, which they call <em>"basic ingredients of a world model"</em>, not a full one.</p>
+          <p class="inpaper">In the papers: Li et al., §2.3 <em>Othello-GPT usually predicts legal moves</em> and §4 <em>Validating probes with interventional experiments</em>; Gurnee &amp; Tegmark, §3 <em>Linear models of space and time</em> and §5 <em>Space and time neurons</em>.</p>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="p7">
     <div class="prose">
+      <p class="scene-tag">Scene 7</p>
+      <h3 id="p7">2020: bigger is predictably better</h3>
+      <p>In January 2020, a team at OpenAI led by Jared Kaplan and Sam McCandlish measured how much better bigger models get. They trained a wide range of transformers, from under a thousand to 1.5 billion tunable numbers, on 23 billion tokens (word pieces) of web text, and measured each one's error.</p>
+      <p>They found something rare outside physics: three clean laws. Make the model bigger, give it more text, or spend more computing power, and the error falls along a straight line on a "times ten" chart. Each time you multiply one of them by ten, the error shrinks by the same fraction, as long as the other two aren't holding it back. Some of these trends held across more than seven orders of magnitude.</p>
+      <div class="predict" data-quiz>
+        <p class="label">Predict before you slide</p>
+        <p class="q">According to the paper, if you make a model ten times bigger (and give it enough data), how much lower does its error get?</p>
+        <div class="opts">
+          <button data-right="0">About 90% lower</button>
+          <button data-right="0">About 50% lower</button>
+          <button data-right="1">About 16% lower</button>
+          <button data-right="0">About 1% lower</button>
+        </div>
+        <p class="reveal" hidden><b class="ok">About 16%.</b> Each tenfold jump in size multiplies the error by 10<sup>−0.076</sup> ≈ 0.84. That sounds small, but it repeats: a thousand times bigger takes you to 0.84 × 0.84 × 0.84 ≈ 0.59 of the starting error. Pick "Parameters" in the chart and slide along to see it.</p>
+      </div>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>The three scaling laws</h4><span class="label">The paper's fitted formulas and ranges</span></div>
+      <div class="seg" id="lawSeg" role="group" aria-label="Which law to show">
+        <button data-law="N" aria-pressed="true">Parameters</button>
+        <button data-law="D" aria-pressed="false">Data</button>
+        <button data-law="C" aria-pressed="false">Compute</button>
+      </div>
+      <div class="canvas-box" style="margin-top:1rem"><canvas id="scaleCanvas" width="1800" height="860" aria-label="A chart of model error falling as a resource grows" role="img"></canvas></div>
+      <div class="controls">
+        <div class="ctl"><label for="budget" id="budgetLab">Model size</label><input type="range" id="budget" min="0" max="100" step="1" value="0"><output id="budgetOut" for="budget"></output></div>
+        <div class="btns"><button id="axisBtn">Show on a ruler scale</button></div>
+      </div>
+      <div class="scaleRead" id="scaleRead"></div>
+      <p class="verdict" id="scaleVerdict"></p>
+      <p class="caption">Each solid line is the paper's own fitted formula, drawn over the range it actually measured (from its Figure 1). Error here is the paper's measure, "loss" in nats per token: lower is better. The dashed part of the compute line is the formula extended beyond what was measured, out to the point where the paper says its own laws start to contradict each other. On a "times ten" scale the laws are straight lines. Press the button to see the same curve on an ordinary ruler scale, where nearly all the gain seems to happen at the very start.</p>
+    </div>
+    <div class="prose" style="margin-top:1.5rem">
+      <details class="deeper">
+        <summary>Go deeper: the formulas, and what "loss" means <small>Level 2</small></summary>
+        <div class="in">
+          <p class="inpaper">In the paper: §1.2 <em>Summary of Scaling Laws</em>, §3 <em>Empirical Results and Basic Power Laws</em>, Appendix A <em>Summary of Power Laws</em>.</p>
+          <p>The paper writes the parameter law like this:</p>
+          <p class="formula">L(N) = (N<sub>c</sub> / N)<sup>α<sub>N</sub></sup>,&nbsp;&nbsp; α<sub>N</sub> ≈ 0.076,&nbsp;&nbsp; N<sub>c</sub> ≈ 8.8 × 10<sup>13</sup></p>
+          <p>In plain words: the loss L equals some big constant divided by the model size N, raised to a small power. The small power, 0.076, is the whole story. It's why doubling the model only trims the loss by 5% (2<sup>−0.076</sup> ≈ 0.95), and why the gains never stop but never come fast. The data law has power 0.095, and the compute law 0.050. The paper says the constants like N<sub>c</sub> <em>"do not have a fundamental meaning"</em>: they depend on how the text is chopped into tokens.</p>
+          <p><strong>What a loss number feels like.</strong> Loss is the model's average surprise at the true next token. If you raise <em>e</em> (about 2.718) to the power of the loss, you get how many equally likely options the model is effectively torn between. The smallest models in the chart score about 6.8, which is like choosing blind among roughly 900 tokens. The biggest score about 2.3: like choosing among 10. That is the distance from babble to fluent prose.</p>
+          <p><strong>Shape barely matters.</strong> With the number of parameters held fixed, the ratio of depth to width could change forty-fold and the loss moved only a few percent. A 6-layer model with 4,288 desks came within 3% of a 48-layer model with 1,600 (§3.1, Figure 5). Size is what counts.</p>
+          <p><strong>And where do these laws come from?</strong> The authors don't know. In their caveats: <em>"At present we do not have a solid theoretical understanding for any of our proposed scaling laws."</em> They compare the laws to the ideal gas law, a reliable rule about a whole gas that holds regardless of what each molecule is doing, and hope for the 'statistical mechanics' underneath their 'thermodynamics'.</p>
+          <details class="deeper">
+            <summary>Deeper still: how to spend a budget, and where the laws must break <small>Level 3</small></summary>
+            <div class="in">
+              <p class="inpaper">In the paper: §4 <em>Charting the Infinite Data Limit and Overfitting</em>, §6 <em>Optimal Allocation of the Compute Budget</em>, §6.3 <em>Contradictions and a Conjecture</em>.</p>
+              <p><strong>Big models learn faster per example.</strong> Larger models reach the same loss after seeing fewer tokens. So with a fixed budget, the paper's answer was: build a very big model and stop training it early, long before it has finished learning. For every tenfold increase in compute, make the model about 5 times bigger (N grows as C<sup>0.73</sup>) and the data only about 2 times bigger (D grows as C<sup>0.27</sup>). Pick "Compute" in the chart to see this recipe for each budget. The paper's line: <em>"Big models may be more important than big data."</em></p>
+              <p><strong>To avoid overfitting</strong>, data should grow at least as N<sup>0.74</sup>: make the model 8 times bigger and you need only about 5 times more data.</p>
+              <p><strong>Later revised.</strong> In 2022, a DeepMind team (Hoffmann et al., the "Chinchilla" paper) redid the budget experiment with different training settings and found that model size and data should grow at about the same rate. By that measure many large models of the time had been trained on too little text. The power-law shape survived. The recipe changed.</p>
+              <p><strong>The laws contain their own expiry date.</strong> Followed far enough, the compute law predicts a loss lower than the data law allows for the small amount of data the recipe uses. The two lines cross at roughly 10<sup>4</sup> petaflop-days, 10<sup>12</sup> parameters and 10<sup>12</sup> tokens, at a loss of about 1.7 nats per token. The authors stress that these numbers are <em>"highly uncertain"</em>, by an order of magnitude either way. They conjecture this might be roughly where the reliable information in natural language runs out. Nobody has settled it.</p>
+            </div>
+          </details>
+        </div>
+      </details>
+      <div class="aside" style="margin-top:1.2rem">
+        <p class="label">A known known, and a known unknown</p>
+        <p>The scaling laws let labs predict <em>how well</em> a model will do before building it. That's why companies began spending billions with confidence. But the laws predict one number, the average loss. They say nothing about <em>what is inside</em>, or <em>which abilities</em> appear at which size. The paper says so itself: <em>"Smooth quantitative change can mask major qualitative improvements: 'more is different'."</em> A smooth economy can hide the invention of the steam engine.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="p8">
+    <div class="prose">
+      <p class="scene-tag">Scene 8</p>
+      <h3 id="p8">Zoom in</h3>
+      <p>So by 2020, people could predict how good a model would be. What they couldn't say was what had grown inside.</p>
+      <p>A small group led by Chris Olah, then at OpenAI, had already started looking, in models that recognise images. In March 2020 they published <em>Zoom In: An Introduction to Circuits</em>. It opens with the microscope. Before microscopes, biology studied whole animals. After them, it studied cells, and cellular biology <em>"isn't just more careful zoology"</em>. Could neural networks have a cellular biology too? What if you studied one neuron, even one weight, at a time, for thousands of hours?</p>
+      <p>They framed their answer the way the biologist Theodor Schwann framed cell theory in 1839: as three bold claims. Schwann's first two claims are still in the textbooks. His third turned out to be <em>"horribly wrong"</em>. Olah and colleagues offered theirs in the same spirit: stated strongly, so they could be tested.</p>
+    </div>
+    <div class="toy" style="max-width:860px">
+      <div class="toy-head"><h4>Three speculative claims</h4><span class="label">Zoom In, 2020</span></div>
+      <div class="claims">
+        <div><p class="label">Claim 1: Features</p><p>Features are the fundamental unit of neural networks. They correspond to <strong>directions</strong>, and can be rigorously studied and understood.</p></div>
+        <div><p class="label">Claim 2: Circuits</p><p>Features are connected by weights, forming <strong>circuits</strong>: small sub-networks that can also be rigorously studied and understood.</p></div>
+        <div><p class="label">Claim 3: Universality</p><p>Analogous features and circuits form across <strong>different models</strong> and tasks.</p></div>
+      </div>
+      <p class="caption">Our paraphrase of the paper's three claims. Notice the word in Claim 1: directions. The idea from word2vec, that meaning lives in directions, reappears here as a claim about what a network is made of.</p>
+    </div>
+    <div class="prose" style="margin-top:2rem">
+      <p><strong>Exhibit one: curve detectors.</strong> In an image model called InceptionV1, early in the network, they found neurons that fire for curved edges about 60 pixels across. They come in families, each member tuned to a different angle, together covering all 360 degrees. How do you prove a neuron "detects curves" rather than something that merely correlates with curves? They built the case the way a careful prosecutor would: several independent lines of evidence, each of which could have failed.</p>
+      <details class="deeper">
+        <summary>Go deeper: the seven lines of evidence <small>Level 2</small></summary>
+        <div class="in">
+          <p class="inpaper">In the paper: <em>Claim 1: Features</em>, "Example 1: Curve Detectors".</p>
+          <ol class="evidence">
+            <li><span><strong>Feature visualisation.</strong> Generate an image that makes the neuron fire as hard as possible. You get curves.</span></li>
+            <li><span><strong>Dataset examples.</strong> The real photos that excite it most contain curves at the expected angle.</span></li>
+            <li><span><strong>Synthetic examples.</strong> Drawn test curves of different angles and sizes trigger it as predicted; straight lines and sharp corners don't.</span></li>
+            <li><span><strong>Joint tuning.</strong> Rotate an exciting image and the neuron fades while its neighbour in the family takes over.</span></li>
+            <li><span><strong>Feature implementation.</strong> Read its incoming weights and you can see a curve-detecting recipe built from earlier curve and line detectors.</span></li>
+            <li><span><strong>Feature use.</strong> The neurons downstream that use it are things like circle and spiral detectors.</span></li>
+            <li><span><strong>Handwritten circuits.</strong> They set weights by hand, from their understanding, and got a working curve detector that behaves much like the original.</span></li>
+          </ol>
+          <p>Their own verdict is measured: these arguments don't rule out <em>"some rare secondary case"</em>, but they seem to meet the standards of evidence used in neuroscience. A lawyer would recognise the move. No single exhibit proves the case. Seven that each could have failed, and didn't, come close.</p>
+        </div>
+      </details>
+      <p style="margin-top:1.2rem"><strong>Exhibit two: a car detector.</strong> Later in the network sits a neuron that detects cars (the paper calls it 4c:447). Its weights read like a recipe. A window detector from the layer before excites it at the top of its view and inhibits it at the bottom. A wheel detector does the reverse. A car-body detector excites it, especially at the bottom. Build a car below and see.</p>
+      <div class="predict" data-quiz>
+        <p class="label">Predict before you press</p>
+        <p class="q">Turn the car upside down: wheels on top, body in the middle, windows at the bottom. All the same parts are there. How strongly does the car detector fire?</p>
+        <div class="opts">
+          <button data-right="0">Just as strongly</button>
+          <button data-right="0">About half as strongly</button>
+          <button data-right="1">Not at all</button>
+        </div>
+        <p class="reveal" hidden><b class="ok">Not at all.</b> Wheels in the top row and windows in the bottom row each count <em>against</em> a car. Their pull outweighs the body's push, the total goes below zero, and the neuron's switch (a ReLU, which turns any negative total into zero) stays off. The detector doesn't just check for parts. It checks where they are. Try it with the "Upside down" preset.</p>
+      </div>
+    </div>
+    <div class="toy" style="max-width:860px">
+      <div class="toy-head"><h4>Build a car for the car detector</h4><span class="label">Hand-set weights, real arithmetic</span></div>
+      <div class="car">
+        <div class="slots3" id="carSlots"></div>
+        <div class="fire">
+          <p class="label">Car detector</p>
+          <span class="big" id="carVal">0</span>
+          <div class="bar"><i id="carBar"></i></div>
+          <p class="mini" id="carSay" aria-live="polite"></p>
+          <div class="presets" id="carPresets">
+            <button data-p="windows,body,wheels">A car</button>
+            <button data-p="wheels,body,windows">Upside down</button>
+            <button data-p="empty,empty,wheels">Just wheels</button>
+            <button data-p="windows,empty,windows">Windows top and bottom</button>
+          </div>
+        </div>
+      </div>
+      <details class="corpus"><summary>See the weights this toy uses</summary>
+        <table class="wtable" id="carWeights" aria-label="Toy weights from each part, in each position, to the car detector"></table>
+      </details>
+      <p class="caption">Tap a row to change what's there. The real neuron reads a 5 × 5 patch of positions through thousands of learned weights. This toy keeps only three positions and three parts, with weights we set by hand to match the signs the paper describes: windows help at the top and hurt at the bottom, wheels the reverse, the body helps most at the bottom. The detector adds up part × weight for each row and switches off if the total is below zero.</p>
+    </div>
+    <div class="prose" style="margin-top:2rem">
+      <p>Then the model did something surprising. In the very next layer, instead of keeping one tidy car neuron, it spread the car feature across several neurons whose main job was detecting dogs. The authors called this <span class="term">superposition</span>, and suggested a reason: high-dimensional spaces have only a limited number of fully separate directions, but a vast number of <em>almost</em> separate ones. A model short of neurons can pack more concepts in by sharing. It also leaves neurons that respond to unrelated things. Another InceptionV1 neuron fires for cat faces, cat legs and the fronts of cars. Those are called <span class="term">polysemantic</span> neurons, and they are the villain of Chapters 3 and 4.</p>
+      <p><strong>Exhibit three, universality, was the thinnest.</strong> Curve detectors and some other early features showed up in several different image models (AlexNet, VGG19, ResNet as well as InceptionV1). The authors called this evidence <em>"anecdotal"</em> and said so plainly. If universality holds, different models are like maps of the same territory drawn by different cartographers at different resolutions, and what you learn reading one transfers to the next. If it fails, every model has to be studied from scratch.</p>
+      <details class="deeper">
+        <summary>Go deeper: interpretability as a natural science <small>Level 2</small></summary>
+        <div class="in">
+          <p class="inpaper">In the paper: <em>Claim 3: Universality</em> and <em>Interpretability as a Natural Science</em>.</p>
+          <p>The authors borrow Thomas Kuhn's idea of a "pre-paradigmatic" field: one without agreement on what the objects of study are, which methods to use, or how to judge results. They say interpretability in 2020 felt like that. Their proposal is to treat a trained network like an organism and make claims about it that could be proven false.</p>
+          <p>Circuits suit that well. If you really understand a circuit, you can predict what happens when you edit its weights. And small enough circuits can be checked by plain reasoning, the way you can check a short proof. The price is that each claim covers only a sliver of the network. The hope is that big claims about behaviour can be built up from many small, solid ones.</p>
+          <p>That gives us the bet this book follows. In 2021, Olah and colleagues, now at Anthropic, began asking the same questions of transformers, the models that read and write language. They published as they went, in a running series called the <em>Transformer Circuits Thread</em>.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="p9">
+    <div class="prose">
       <p class="scene-tag">The end of the prologue</p>
-      <h3 id="p7">What we know, and what we don't</h3>
+      <h3 id="p9">What we know, and what we don't</h3>
     </div>
     <div class="learned">
-      <div class="card k"><h4>Known: you can know a word by its company</h4><p>Describing words by their neighbours gives a map where similar meanings sit close together.</p></div>
-      <div class="card k"><h4>Known: directions carry meaning</h4><p>Steps through the map, like man to woman or country to capital, mean the same thing wherever you take them.</p></div>
-      <div class="card k"><h4>Known: scale brings predictable gains</h4><p>More compute, data and size reduce a model's error along a smooth, predictable curve.</p></div>
-      <div class="card u"><h4>Unknown: what grows inside?</h4><p>In 2020, nobody could explain how a big language model actually produces its answers.</p></div>
-      <div class="card u"><h4>Unknown: why does scaling work so well?</h4><p>The curve was measured, not explained. Why it holds, and how far it will keep holding, are still debated.</p></div>
-      <div class="card u"><h4>Unknown: are models made of readable parts?</h4><p>Circuits had been found in image models. Whether language models could be read the same way was the open bet.</p></div>
+      <div class="card k"><h4>Known: you can know a word by its company</h4><p>Describing words by their neighbours gives a map where similar meanings sit close together. Nobody has to say what any word means.</p></div>
+      <div class="card k"><h4>Known: directions carry meaning, imperfectly</h4><p>Relationships like singular to plural, or man to woman, show up as roughly constant arrows. The best 2013 model answered about two-thirds of its analogy questions exactly right.</p></div>
+      <div class="card k"><h4>Known: maps inherit our biases</h4><p>Stereotypes in text become directions in the map. One direction can be measured and removed, though what it correlated with tends to remain.</p></div>
+      <div class="card k"><h4>Known: loss falls as a power law</h4><p>Across many orders of magnitude, loss falls smoothly with parameters (power 0.076), data (0.095) and compute (0.050), as long as nothing else is the bottleneck.</p></div>
+      <div class="card k"><h4>Known: some neurons are readable</h4><p>In image models, curve detectors and a car detector built from windows, body and wheels were checked with several independent lines of evidence.</p></div>
+      <div class="card u"><h4>Unknown: why scaling works</h4><p>The authors had no theory for their laws, and their own formulas predict a breakdown somewhere around 10<sup>12</sup> parameters. Where they really stop is still debated.</p></div>
+      <div class="card u"><h4>Unknown: what appears when</h4><p>The laws predict average loss, not abilities. Which skills emerge at which size, and why, the curves don't say.</p></div>
+      <div class="card u"><h4>Unknown: how much world is inside?</h4><p>Board games, maps and timelines have been found inside models trained only on text. How complete and how causal such world models are is an open question.</p></div>
+      <div class="card u"><h4>Unknown: are language models readable?</h4><p>Circuits had been found in image models, and the authors called universality "anecdotal". Whether language models could be read the same way was the open bet.</p></div>
     </div>
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 1: The Clerks and the Case File</h4>
       <p>What happens inside a transformer, layer by layer: the case file, the clerks, and the notes they add. <a href="#clerks">Read Chapter 1 ↓</a></p>
-      <p class="stat">Sources: <a href="https://arxiv.org/abs/1301.3781" target="_blank" rel="noopener">Mikolov et al., 2013 (word2vec)</a> · <a href="https://aclanthology.org/N13-1090/" target="_blank" rel="noopener">Mikolov, Yih &amp; Zweig, 2013 (word analogies)</a> · <a href="https://arxiv.org/abs/1607.06520" target="_blank" rel="noopener">Bolukbasi et al., 2016 (bias in word maps)</a> · <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Vaswani et al., 2017 (the transformer)</a> · <a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">Kaplan et al., 2020 (scaling laws)</a> · <a href="https://distill.pub/2020/circuits/zoom-in/" target="_blank" rel="noopener">Olah et al., 2020 (Zoom In)</a></p>
+      <p class="stat">Sources: <a href="https://arxiv.org/abs/1301.3781" target="_blank" rel="noopener">Mikolov, Chen, Corrado &amp; Dean, 2013, <em>Efficient Estimation of Word Representations in Vector Space</em> (word2vec)</a> · <a href="https://aclanthology.org/N13-1090/" target="_blank" rel="noopener">Mikolov, Yih &amp; Zweig, 2013, <em>Linguistic Regularities in Continuous Space Word Representations</em></a> · <a href="https://arxiv.org/abs/1607.06520" target="_blank" rel="noopener">Bolukbasi, Chang, Zou, Saligrama &amp; Kalai, 2016, <em>Man is to Computer Programmer as Woman is to Homemaker?</em></a> · <a href="https://aclanthology.org/N19-1061/" target="_blank" rel="noopener">Gonen &amp; Goldberg, 2019, <em>Lipstick on a Pig</em></a> · <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Vaswani et al., 2017, <em>Attention Is All You Need</em></a> · <a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">Kaplan, McCandlish et al., 2020, <em>Scaling Laws for Neural Language Models</em></a> · <a href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener">Hoffmann et al., 2022 (Chinchilla)</a> · <a href="https://arxiv.org/abs/2210.13382" target="_blank" rel="noopener">Li et al., 2022, <em>Emergent World Representations</em> (Othello)</a> · <a href="https://arxiv.org/abs/2309.00941" target="_blank" rel="noopener">Nanda, Lee &amp; Wattenberg, 2023 (linear Othello board)</a> · <a href="https://arxiv.org/abs/2310.02207" target="_blank" rel="noopener">Gurnee &amp; Tegmark, 2023, <em>Language Models Represent Space and Time</em></a> · <a href="https://distill.pub/2020/circuits/zoom-in/" target="_blank" rel="noopener">Olah, Cammarata, Schubert, Goh, Petrov &amp; Carter, 2020, <em>Zoom In: An Introduction to Circuits</em></a></p>
     </div>
   </section>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const LL = window.LL, root = document.getElementById('prologue');
+    const C = () => LL.C;
+
+    /* predict-before-you-press quizzes */
+    root.querySelectorAll('[data-quiz]').forEach(q => {
+      const btns = [...q.querySelectorAll('.opts button')], rev = q.querySelector('.reveal');
+      rev.setAttribute('aria-live', 'polite');
+      btns.forEach(b => b.addEventListener('click', () => {
+        btns.forEach(x => x.classList.remove('right', 'wrong'));
+        const ok = b.dataset.right === '1';
+        b.classList.add(ok ? 'right' : 'wrong');
+        btns.filter(x => x.dataset.right === '1').forEach(x => x.classList.add('right'));
+        const lead = rev.querySelector('b');
+        if (!rev.dataset.lead) rev.dataset.lead = lead.textContent;
+        lead.className = ok ? 'ok' : 'no';
+        lead.textContent = (ok ? 'Right. ' : 'Not quite. ') + rev.dataset.lead;
+        rev.hidden = false;
+      }));
+    });
+
+    /* spot the mistakes (word2vec Table 8 rows) */
+    {
+      const items = [
+        ['France', 'Paris', 'Italy', 'Rome', 1, ''],
+        ['big', 'bigger', 'small', 'larger', 0, 'should be "smaller"'],
+        ['Miami', 'Florida', 'Baltimore', 'Maryland', 1, ''],
+        ['Einstein', 'scientist', 'Picasso', 'painter', 1, ''],
+        ['Sarkozy', 'France', 'Merkel', 'Germany', 1, ''],
+        ['copper', 'Cu', 'uranium', 'plutonium', 0, 'should be "U", the chemical symbol'],
+        ['copper', 'Cu', 'zinc', 'Zn', 1, ''],
+        ['Berlusconi', 'Silvio', 'Obama', 'Barack', 1, ''],
+        ['Berlusconi', 'Silvio', 'Putin', 'Medvedev', 0, 'should be "Vladimir"'],
+        ['Microsoft', 'Ballmer', 'Google', 'Yahoo', 0, 'a rival company, not a boss'],
+        ['Japan', 'sushi', 'Germany', 'bratwurst', 1, ''],
+        ['Japan', 'sushi', 'France', 'tapas', 0, 'tapas is Spanish'],
+      ];
+      const box = document.getElementById('spotList');
+      box.innerHTML = items.map((it, i) => `<button class="spot-item" data-i="${i}" aria-pressed="false"><span>${it[0]} → ${it[1]}, so ${it[2]} → <b>${it[3]}</b><span class="why" hidden></span></span></button>`).join('');
+      const bs = [...box.querySelectorAll('.spot-item')];
+      let checked = false;
+      bs.forEach(b => b.addEventListener('click', () => { if (checked) return; b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); }));
+      document.getElementById('spotCheck').addEventListener('click', () => {
+        checked = true; let score = 0;
+        bs.forEach((b, i) => {
+          const wrong = items[i][4] === 0, picked = b.getAttribute('aria-pressed') === 'true';
+          if (wrong === picked) score++;
+          b.setAttribute('aria-pressed', 'false');
+          b.classList.add(wrong ? 'miss' : 'hit');
+          const w = b.querySelector('.why'); w.hidden = false;
+          w.textContent = (wrong ? 'Wrong: ' + items[i][5] : 'Right') + (wrong === picked ? ' · you called it' : ' · you missed this one');
+        });
+        document.getElementById('spotVerdict').innerHTML = `You judged <span>${score} of 12</span> correctly. Five of these twelve answers are wrong.`;
+      });
+      document.getElementById('spotReset').addEventListener('click', () => {
+        checked = false; document.getElementById('spotVerdict').textContent = '';
+        bs.forEach(b => { b.classList.remove('hit', 'miss'); b.setAttribute('aria-pressed', 'false'); b.querySelector('.why').hidden = true; });
+      });
+    }
+
+    /* bias: neutralise the gender direction (hand-placed points, real projection) */
+    {
+      const cv = document.getElementById('biasCanvas'), ctx = cv.getContext('2d');
+      const W0 = [
+        {w: 'she', p: [-0.92, 0.80], def: 1}, {w: 'he', p: [0.92, 0.68], def: 1},
+        {w: 'queen', p: [-0.78, 0.42], def: 1}, {w: 'king', p: [0.80, 0.30], def: 1},
+        {w: 'receptionist', p: [-0.40, 0.12]}, {w: 'homemaker', p: [-0.70, -0.06]}, {w: 'nurse', p: [-0.55, -0.24]},
+        {w: 'captain', p: [0.58, -0.66]}, {w: 'philosopher', p: [0.30, -0.82]}, {w: 'architect', p: [0.42, -1.0]},
+      ];
+      const she = W0[0].p, he = W0[1].p;
+      const g0 = [he[0] - she[0], he[1] - she[1]], gl = Math.hypot(...g0), g = [g0[0] / gl, g0[1] / gl];
+      const proj = p => p[0] * g[0] + p[1] * g[1];
+      const target = on => W0.map(o => o.def || !on ? o.p.slice() : [o.p[0] - proj(o.p) * g[0], o.p[1] - proj(o.p) * g[1]]);
+      let cur = target(false), raf = 0;
+      LL.shared.prologueBias = {proj, get points() { return W0.map((o, i) => ({w: o.w, def: !!o.def, p: cur[i], s: proj(cur[i])})); }};
+      const draw = () => {
+        const Wd = cv.width, H = cv.height, cx = Wd / 2, cy = H / 2, R = Math.min(Wd * .42, H * .46);
+        const X = p => cx + p[0] * R * 1.08, Y = p => cy - p[1] * R * .92;
+        ctx.clearRect(0, 0, Wd, H);
+        ctx.strokeStyle = C().line; ctx.lineWidth = 3; ctx.setLineDash([10, 12]);
+        ctx.beginPath(); ctx.moveTo(X([g[1] * 1.06, -g[0] * 1.06]), Y([g[1] * 1.06, -g[0] * 1.06])); ctx.lineTo(X([-g[1] * 0.9, g[0] * 0.9]), Y([-g[1] * 0.9, g[0] * 0.9])); ctx.stroke(); ctx.setLineDash([]);
+        LL.arrow(ctx, X(she), Y(she), X(he), Y(he), C().soft, 6);
+        ctx.font = '600 26px "JetBrains Mono", monospace'; ctx.fillStyle = C().soft; ctx.textAlign = 'center';
+        ctx.fillText('the gender arrow, from "she" to "he"', cx, Y([0, (she[1] + he[1]) / 2]) - 40);
+        ctx.fillText('zero gender', cx, H - 8);
+        W0.forEach((o, i) => {
+          const p = cur[i], px = X(p), py = Y(p);
+          ctx.fillStyle = o.def ? C().plum : LL.css('--tomato');
+          ctx.beginPath(); ctx.arc(px, py, 13, 0, Math.PI * 2); ctx.fill();
+          ctx.font = '700 32px "Bricolage Grotesque", system-ui, sans-serif'; ctx.fillStyle = C().ink;
+                    ctx.textAlign = (!o.def || p[0] > 0) ? 'left' : 'right';
+          ctx.fillText(o.w, px + (ctx.textAlign === 'left' ? 22 : -22), py + 10);
+        });
+      };
+      const verdict = on => {
+        const jobs = W0.map((o, i) => ({w: o.w, s: proj(cur[i]), def: o.def})).filter(o => !o.def);
+        const most = jobs.slice().sort((a, b) => a.s - b.s);
+        document.getElementById('biasVerdict').innerHTML = on
+          ? `Every job word now scores <span>${Math.max(...jobs.map(j => Math.abs(j.s))).toFixed(2)}</span> on the gender arrow. King and queen still score ${proj(cur[3]).toFixed(2)} and ${proj(cur[2]).toFixed(2)}.`
+          : `Most "she" job: <span>${most[0].w}</span> (${most[0].s.toFixed(2)}). Most "he" job: <span>${most[most.length - 1].w}</span> (+${most[most.length - 1].s.toFixed(2)}).`;
+      };
+      const go = on => {
+        const from = cur.map(p => p.slice()), to = target(on);
+        cancelAnimationFrame(raf);
+        if (LL.reduce) { cur = to; draw(); verdict(on); return; }
+        const t0 = performance.now();
+        const step = t => { const k = Math.min(1, (t - t0) / 700), e = 1 - Math.pow(1 - k, 3);
+          cur = from.map((p, i) => [p[0] + (to[i][0] - p[0]) * e, p[1] + (to[i][1] - p[1]) * e]); draw();
+          if (k < 1) raf = requestAnimationFrame(step); else { cur = to; verdict(on); } };
+        raf = requestAnimationFrame(step);
+      };
+      document.getElementById('biasGo').addEventListener('click', () => go(true));
+      document.getElementById('biasReset').addEventListener('click', () => go(false));
+      LL.redrawers.push(draw); draw(); verdict(false);
+    }
+
+    /* blind nudges: shared dial vs one-off quirks (seeded, real arithmetic) */
+    {
+      const K = 9, SHARED = 0.2, QUIRK = 1.0;
+      let seed, n, plural, quirks;
+      const rnd = () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+      const reset = () => { seed = 20130116; n = 0; plural = 0; quirks = Array(K).fill(0); };
+      const box = document.getElementById('dials');
+      box.innerHTML = `<div class="dial main"><span>plural rule</span><div class="track"><i></i></div><span>0</span></div>` +
+        [...Array(K)].map((_, i) => `<div class="dial"><span>quirk ${i + 1}</span><div class="track"><i></i></div><span>0</span></div>`).join('');
+      const rows = [...box.querySelectorAll('.dial')];
+      const feed = m => { for (let k = 0; k < m; k++) { n++; plural += SHARED; const j = Math.floor(rnd() * K); quirks[j] += rnd() < 0.5 ? -QUIRK : QUIRK; } render(); };
+      const render = () => {
+        const vals = [plural, ...quirks], mx = Math.max(1, ...vals.map(Math.abs));
+        rows.forEach((r, i) => { const v = vals[i], f = Math.abs(v) / mx * 50; const bar = r.querySelector('i');
+          bar.style.left = (v >= 0 ? 50 : 50 - f) + '%'; bar.style.width = f + '%'; r.lastElementChild.textContent = (v >= 0 ? '+' : '') + v.toFixed(1); });
+        const mq = Math.max(...quirks.map(Math.abs));
+        LL.shared.prologueNudges = {n, plural, maxQuirk: mq};
+        document.getElementById('nudgeVerdict').innerHTML = n === 0 ? 'No examples yet. Feed the dials some training data.'
+          : `After <span>${n.toLocaleString()}</span> example${n > 1 ? 's' : ''}: the plural dial is at ${plural.toFixed(1)}, the biggest quirk at ${mq.toFixed(1)}. ${plural > mq ? `The shared rule is ahead by ${(plural / Math.max(mq, 0.1)).toFixed(1)}×.` : 'A quirk is still ahead.'}`;
+      };
+      document.getElementById('nudge1').addEventListener('click', () => feed(1));
+      document.getElementById('nudge100').addEventListener('click', () => feed(100));
+      document.getElementById('nudge1000').addEventListener('click', () => feed(1000));
+      document.getElementById('nudgeReset').addEventListener('click', () => { reset(); render(); });
+      reset(); render();
+    }
+
+    /* car detector (hand-set weights, real weighted sum + ReLU) */
+    {
+      const parts = ['empty', 'windows', 'body', 'wheels'];
+      const names = {empty: 'empty', windows: 'Windows', body: 'Car body', wheels: 'Wheels'};
+      const rowsN = ['top', 'middle', 'bottom'];
+      const Wt = {windows: [1.0, 0, -1.0], body: [0.2, 0.4, 0.7], wheels: [-1.0, 0, 1.0], empty: [0, 0, 0]};
+      const icon = p => p === 'windows' ? '<svg viewBox="0 0 72 40" aria-hidden="true"><rect x="6" y="8" width="26" height="22" rx="5" fill="var(--sky)"/><rect x="40" y="8" width="26" height="22" rx="5" fill="var(--sky)"/></svg>'
+        : p === 'body' ? '<svg viewBox="0 0 72 40" aria-hidden="true"><rect x="3" y="10" width="66" height="20" rx="9" fill="var(--tomato)"/></svg>'
+        : p === 'wheels' ? '<svg viewBox="0 0 72 40" aria-hidden="true"><circle cx="18" cy="20" r="14" fill="var(--ink)"/><circle cx="54" cy="20" r="14" fill="var(--ink)"/><circle cx="18" cy="20" r="5" fill="var(--wash)"/><circle cx="54" cy="20" r="5" fill="var(--wash)"/></svg>' : '';
+      let state = ['windows', 'body', 'wheels'];
+      const slots = document.getElementById('carSlots');
+      slots.innerHTML = rowsN.map((r, i) => `<div class="slot"><span>${r}</span><button data-i="${i}" aria-label="${r} row"></button></div>`).join('');
+      const sb = [...slots.querySelectorAll('button')];
+      const full = Wt.windows[0] + Wt.body[1] + Wt.wheels[2];
+      const score = s => Math.max(0, s.reduce((a, p, i) => a + Wt[p][i], 0));
+      LL.shared.prologueCar = {score, full};
+      const render = () => {
+        sb.forEach((b, i) => { b.innerHTML = icon(state[i]) + `<span>${names[state[i]]}</span>`; b.setAttribute('aria-label', `${rowsN[i]} row: ${names[state[i]]}. Tap to change.`); });
+        const raw = state.reduce((a, p, i) => a + Wt[p][i], 0), v = Math.max(0, raw), pct = Math.round(v / full * 100);
+        document.getElementById('carVal').textContent = pct + '%';
+        document.getElementById('carBar').style.width = Math.min(100, pct) + '%';
+        document.getElementById('carSay').textContent = `Weighted total ${raw >= 0 ? '+' : ''}${raw.toFixed(1)}${raw < 0 ? ', below zero, so the detector stays silent' : ''}. Shown as a share of a normal car (${full.toFixed(1)}).`;
+      };
+      sb.forEach((b, i) => b.addEventListener('click', () => { state[i] = parts[(parts.indexOf(state[i]) + 1) % parts.length]; render(); }));
+      document.querySelectorAll('#carPresets button').forEach(b => b.addEventListener('click', () => { state = b.dataset.p.split(','); render(); }));
+      const fmt = v => (v > 0 ? '+' : '') + v.toFixed(1);
+      document.getElementById('carWeights').innerHTML = '<tr><th></th>' + rowsN.map(r => `<th>${r}</th>`).join('') + '</tr>' +
+        ['windows', 'body', 'wheels'].map(p => `<tr><th>${names[p]}</th>` + Wt[p].map(v => `<td class="${v > 0 ? 'pos' : v < 0 ? 'neg' : ''}">${fmt(v)}</td>`).join('') + '</tr>').join('');
+      render();
+    }
+  });
+  </script>
 </article>
 
 <article id="clerks">
@@ -1472,7 +2001,7 @@ the woman rides her horse to the village`.split('\n');
     aDir.innerHTML = dirs.map((d, i) => `<option value="${i}">${d.f} → ${d.t}</option>`).join('');
     aStart.value = 'king';
     document.getElementById('corpusList').innerHTML = S.map(s => `<li>${s}</li>`).join('');
-    let P = {};
+    let P = {}, share = [0, 0], nCtx = 0;
     const build = () => {
       const allowed = c => (gender.includes(c) ? gG.checked : gS.checked);
       const M = {}; T.forEach(t => M[t] = {}); const ctxs = new Set();
@@ -1489,11 +2018,13 @@ the woman rides her horse to the village`.split('\n');
       const mean = Cx.map((_, j) => X.reduce((a, r) => a + r[j], 0) / T.length);
       X.forEach(r => r.forEach((v, j) => r[j] = v - mean[j]));
       let A = T.map((_, i) => T.map((_, k) => X[i].reduce((a, v, j) => a + v * X[k][j], 0)));
+      const total = A.reduce((a, r, i) => a + r[i], 0), lams = [];
       const coords = T.map(() => [0, 0]);
       for (let e = 0; e < 2; e++) {
         let v = T.map((_, i) => Math.sin(i * 1.7 + e + 1));
         for (let it = 0; it < 300; it++) { const w = A.map(r => r.reduce((a, x, j) => a + x * v[j], 0)); const nn = Math.hypot(...w) || 1; v = w.map(x => x / nn); }
         const lam = v.reduce((a, x, i) => a + x * A[i].reduce((b, y, j) => b + y * v[j], 0), 0);
+        lams.push(Math.max(0, lam));
         if (lam > 1e-6) T.forEach((_, i) => coords[i][e] = v[i] * Math.sqrt(lam));
         A = A.map((r, i) => r.map((x, j) => x - lam * v[i] * v[j]));
       }
@@ -1501,6 +2032,7 @@ the woman rides her horse to the village`.split('\n');
       [0, 1].forEach(e => { if (coords[ki][e] < -1e-9) coords.forEach(c => c[e] = -c[e]); });
       const mx = Math.max(1e-9, ...coords.flat().map(Math.abs));
       P = {}; T.forEach((t, i) => P[t] = [coords[i][0] / mx, coords[i][1] / mx]);
+      share = lams.map(l => total > 1e-9 ? l / total : 0); nCtx = Cx.length;
       draw();
     };
     const draw = () => {
@@ -1530,6 +2062,9 @@ the woman rides her horse to the village`.split('\n');
       const best = T.filter(t => t !== s && t !== d.f && t !== d.t).map(t => [t, Math.hypot(P[t][0] - land[0], P[t][1] - land[1])]).sort((a, b) => a[1] - b[1])[0]
         || T.map(t => [t, Math.hypot(P[t][0] - land[0], P[t][1] - land[1])]).sort((a, b) => a[1] - b[1])[0];
       document.getElementById('wordVerdict').innerHTML = `${s} − ${d.f} + ${d.t} lands nearest <span>${best[0]}</span>.`;
+      const pc = x => Math.round(x * 100) + '%';
+      document.getElementById('wordStats').innerHTML = `<span>neighbour words seen: <b>${nCtx}</b></span><span>across: <b>${pc(share[0])}</b> of the spread</span><span>up–down: <b>${pc(share[1])}</b></span><span>miss by: <b>${best[1].toFixed(2)}</b></span>`;
+      shared.prologueMap = {P: JSON.parse(JSON.stringify(P)), share: share.slice(), best: best[0], miss: best[1], nCtx};
     };
     redrawers.push(draw);
     [gG, gS].forEach(el => el.addEventListener('change', build));
@@ -1539,38 +2074,78 @@ the woman rides her horse to the village`.split('\n');
 
   /* ---------- prologue: scaling law (error ∝ compute^-0.05, Kaplan et al. 2020) ---------- */
   {
+    // The three fitted laws from Kaplan et al. 2020, Figure 1 / §1.2, drawn over their measured ranges.
     const cv = document.getElementById('scaleCanvas'), ctx = cv.getContext('2d');
     const br = document.getElementById('budget'), bo = document.getElementById('budgetOut');
-    let logScale = true;
-    const L = c => 4 * Math.pow(c, -0.05);
+    const laws = {
+      N: {c: 8.8e13, a: 0.076, lo: 3, hi: Math.log10(1.5e9), label: 'Model size', axis: 'parameters (not counting embeddings) →', sym: 'N'},
+      D: {c: 5.4e13, a: 0.095, lo: Math.log10(2.1e7), hi: Math.log10(1.4e9), label: 'Dataset size', axis: 'tokens of training text →', sym: 'D'},
+      C: {c: 2.3e8, a: 0.050, lo: -8, hi: 0, ext: 4, label: 'Compute budget', axis: 'compute, in petaflop-days →', sym: 'C'},
+    };
+    let law = 'N', logScale = true;
+    const Lf = (l, x) => Math.pow(l.c / x, l.a);
+    const big = v => v >= 1e9 ? (v / 1e9).toPrecision(2) + ' billion' : v >= 1e6 ? (v / 1e6).toPrecision(2) + ' million' : v >= 1e3 ? (v / 1e3).toPrecision(2) + ' thousand' : String(Math.round(v));
+    const pf = v => v >= 1 ? v.toPrecision(2) : '10^' + Math.round(Math.log10(v) * 10) / 10;
+    const fmt = (l, v) => l === laws.C ? pf(v) + ' PF-days' : big(v) + (l === laws.N ? ' parameters' : ' tokens');
+    const tick = (l, k) => l === laws.C ? (k === 0 ? '1' : `10^${k}`) : (k >= 9 ? `${10 ** (k - 9)}B` : k >= 6 ? `${10 ** (k - 6)}M` : `${10 ** (k - 3)}K`);
+    const cur = () => { const l = laws[law]; return 10 ** (l.lo + (l.hi - l.lo) * (+br.value) / 100); };
+    const Ymax = 7.5, Ymin = 1.5;
     const draw = () => {
-      const W = cv.width, H = cv.height, pl = 150, pr = 60, pt = 40, pb = 110, cw = W - pl - pr, ch = H - pt - pb;
-      const Lmin = L(1e8), Lmax = L(1);
-      const xOf = c => pl + (logScale ? Math.log10(c) / 8 : c / 1e8) * cw;
-      const yOf = l => pt + (logScale ? (Math.log10(Lmax) - Math.log10(l)) / (Math.log10(Lmax) - Math.log10(Lmin)) : (Lmax - l) / (Lmax - Lmin)) * ch;
+      const narrow = (cv.clientWidth || 900) < 600, wantW = narrow ? 700 : 1800, wantH = narrow ? 620 : 860;
+      if (cv.width !== wantW) { cv.width = wantW; cv.height = wantH; }
+      const l = laws[law], W = cv.width, H = cv.height, pl = 150, pr = 60, pt = 40, pb = 120, cw = W - pl - pr, ch = H - pt - pb;
+      const xHiLog = l.ext !== undefined ? l.ext : l.hi, xHi = 10 ** l.hi;
+      const xOf = v => pl + (logScale ? (Math.log10(v) - l.lo) / (xHiLog - l.lo) : v / xHi) * cw;
+      const yLo = logScale ? Ymin : Lf(l, xHi) - 0.2, yHi = logScale ? Ymax : Lf(l, 10 ** l.lo) + 0.2;
+      const yOf = v => pt + (logScale ? (Math.log10(yHi) - Math.log10(v)) / (Math.log10(yHi) - Math.log10(yLo)) : (yHi - v) / (yHi - yLo)) * ch;
       ctx.clearRect(0, 0, W, H);
       ctx.strokeStyle = C.line; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.moveTo(pl, pt); ctx.lineTo(pl, pt + ch); ctx.lineTo(pl + cw, pt + ch); ctx.stroke();
-      ctx.font = '600 32px "JetBrains Mono", monospace'; ctx.fillStyle = C.soft;
-      ctx.textAlign = 'center';
-      if (logScale) { for (let k = 0; k <= 8; k += 2) ctx.fillText(k === 0 ? '1×' : `10^${k}×`, xOf(10 ** k), pt + ch + 50); }
-      else { [0, .25, .5, .75, 1].forEach(f => ctx.fillText(f === 0 ? '0' : `${f * 100}M×`, pl + f * cw, pt + ch + 50)); }
-      ctx.fillText('computing power →', pl + cw / 2, pt + ch + 98);
-      ctx.save(); ctx.translate(48, pt + ch / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('error →  lower is better', 0, 0); ctx.restore();
-      ctx.strokeStyle = C.feats[1]; ctx.lineWidth = 9; ctx.lineCap = 'round'; ctx.beginPath();
-      for (let i = 0; i <= 400; i++) { const c = logScale ? 10 ** (8 * i / 400) : Math.max(1, 1e8 * i / 400); const x = xOf(c), y = yOf(L(c)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
-      ctx.stroke();
-      const cNow = 10 ** +br.value, x = xOf(cNow), y = yOf(L(cNow));
+      ctx.font = '600 30px "JetBrains Mono", monospace'; ctx.fillStyle = C.soft; ctx.textAlign = 'center';
+      if (logScale) {
+        for (let k = Math.ceil(l.lo); k <= Math.floor(xHiLog); k++) { const span = xHiLog - l.lo, every = narrow && span > 7 ? 4 : (narrow || span > 7) ? 2 : 1; if (k % every) continue; ctx.fillText(tick(l, k), xOf(10 ** k), pt + ch + 48); }
+        ctx.textAlign = 'right'; [2, 3, 4, 5, 6, 7].forEach(v => { ctx.fillText(v, pl - 18, yOf(v) + 10); ctx.strokeStyle = C.line; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(pl, yOf(v)); ctx.lineTo(pl + cw, yOf(v)); ctx.stroke(); });
+      } else {
+        [0, .5, 1].forEach(f => ctx.fillText(f === 0 ? '0' : fmt(l, f * xHi).replace(' parameters', '').replace(' tokens', '').replace(' PF-days', ''), pl + f * cw - (f === 1 ? 60 : 0), pt + ch + 48));
+        ctx.textAlign = 'right'; [Math.ceil(yLo * 2) / 2, Math.floor(yHi * 2) / 2].forEach(v => ctx.fillText(v.toFixed(1), pl - 18, yOf(v) + 10));
+      }
+      ctx.textAlign = 'center'; ctx.fillText(l.axis, pl + cw / 2, pt + ch + 100);
+      ctx.save(); ctx.translate(40, pt + ch / 2); ctx.rotate(-Math.PI / 2); ctx.fillText(narrow ? 'loss · lower is better' : 'loss (nats per token) · lower is better', 0, 0); ctx.restore();
+      const line = (a, b, dash) => {
+        ctx.strokeStyle = C.feats[1]; ctx.lineWidth = dash ? 6 : 9; ctx.lineCap = 'round'; ctx.setLineDash(dash ? [14, 16] : []); ctx.beginPath();
+        for (let i = 0; i <= 300; i++) { const v = logScale ? 10 ** (a + (b - a) * i / 300) : Math.max(10 ** l.lo, xHi * i / 300); const x = xOf(v), y = yOf(Lf(l, v)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+        ctx.stroke(); ctx.setLineDash([]);
+      };
+      line(l.lo, l.hi, false);
+      if (logScale && l.ext !== undefined) {
+        line(l.hi, l.ext, true);
+        const ex = xOf(10 ** l.ext), ey = yOf(Lf(l, 10 ** l.ext));
+        ctx.fillStyle = C.bad; ctx.beginPath(); ctx.arc(ex, ey, 14, 0, Math.PI * 2); ctx.fill();
+        ctx.font = '600 26px "JetBrains Mono", monospace'; ctx.textAlign = 'right'; ctx.fillStyle = C.bad;
+        if (narrow) { ctx.fillText('laws contradict', ex, ey - 64); ctx.fillText('(very uncertain)', ex, ey - 30); }
+        else ctx.fillText('laws contradict here (very uncertain)', ex - 24, ey - 30);
+      }
+      const v = cur(), x = xOf(v), y = yOf(Lf(l, v));
       ctx.fillStyle = C.feats[0]; ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill();
       ctx.strokeStyle = C.card; ctx.lineWidth = 6; ctx.stroke();
-      const k = +br.value;
-      bo.textContent = k === 0 ? 'The starting budget' : `${(10 ** k).toLocaleString()} times the starting budget`;
-      const pct = Math.round((1 - L(cNow) / L(1)) * 100);
-      document.getElementById('scaleVerdict').innerHTML = k === 0 ? 'Slide right to multiply the budget by ten, again and again.' : `Error is down <span>${pct}%</span> from the start. Each ten-times step cuts it by about 11%.`;
+      const loss = Lf(l, v), base = Lf(l, 10 ** l.lo), drop = Math.round((1 - 10 ** -l.a) * 100);
+      document.getElementById('budgetLab').textContent = l.label;
+      bo.textContent = fmt(l, v);
+      let tiles = `<div><small>predicted loss</small><b>${loss.toFixed(2)}</b><small>nats per token</small></div>` +
+        `<div><small>like choosing blindly among</small><b>${Math.round(Math.exp(loss)).toLocaleString()}</b><small>tokens (e to the power of the loss)</small></div>` +
+        `<div><small>the formula</small><b style="font-size:1.05rem">L = (${l.c.toExponential(1).replace('e+', '×10^')} / ${l.sym})^${l.a.toFixed(3)}</b><small>each 10× cuts loss by ${drop}%</small></div>`;
+      if (law === 'C') tiles += `<div><small>the paper's compute-efficient recipe</small><b style="font-size:1.05rem">${big(1.3e9 * v ** 0.73)} params</b><small>trained on about ${big(2e10 * v ** 0.27)} tokens (Table 6)</small></div>`;
+      document.getElementById('scaleRead').innerHTML = tiles;
+      document.getElementById('scaleVerdict').innerHTML = +br.value === 0 ? 'This is the smallest size the paper measured. Slide right.' : `Loss is down <span>${Math.round((1 - loss / base) * 100)}%</span> from the smallest ${law === 'N' ? 'model' : law === 'D' ? 'dataset' : 'budget'} measured, across a ${Math.round(v / 10 ** l.lo).toLocaleString()}-fold increase.`;
       document.getElementById('axisBtn').textContent = logScale ? 'Show on a ruler scale' : 'Show on a times-ten scale';
+      shared.prologueScale = {law, value: v, loss, drop};
     };
     redrawers.push(draw);
+    addEventListener('resize', draw);
     br.addEventListener('input', draw);
+    document.querySelectorAll('#lawSeg button').forEach(b => b.addEventListener('click', () => {
+      law = b.dataset.law; document.querySelectorAll('#lawSeg button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); br.value = 0; draw();
+    }));
     document.getElementById('axisBtn').addEventListener('click', () => { logScale = !logScale; draw(); });
     draw();
   }
