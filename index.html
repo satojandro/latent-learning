@@ -467,34 +467,143 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
 </article>
 
 <article id="clerks">
+  <style>
+    #clerks .deeper{background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:0;overflow:hidden}
+    #clerks .deeper > summary{cursor:pointer;list-style:none;display:flex;gap:.7rem;align-items:baseline;flex-wrap:wrap;padding:14px 18px;font-family:var(--f-display);font-weight:600;font-size:1.05rem}
+    #clerks .deeper > summary::-webkit-details-marker{display:none}
+    #clerks .deeper > summary::before{content:"+";font-family:var(--f-mono);font-weight:600;color:var(--plum);width:1ch}
+    #clerks .deeper[open] > summary::before{content:"−"}
+    #clerks .deeper > summary .lvl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--plum);background:color-mix(in srgb, var(--plum) 12%, var(--card));padding:.15rem .5rem;border-radius:999px}
+    #clerks .deeper.deepest{border-style:dashed}
+    #clerks .deeper.deepest > summary .lvl{color:var(--tomato);background:color-mix(in srgb, var(--tomato) 12%, var(--card))}
+    #clerks .deeper .body{padding:0 18px 18px;display:grid;gap:.9rem;font-size:1rem}
+    #clerks .deeper .body .deeper{margin-top:.3rem}
+    #clerks .inpaper{font-family:var(--f-mono);font-size:.8rem;color:var(--ink-soft);border-left:4px solid var(--sky);padding:.2rem 0 .2rem .7rem}
+    #clerks .inpaper a{color:var(--sky)}
+    #clerks .eq{font-family:var(--f-mono);font-size:.95rem;background:var(--wash);border-radius:12px;padding:.8rem 1rem;overflow-x:auto;white-space:nowrap}
+    #clerks .eq sub,#clerks .eq sup{font-size:.7em}
+    #clerks .gloss{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.35rem .9rem;font-size:.95rem}
+    #clerks .gloss dt{font-family:var(--f-mono);font-size:.85rem;color:var(--plum);white-space:nowrap}
+    #clerks .gloss dd{margin:0}
+    #clerks blockquote{margin:0;border-left:4px solid var(--marigold);padding:.3rem 0 .3rem 1rem;font-style:italic}
+    #clerks blockquote cite{display:block;font-style:normal;font-family:var(--f-mono);font-size:.75rem;color:var(--ink-soft);margin-top:.3rem}
+    #clerks .predict{border:2px dashed var(--plum);border-radius:14px;padding:12px 14px;font-size:.98rem}
+    #clerks .predict .label{color:var(--plum);margin-bottom:.2rem}
+    #clerks .three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    @media (max-width:720px){#clerks .three{grid-template-columns:1fr}}
+    #clerks .colhead{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:.5rem}
+    #clerks .score-line{font-family:var(--f-mono);font-size:.85rem;display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:.8rem}
+    #clerks .score-line b{font-family:var(--f-display);font-size:1.25rem;font-variant-numeric:tabular-nums}
+    #clerks .runlog{font-family:var(--f-mono);font-size:.82rem;display:grid;gap:4px;margin-top:.6rem}
+    #clerks .runlog div{background:var(--wash);border-radius:8px;padding:.3rem .6rem}
+    #clerks .seg-desks{display:flex;flex-wrap:wrap;gap:6px}
+    #clerks .seg-desks button{font-size:.88rem;padding:.3rem .8rem;border-width:1.5px;min-width:2.6rem}
+    #clerks .seg-desks button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+    #clerks .prob.plain .bar i{background:var(--teal)}
+    #clerks .prob.plain:first-child .bar i{background:var(--teal)}
+    #clerks .trained .prob .bar i{background:var(--marigold)}
+    #clerks .trained .prob:first-child .bar i{background:var(--tomato)}
+    #clerks .trigs{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+    #clerks .trig{font-family:var(--f-mono);font-size:.9rem;text-align:left;border:2px solid var(--line);border-radius:12px;padding:.6rem .8rem;background:var(--card);color:var(--ink);display:grid;gap:.25rem;line-height:1.4}
+    #clerks .trig small{font-family:var(--f-body);font-size:.8rem;color:var(--ink-soft)}
+    #clerks .trig .ans{color:var(--plum);font-weight:600}
+    #clerks .trig[aria-expanded="false"] .ans{color:var(--ink-soft)}
+    #clerks .heads{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:.4rem}
+    #clerks .head{border-radius:14px;padding:12px 14px;background:color-mix(in srgb, var(--sky) 10%, var(--card));border:2px solid color-mix(in srgb, var(--sky) 35%, transparent);display:grid;gap:.55rem;align-content:start}
+    #clerks .head.h2{background:color-mix(in srgb, var(--pink) 10%, var(--card));border-color:color-mix(in srgb, var(--pink) 35%, transparent)}
+    #clerks .head h5{font-family:var(--f-display);font-size:1rem;margin:0}
+    #clerks .head .label{color:var(--ink)}
+    #clerks .tog{display:flex;flex-wrap:wrap;gap:6px}
+    #clerks .tog button{font-family:var(--f-mono);font-size:.82rem;font-weight:400;padding:.3rem .7rem;border-width:1.5px}
+    #clerks .tog button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+    #clerks .phrases{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:1rem}
+    #clerks .phrase{background:var(--wash);border-radius:14px;padding:12px 14px;display:grid;gap:.5rem;align-content:start}
+    #clerks .phrase .prompt{background:var(--card)}
+    #clerks .phrase .status{font-family:var(--f-display);font-weight:600;font-size:.95rem}
+    #clerks .phrase .status.ok{color:var(--good)}
+    #clerks .phrase .status.bug{color:var(--bad)}
+    #clerks .receipt{overflow-x:auto;margin-top:1rem}
+    #clerks .receipt table{border-collapse:collapse;width:100%;min-width:320px;font-size:.88rem}
+    #clerks .receipt th{font-family:var(--f-mono);font-weight:600;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);text-align:right;padding:.35rem .5rem;border-bottom:2px solid var(--line)}
+    #clerks .receipt th:first-child,#clerks .receipt td:first-child{text-align:left}
+    #clerks .receipt td{font-family:var(--f-mono);text-align:right;padding:.35rem .5rem;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+    #clerks .receipt td.d{color:var(--teal)}
+    #clerks .receipt td.m{color:var(--sky)}
+    #clerks .receipt td.t{font-weight:600}
+    #clerks .quiz{display:grid;gap:12px;margin-top:1rem}
+    #clerks .qcard{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:.6rem}
+    #clerks .qcard p{font-size:.98rem}
+    #clerks .qcard .seg button{min-width:3rem}
+    #clerks .qcard .reveal{font-size:.95rem;color:var(--ink-soft);min-height:1.2em}
+    #clerks .qcard .reveal b{color:var(--ink)}
+    #clerks .qcard.right{border-color:var(--good)}
+    #clerks .qcard.wrong{border-color:var(--bad)}
+    #clerks .doors{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;font-family:var(--f-display);font-weight:600;text-align:center;margin-top:.4rem}
+    #clerks .doors > div{border-radius:14px;padding:.7rem .6rem;font-size:.92rem}
+    #clerks .doors small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.7rem;color:var(--ink-soft)}
+    #clerks .doors .door{background:color-mix(in srgb, var(--marigold) 22%, var(--card))}
+    #clerks .doors .mid{background:color-mix(in srgb, var(--sky) 14%, var(--card))}
+    @media (max-width:560px){#clerks .doors{grid-template-columns:1fr}}
+  </style>
+
   <div class="chapter-head">
     <span class="num c1">Chapter 1</span>
     <h2>The Clerks and the Case File</h2>
-    <p class="based">Based on <a href="https://transformer-circuits.pub/2021/framework/index.html" target="_blank" rel="noopener"><em>A Mathematical Framework for Transformer Circuits</em></a> (Elhage, Nanda, Olsson et al., Anthropic, 2021)</p>
+    <p class="based">December 2021. Based on <a href="https://transformer-circuits.pub/2021/framework/index.html" target="_blank" rel="noopener"><em>A Mathematical Framework for Transformer Circuits</em></a> (Elhage, Nanda, Olsson et al., Anthropic, 22 December 2021)</p>
   </div>
 
   <div class="prose">
-    <p>The Prologue ended with a bet: that language models are made of parts we can understand. In late 2021, the first big article in the Transformer Circuits series set out to test it. The researchers began with the simplest transformers they could build, ones with zero, one or two layers, and tried to explain <em>exactly</em> what each one does. To keep things simple, they also removed one kind of part, which we'll meet below.</p>
+    <p>The Prologue ended with a bet: that language models are made of parts we can understand. At the end of 2021 the largest of them, GPT-3, had 96 layers and 175 billion numbers, and nobody could say how it produced a single word.</p>
+    <p>The paper behind this chapter framed the job as reverse engineering. Its authors compared it to the work of a programmer handed a program that exists only as machine code, who has to work back to source code a person could read. Their plan was to start with the smallest transformers possible, with zero, one or two layers, and to explain them <em>exactly</em>, with algebra, before going anywhere near a big model.</p>
+    <p>To make the small models cleaner, they also removed a whole kind of part, the MLP layers. They called this "a very dramatic simplification", and we'll come back to what it cost them at the end. In exchange they got something rare: models they could take apart completely, on paper, and check against what the models actually did.</p>
+    <div class="aside">
+      <p class="label">How to read this chapter</p>
+      <p>Each scene starts with the story. If you want more, open the <strong>Go deeper</strong> panels, which hold the paper's real mechanism, its own terms and numbers. Panels marked <strong>Deepest</strong> go further again. The blue <em>In the paper</em> notes tell you which section to read alongside.</p>
+    </div>
     <p>To follow along, picture a courthouse.</p>
   </div>
 
   <section class="scene" aria-labelledby="c1s1">
     <div class="prose">
       <p class="scene-tag">Scene 1</p>
-      <h3 id="c1s1">One case file per word</h3>
-      <p>When a transformer reads your sentence, every word gets its own <span class="term">case file</span>. The files are lined up on a long table, in order. At first each file holds very little: which word it is, and where it sits in the sentence.</p>
-      <p>Then <span class="term">clerks</span> work through the files, one row of clerks per layer. Each clerk reads, then adds notes. Clerks almost never throw notes away, so the file keeps growing. Researchers call this growing file the <span class="term">residual stream</span>.</p>
-      <p>There are two kinds of clerk:</p>
-      <p><strong>Messengers</strong> look across at <em>earlier</em> files and copy useful notes into the one they're working on. Researchers call them <span class="term">attention heads</span>. They are the only way information travels between words.</p>
-      <p><strong>Thinkers</strong> work on one file alone, mulling over what's already in it and adding conclusions. These are the <span class="term">MLP layers</span>. They're the part this paper set aside to keep things simple.</p>
-      <p>When the clerks are finished, someone reads the <em>last</em> file and uses it to guess the next word. Step through a sketch of that below.</p>
+      <h3 id="c1s1">Words only exist at the doors</h3>
+      <p>When a transformer reads your sentence, every word gets its own <span class="term">case file</span>. The files are lined up on a long table, in order. At first each file holds very little: which word it is, and where it sits.</p>
+      <p>Here's the first surprise. At the front door, a clerk swaps each word for an arrow: a long list of numbers that points somewhere in a space with hundreds or thousands of directions. From then on, nothing inside the building is written in English. Every note in every file is another arrow. Only at the back door does a reader turn the last file back into words, as a guess about what comes next. Words exist only at the entrance and the exit. Everything in between is geometry.</p>
+      <div class="doors" aria-label="Words come in at the front door, become arrows inside, and leave as a guess at the back door">
+        <div class="door">Front door<small>word → arrow</small><small>the embedding, W<sub>E</sub></small></div>
+        <div class="mid">The case files<small>arrows added to arrows, layer after layer</small><small>the residual stream</small></div>
+        <div class="door">Back door<small>arrow → next-word guess</small><small>the unembedding, W<sub>U</sub></small></div>
+      </div>
+      <p>Between the doors, <span class="term">clerks</span> work through the files, one row of clerks per layer. Each clerk reads a file and adds notes to it. Researchers call this growing file the <span class="term">residual stream</span>. There are two kinds of clerk:</p>
+      <p><strong>Messengers</strong> look across at <em>earlier</em> files and copy useful notes into the one they're working on. These are the <span class="term">attention heads</span>, and they are the only way information travels between words.</p>
+      <p><strong>Thinkers</strong> work on one file alone, adding conclusions from what's already in it. These are the <span class="term">MLP layers</span>, the part this paper set aside.</p>
+      <p>Notice that a model holds two very different kinds of numbers. The clerks' habits, called the <span class="term">weights</span>, were set during training and are frozen: they're the same for every conversation, like a firm's standing procedures. The case files, called the <span class="term">activations</span>, are opened fresh for each conversation and thrown away afterwards, like the file for today's matter. This paper's boldest move was to read the habits directly, from the weights, without needing to watch any particular case.</p>
     </div>
     <div class="toy">
       <div class="toy-head"><h4>The case files for "Ms Okafor … thanked Ms"</h4><span class="label">A sketch</span></div>
       <div class="files-scroll"><div class="files" id="files"></div></div>
       <p class="stepcap" id="fileCap"></p>
       <div class="btns"><button class="primary" id="fileNext">Next clerk</button><button id="fileReset">Start over</button></div>
-      <p class="caption">This is an illustration, not a real model's notes. Real notes aren't words: they're arrows in a space with thousands of directions, as in the Prologue. The structure is real, though: one file per word, messengers moving notes between files, thinkers working within a file, and the last file used for the guess.</p>
+      <p class="caption">This is an illustration, not a real model's notes. Real notes aren't words: they're arrows, and we've translated them into English for you. The structure is real, though: one file per word, messengers moving notes between files, thinkers working within a file, and the last file read for the guess. Notice that no step ever rubs a note out.</p>
+    </div>
+    <div class="prose" style="margin-top:1.4rem">
+      <details class="deeper">
+        <summary><span class="lvl">Go deeper</span> The case file is a shared ledger</summary>
+        <div class="body">
+          <p>The paper describes the residual stream as "simply the sum of the output of all the previous layers and the original embedding". It treats it as a <span class="term">communication channel</span>: it "doesn't do any processing itself", and every layer talks to every other layer through it.</p>
+          <p>Each clerk reads with a fixed linear projection (it looks at the file through its own fixed lens) and writes by <em>adding</em> an arrow. Nothing is ever overwritten. Think of an append-only ledger, or a blockchain: you can't delete an entry, but you can post a reversing entry that cancels it. The paper saw hints of exactly that: some neurons and heads seem to read a note and write its negative, which the authors suggest may be a kind of "memory management". They flag this as a hint, not a finding.</p>
+          <p>The file is big, but not big enough. Small models give it hundreds of directions; large ones tens of thousands. Each messenger reads and writes only a small slice, typically 64 or 128 directions, so different clerks can keep to separate lanes and never interfere. But demand is enormous. A single thinker layer usually has four times as many neurons as the file has directions. The paper's example: halfway up a 50-layer model, the file has about 100 times more neurons before it than it has directions, all trying to talk to 100 times as many neurons after it. Space in the file is precious. That squeeze sets up Chapter 3.</p>
+          <p class="inpaper">In the paper: <a href="https://transformer-circuits.pub/2021/framework/index.html#residual-comms" target="_blank" rel="noopener">Virtual Weights and the Residual Stream as a Communication Channel</a>, and <a href="https://transformer-circuits.pub/2021/framework/index.html#subspaces-and-residual-stream-bandwidth" target="_blank" rel="noopener">Subspaces and Residual Stream Bandwidth</a></p>
+          <details class="deeper deepest">
+            <summary><span class="lvl">Deepest</span> No desk has a name, and virtual weights</summary>
+            <div class="body">
+              <p><strong>No privileged basis.</strong> The file's directions are like desks in an open-plan office. Because every clerk reads and writes through its own linear lens, you could rotate the whole office, turning every lens to match, and the model would behave identically. So there's no reason for "desk 17" on its own to mean anything. The paper says the residual stream has no <span class="term">privileged basis</span>. Meaning lives in directions that may cut across many desks, which is why later chapters hunt for directions rather than reading desks one by one.</p>
+              <p><strong>Virtual weights.</strong> Because the channel is linear, you can multiply a writer's output weights by a reader's input weights, W<sub>I</sub><sup>2</sup>W<sub>O</sub><sup>1</sup>, and get a direct line between two layers, even with many layers in between. It tells you how much a later clerk reads what an earlier one wrote. Those lines don't exist anywhere in the model as separate numbers. They appear only when you multiply things out, which is the trick the rest of this chapter keeps using.</p>
+              <p><strong>Can you read a middle file as words?</strong> Only roughly. The paper cites a trick called the <em>logit lens</em>: hold the back-door reader up to a middle file and see what guess is forming. It works to a degree because the file is a running sum. The paper's authors went the other way and multiplied out the weights instead, deciding that the residual stream "isn't actually the fundamental object to study".</p>
+            </div>
+          </details>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -502,62 +611,170 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="prose">
       <p class="scene-tag">Scene 2</p>
       <h3 id="c1s2">Zero clerks: the one-word guesser</h3>
-      <p>Start with the simplest case: a transformer with no clerks at all. The last file holds only one note, the current word. So the model can only learn "after this word, that word usually comes next." Nothing earlier in the sentence can reach it.</p>
-      <p>The paper showed that's exactly what a zero-layer transformer learns: a table of which word tends to follow which. Here's a real one, learned from a 25-sentence courtroom story. Pick a word to see what it guesses comes next.</p>
+      <p>Start with the simplest case: no clerks at all. The front door turns the word into an arrow, and the back door immediately turns that arrow into a guess. Nothing earlier in the sentence can reach the last file. So the most the model can learn is "after this word, that word usually comes next", which is called a <span class="term">bigram</span> table.</p>
+      <p>The paper writes the whole zero-layer model in one line:</p>
+      <p class="eq">T = W<sub>U</sub> W<sub>E</sub></p>
+      <dl class="gloss">
+        <dt>W<sub>E</sub></dt><dd>the front door: one arrow per word.</dd>
+        <dt>W<sub>U</sub></dt><dd>the back door: turns an arrow into a score for every possible next word.</dd>
+        <dt>T</dt><dd>their product: a table with one row per current word and one column per next word.</dd>
+      </dl>
+      <p>The claim is that training pushes this table towards the real bigram statistics of the text. We can test that claim right here. Below, a real zero-layer model trains in your browser on a 25-sentence courtroom story, and you can compare it with the bigram table counted directly from the story.</p>
+      <div class="predict">
+        <p class="label">Predict before you press</p>
+        <p>The story uses 59 different words. The model's case file has a number of desks (directions) that you choose. How many desks do you think it needs before the trained model guesses as well as the counted table? One? Ten? All 59?</p>
+      </div>
     </div>
     <div class="toy">
-      <div class="toy-head"><h4>The one-word guesser</h4><span class="label">Real calculation</span></div>
-      <div class="two-col">
+      <div class="toy-head"><h4>Counted table versus a trained zero-layer model</h4><span class="label">Real calculation · trained in your browser</span></div>
+      <p class="label" style="margin-bottom:.6rem">The current word is…</p>
+      <div class="chips" id="bigramChips" role="group" aria-label="Pick the current word"></div>
+      <div class="two-col" style="margin-top:1.1rem">
         <div>
-          <p class="label" style="margin-bottom:.6rem">The current word is…</p>
-          <div class="chips" id="bigramChips" role="group" aria-label="Pick the current word"></div>
-        </div>
-        <div>
-          <p class="label" style="margin-bottom:.6rem">Its guesses for the next word</p>
+          <p class="colhead">Counted from the story</p>
           <div class="probs" id="bigramProbs"></div>
         </div>
+        <div class="trained">
+          <p class="colhead" id="zlHead">The zero-layer model (untrained)</p>
+          <div class="probs" id="zlProbs"></div>
+        </div>
       </div>
+      <div class="controls">
+        <div class="ctl" style="flex:2 1 280px">
+          <span class="label" id="zlDeskLabel">Desks in the case file</span>
+          <div class="seg-desks" id="zlDesks" role="group" aria-labelledby="zlDeskLabel"></div>
+        </div>
+        <div class="btns"><button class="primary" id="zlTrain">Train it</button></div>
+      </div>
+      <div class="score-line" aria-live="polite">
+        <span>Surprise, counted table: <b id="zlBest">1.53</b> bits</span>
+        <span>Surprise, trained model: <b id="zlNow">5.88</b> bits</span>
+        <span id="zlAgree"></span>
+      </div>
+      <div class="runlog" id="zlLog"></div>
       <details class="corpus"><summary>Read the courtroom story it learned from</summary><ol id="courtList"></ol></details>
-      <p class="caption">Notice that after "ms" it always says "reyes", because Ms Reyes is the only Ms in the story. It can't do any better, because it can't see the rest of your sentence. For that, it needs a messenger.</p>
+      <p class="caption"><strong>How to read the score.</strong> "Surprise" is the average number of bits of surprise per word, where one bit is a fair coin flip's worth (lower is better). Knowing nothing, the model is as surprised as if picking blindly from all 59 words: 5.88 bits. The counted table is the best any one-word guesser can do on this story: 1.53 bits, about as uncertain as choosing among three words. The model is trained with ordinary gradient descent (Adam, 400 steps) on the story's 146 word pairs, starting from random numbers that depend on the desk count. Nothing in it is hand-set.</p>
+      <p class="verdict" id="zlVerdict"></p>
+    </div>
+    <div class="prose" style="margin-top:1.4rem">
+      <details class="deeper">
+        <summary><span class="lvl">Go deeper</span> What the experiment shows</summary>
+        <div class="body">
+          <p>With one desk, every word's arrow is just a single number, so the model can barely separate words: it learns little more than "the" is common. With two it gets most top guesses right. With three it matches the counted table almost exactly. (Our story is tiny and repetitive. Real models face about 50,000 tokens and give the file hundreds to thousands of desks.)</p>
+          <p>The paper makes two further points about this little product. First, it never goes away. Every transformer, however deep, contains a W<sub>U</sub>W<sub>E</sub> term, the <span class="term">direct path</span>, where a word's arrow flows straight from the front door to the back door. In bigger models, other parts handle most grammar, so the direct path ends up holding the leftovers: bigrams no general rule explains. The paper's example is that "Barack" is often followed by "Obama".</p>
+          <p>Second, the back door is <em>not</em> the front door run backwards. People call W<sub>U</sub> the "unembedding", but the paper notes we shouldn't expect it to be the inverse of W<sub>E</sub>. The arrow for "ms" coming in has to predict "reyes" going out.</p>
+          <p class="inpaper">In the paper: <a href="https://transformer-circuits.pub/2021/framework/index.html#zero-layer-transformers" target="_blank" rel="noopener">Zero-Layer Transformers</a></p>
+          <details class="deeper deepest">
+            <summary><span class="lvl">Deepest</span> The same squeeze as the Prologue's word map</summary>
+            <div class="body">
+              <p>The paper points to a 2014 observation by Levy and Goldberg: many early word embeddings can be seen as squeezing a big table of word statistics into a few directions. The Prologue's word map did exactly that, squeezing co-occurrence counts down to two directions. A zero-layer transformer does it too. T has 59 × 59 = 3,481 entries here, but if the file has only <em>d</em> desks, T is built from 59 × <em>d</em> numbers at each door. That makes it a <span class="term">low-rank</span> table: it can only express patterns that fit through <em>d</em> directions. When you set one desk and watch the score stall, you're watching that limit bite.</p>
+            </div>
+          </details>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="c1s3">
     <div class="prose">
       <p class="scene-tag">Scene 3</p>
-      <h3 id="c1s3">The messenger: where to look, and what to copy</h3>
-      <p>Give the model one layer of messengers. Now, while working on the last file, a messenger can look back at every earlier file and decide which ones are worth copying from.</p>
-      <p>The paper's key insight was that each messenger does <strong>two separate jobs</strong>, and you can study each on its own:</p>
-      <p><strong>Where to look.</strong> The current file asks a question, such as "is there a name earlier on?". Every earlier file carries a label that says what it holds. Where question and label match, the messenger pays attention. Researchers call this the <span class="term">QK circuit</span>, for "query" and "key".</p>
-      <p><strong>What to copy.</strong> Having looked, the messenger writes something into the current file. Often it simply copies the word it found, making that word more likely to come next. This is the <span class="term">OV circuit</span>, for "output" and "value".</p>
-      <p>A one-layer model is full of messengers like this. The paper found they learn patterns of the form "A … B → C": when you see A, look back for B, and predict C. One real example was "keep … in → mind" and "keep … at → bay".</p>
-      <div class="aside">
-        <p class="label">A bug that shows how it works</p>
-        <p>Because "where to look" and "what to copy" are separate, these patterns get mixed up. A messenger that learned "keep … in → mind" and "keep … at → bay" also nudges the model towards "keep … in → bay" and "keep … at → mind". It can't remember which pairs belong together. The paper found exactly this kind of mistake, which was good evidence that the explanation was right.</p>
-      </div>
+      <h3 id="c1s3">One row of messengers: where to look, and what to copy</h3>
+      <p>Give the model one row of messengers. Now, while working on the last file, a messenger can look back at every earlier file and decide which ones are worth copying from.</p>
+      <p>The paper's central observation is that each messenger does <strong>two separate jobs</strong>, and that they can be studied one at a time. In its words, which words to move information from "is completely separable from" what information is moved and how it is written.</p>
+      <p><strong>Where to look.</strong> The current file poses a question, such as "is there a name earlier on?", and every earlier file carries a label. Where question and label match, the messenger pays attention. This is the <span class="term">QK circuit</span>, for query and key.</p>
+      <p><strong>What to copy.</strong> Having looked, the messenger writes something into the current file, which changes the odds of each next word. This is the <span class="term">OV circuit</span>, for output and value.</p>
+      <p>Put the two together and every messenger becomes a pile of rules with three slots: an earlier word A, the current word B, and a next word C that becomes more likely. The paper calls these <span class="term">skip-trigrams</span> and writes them "A … B → C". Here are some it found in real one-layer models. Try to guess each next word before you tap.</p>
+    </div>
+    <div class="toy" style="max-width:820px">
+      <div class="toy-head"><h4>Guess the skip-trigram</h4><span class="label">Examples from the paper</span></div>
+      <div class="trigs" id="trigs"></div>
+      <p class="caption" id="trigCap">Tap a card to reveal what the head predicts.</p>
+    </div>
+    <div class="prose" style="margin-top:1.4rem">
+      <p>Most of these heads spend much of their effort on one humble trick: <strong>copying</strong>. If a word appears earlier, raise the odds that it appears again, but only at places where it could plausibly fit. Seeing "Reyes" earlier makes "Reyes" likelier after a later "Ms". The paper calls this a "very primitive" kind of in-context learning, and it will matter again in Chapter 2.</p>
+      <details class="deeper">
+        <summary><span class="lvl">Go deeper</span> The path expansion, in one equation</summary>
+        <div class="body">
+          <p>Because every clerk adds to the file, you can expand the whole model into a sum of routes from the front door to the back door. For a one-layer model the paper gets:</p>
+          <p class="eq">T = Id ⊗ W<sub>U</sub>W<sub>E</sub> + Σ<sub>h</sub> A<sup>h</sup> ⊗ (W<sub>U</sub>W<sub>OV</sub><sup>h</sup>W<sub>E</sub>)</p>
+          <p class="eq">A<sup>h</sup> = softmax( t<sup>T</sup> · W<sub>E</sub><sup>T</sup>W<sub>QK</sub><sup>h</sup>W<sub>E</sub> · t )</p>
+          <p>In plain words: the guess equals the one-word table from Scene 2, plus one contribution from each messenger <em>h</em>. Each contribution is "where this messenger looked" (A<sup>h</sup>) combined with "what the word it looked at says about the next word" (W<sub>U</sub>W<sub>OV</sub>W<sub>E</sub>). The "Id ⊗" on the first route just means it stays in its own file.</p>
+          <p>The two jobs become two giant tables, each with one row and one column per word in the vocabulary. The <strong>QK circuit</strong>, W<sub>E</sub><sup>T</sup>W<sub>QK</sub>W<sub>E</sub>, scores how much each current word wants to look at each earlier word. The <strong>OV circuit</strong>, W<sub>U</sub>W<sub>OV</sub>W<sub>E</sub>, says how each looked-at word shifts the odds of each next word. With about 50,000 tokens, one OV table has around 2.5 billion entries.</p>
+          <blockquote>"we revealed the one-layer attention-only model to be a compressed Chinese room, and we're left with a giant pile of cards."<cite>Elhage et al., 2021, on what the expanded tables amount to</cite></blockquote>
+          <p>The cards are huge but secretly simple: each table has rank of only 64 or 128, the width of the messenger's slice of the file. Keys, queries and values, the terms you'll see in most explanations of transformers, turn out to be "intermediary by-products" of computing these two tables.</p>
+          <p class="inpaper">In the paper: <a href="https://transformer-circuits.pub/2021/framework/index.html#onel-path-expansion" target="_blank" rel="noopener">The Path Expansion Trick</a>, <a href="https://transformer-circuits.pub/2021/framework/index.html#splitting-attention-head-terms-into-circuits" target="_blank" rel="noopener">Splitting Attention Head terms into Query-Key and Output-Value Circuits</a>, <a href="https://transformer-circuits.pub/2021/framework/index.html#interpretation-as-skip-trigrams" target="_blank" rel="noopener">Interpretation as Skip-Trigrams</a></p>
+          <details class="deeper deepest">
+            <summary><span class="lvl">Deepest</span> How to spot a copying head from its weights alone</summary>
+            <div class="body">
+              <p>Copying means a word raises its own odds. In matrix language, that's an OV table with positive <span class="term">eigenvalues</span>: some group of words that, when looked at, boosts that same group. A random matrix has roughly as many negative eigenvalues as positive ones, and many complex ones. So a head whose eigenvalues lean heavily positive is very unlikely to be an accident.</p>
+              <p>Using this test on a one-layer model with 12 heads, the authors found that "10 out of 12 heads are significantly copying", which matched what they saw by reading the tables. They're careful about it: positive eigenvalues are "quite strong evidence" of copying, but they "shouldn't be considered a dispositive proof", because a matrix can have all-positive eigenvalues and still lower some words' own odds.</p>
+              <p class="inpaper">In the paper: <a href="https://transformer-circuits.pub/2021/framework/index.html#copying--primitive-in-context-learning" target="_blank" rel="noopener">Copying / Primitive In-Context Learning</a>, <a href="https://transformer-circuits.pub/2021/framework/index.html#copying-matrix" target="_blank" rel="noopener">Detecting Copying Behavior</a></p>
+            </div>
+          </details>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="c1s4">
     <div class="prose">
       <p class="scene-tag">Scene 4</p>
-      <h3 id="c1s4">Every clerk casts a vote</h3>
-      <p>Here's the other big insight. Because clerks only ever add notes, the final guess is simply <strong>the sum of every clerk's contribution</strong>. So you can take a model apart: switch one clerk off, and see what it was adding.</p>
-      <p>Below is a tiny real model with two contributors. The <strong>one-word guesser</strong> from Scene 2 is the direct path. A <strong>messenger</strong> looks back for names and nouns and copies them forward. Its "where to look" and "what to copy" settings are a handful of numbers we set by hand, but the attention maths is the real thing.</p>
+      <h3 id="c1s4">The bug that proves the theory</h3>
+      <p>If "where to look" and "what to copy" really are separate, a messenger should make a very particular mistake. Take the idioms "keep … in mind" and "keep … at bay". Suppose one messenger handles both. From "in" and from "at", it looks back at "keep". Then it copies what "keep" suggests: "mind" and "bay". But the copying step never sees whether it started from "in" or "at". So the messenger must <em>also</em> push "keep … in bay" and "keep … at mind".</p>
+      <p>It's like a firm's form letter built from two separate lists: one says which earlier document to cite, the other says what remedy that document supports. The second list never sees who the letter is for, so every recipient who triggers that citation gets every remedy.</p>
+      <p>The paper found exactly these mistakes in real heads, and called them skip-trigram "bugs". Try to fix one yourself.</p>
+      <div class="predict">
+        <p class="label">The puzzle</p>
+        <p>Set the switches so "keep it in" predicts <strong>mind</strong> and "keep them at" predicts <strong>bay</strong>, with no cross-talk. Can you do it with one messenger?</p>
+      </div>
     </div>
     <div class="toy">
-      <div class="toy-head"><h4>Two clerks, one guess</h4><span class="label">Real calculation · hand-set messenger</span></div>
+      <div class="toy-head"><h4>Fix the "keep … in bay" bug</h4><span class="label">Real calculation · hand-set switches</span></div>
+      <div class="heads" id="kbHeads"></div>
+      <div class="btns" style="margin-top:1rem"><button id="kbHire">Hire a second messenger</button><button id="kbReset">Reset</button></div>
+      <div class="phrases" id="kbPhrases" aria-live="polite"></div>
+      <p class="verdict" id="kbVerdict"></p>
+      <p class="caption">The maths here is a real one-layer attention calculation: each switch sets a score in the messenger's QK or OV table, attention is a softmax over the earlier words, and the odds are a softmax over 22 possible next words (mind, bay and 20 others). When a messenger finds nothing it wants, it rests on the start of the text, a habit the paper observed in real heads, and so writes almost nothing.</p>
+    </div>
+    <div class="prose" style="margin-top:1.4rem">
+      <details class="deeper">
+        <summary><span class="lvl">Go deeper</span> Why the bug was good news</summary>
+        <div class="body">
+          <p>The paper describes the problem as a "factored form". A messenger can't store an arbitrary rule f(A, B, C) about three words. It can only store something shaped like f<sub>1</sub>(A, B) × f<sub>2</sub>(A, C): one part for where to look, one part for what to copy, with A as the only link between them. Any rule that needs B and C to depend on each other directly is out of reach for a single head.</p>
+          <p>A second messenger fixes it, as you may have found. But messengers are expensive: each has its own attention pattern and its own 64 or 128 directions. The authors suspect that tolerating the bug is "a good trade for the model on balance". They report seeing such bugs frequently in the expanded weights, and they were pleased, calling it "an early demonstration of using interpretability to understand model failures". A theory that predicts the model's specific mistakes is much more convincing than one that only explains its successes.</p>
+          <p>They left open how much these bugs cost the model, and whether they survive in larger models, where other parts might paper over them.</p>
+          <p class="inpaper">In the paper: <a href="https://transformer-circuits.pub/2021/framework/index.html#skip-trigram-bugs" target="_blank" rel="noopener">Skip-Trigram "Bugs"</a></p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c1s5">
+    <div class="prose">
+      <p class="scene-tag">Scene 5</p>
+      <h3 id="c1s5">Every clerk casts a vote</h3>
+      <p>Because clerks only ever add notes, the final guess is <strong>the sum of every clerk's contribution</strong>. Each route through the model awards points to each possible next word, and the points become odds. So you can do something lawyers will recognise: produce an itemised account of who contributed what, switch one contributor off, and see what changes.</p>
+      <p>That matters well beyond tiny models. If a decision is a sum of contributions, you can ask which part caused it, the way a court apportions liability or an auditor traces each entry in a ledger back to the person who posted it.</p>
+      <p>Below is a tiny real model with two contributors. The <strong>one-word guesser</strong> from Scene 2 is the direct path. One <strong>messenger</strong> looks back for names and nouns and copies them forward. Its two tables are a handful of numbers we set by hand; the attention maths and the vote counting are the real thing.</p>
+      <div class="predict">
+        <p class="label">Predict before you press</p>
+        <p>Example 2 mentions two people the story has never seen, Mr Osei and Ms Novak, then ends "thanked ms". What will this model guess?</p>
+      </div>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Two clerks, one guess, one receipt</h4><span class="label">Real calculation · hand-set messenger</span></div>
       <div class="presets" id="c1Presets" role="group" aria-label="Example sentences"></div>
       <div style="margin-top:.8rem"><label for="c1Text" class="label">Or type your own (lowercase words, the last word is the one being completed)</label><input type="text" id="c1Text" spellcheck="false" autocomplete="off"></div>
       <div class="checks" style="margin-top:1rem">
-        <label for="c1Direct"><input type="checkbox" id="c1Direct" checked> One-word guesser</label>
+        <label for="c1Direct"><input type="checkbox" id="c1Direct" checked> One-word guesser (direct path)</label>
         <label for="c1Head"><input type="checkbox" id="c1Head" checked> Messenger clerk</label>
       </div>
       <div class="two-col" style="margin-top:1.2rem">
         <div>
-          <p class="label">Where the messenger is looking</p>
+          <p class="label">Where the messenger is looking (QK)</p>
           <div class="spot" id="c1Spot"></div>
           <p class="stat" style="margin-top:.6rem" id="c1Q"></p>
+          <p class="stat" style="margin-top:.3rem" id="c1OV"></p>
         </div>
         <div>
           <p class="label" style="margin-bottom:.6rem">The model's guesses for the next word</p>
@@ -565,39 +782,277 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
         </div>
       </div>
       <p class="verdict" id="c1Verdict"></p>
-      <p class="caption"><strong>Try this:</strong> on the first example, switch the messenger off and the guess falls back to "reyes". Then try the second example, which has two unfamiliar names. The messenger finds both, but it can't tell which name went with "ms", so it splits its vote between them, and the old habit "reyes" sneaks into first place. A one-layer model can't do better. Fixing that takes a second layer.</p>
+      <div class="receipt"><table><thead><tr><th scope="col">Receipt</th><th scope="col">Direct path</th><th scope="col">Messenger</th><th scope="col">Total points</th><th scope="col">Odds</th></tr></thead><tbody id="c1Receipt"></tbody></table></div>
+      <p class="caption"><strong>Reading the receipt:</strong> points are measured against a word the model has no reason to pick, which gets 0. Each extra point multiplies a word's odds by about 2.7. On the first example, switch the messenger off and the guess falls back to "reyes", the only Ms the story knows. On the second, the messenger finds both new names but can't tell which one followed "ms", so it splits its points between them, and the old habit "reyes" wins. Fixing that takes a second layer.</p>
     </div>
-  </section>
-
-  <section class="scene" aria-labelledby="c1s5">
-    <div class="prose">
-      <p class="scene-tag">Scene 5</p>
-      <h3 id="c1s5">Two layers: clerks who read each other's notes</h3>
-      <p>With two layers, something new becomes possible. A second-row messenger can read notes that a first-row messenger left behind, and use them to decide where to look. The paper called this <span class="term">composition</span>.</p>
-      <p>Here's how that fixes the mix-up above. A first-row messenger in every file writes down "the word before me was…". Now the file for "okafor" carries the note "the word before me was <em>ms</em>". When a second-row messenger working on a later "ms" asks "which file came right after an earlier <em>ms</em>?", that note answers it, and it copies "okafor".</p>
-      <p>That two-clerk team is called an <span class="term">induction head</span>. The paper found induction heads in its two-layer models, and suspected they mattered far more than their simple job suggests. Chapter 2 is the story of finding out how much.</p>
+    <div class="prose" style="margin-top:1.4rem">
+      <details class="deeper">
+        <summary><span class="lvl">Go deeper</span> Freezing the attention, and when receipts mislead</summary>
+        <div class="body">
+          <p><strong>The freezing trick.</strong> Is it fair to study the two jobs separately, when "where to look" passes through a softmax that isn't linear? The paper's answer is a thought experiment. Run the model once and record where every messenger looked. Run it again with those attention patterns frozen. Now the output is a plain linear function of the input words, and every route's contribution can be read off exactly. That's what our receipt does.</p>
+          <p><strong>Attention isn't the whole story.</strong> A long-running debate asks whether attention patterns explain a model's decisions. The paper's view is that a messenger acting alone is "straightforwardly interpretable", but messengers in different layers can interact, and then attention patterns can mislead. Its example comes in the next scene: an auditor who looked only at the attention of an induction head would credit the wrong clerk.</p>
+          <p><strong>The limit of the receipt.</strong> This exact split works because this model has no thinkers. Thinkers pass the file through a non-linear step, so their contributions no longer add up so neatly. Chapter 6 shows how researchers later got itemised accounts out of large models anyway.</p>
+          <p class="inpaper">In the paper: <a href="https://transformer-circuits.pub/2021/framework/index.html#ov-and-qk-independence" target="_blank" rel="noopener">OV and QK Independence (The Freezing Attention Patterns Trick)</a>, <a href="https://transformer-circuits.pub/2021/framework/index.html#architecture-attn-independent" target="_blank" rel="noopener">Attention Heads are Independent and Additive</a>, <a href="https://transformer-circuits.pub/2021/framework/index.html#criticism-of-attention-as-explanation" target="_blank" rel="noopener">Criticism of Attention as Explanation</a></p>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="c1s6">
     <div class="prose">
+      <p class="scene-tag">Scene 6</p>
+      <h3 id="c1s6">Two layers: clerks who read each other's notes</h3>
+      <p>With two layers, a second-row messenger can read notes that a first-row messenger left behind. The paper calls this <span class="term">composition</span>, and it's where small models stop being lookup tables. In the authors' words, two-layer models become "something much more like a computer program running an algorithm".</p>
+      <p>Here's how it fixes the mix-up above. A first-row messenger works on every file and writes one fact: "the word before me was…". This is a <span class="term">previous-token head</span>. Now the file for "novak" carries the note "the word before me was <em>ms</em>". A second-row messenger working on the final "ms" asks: which earlier file has the label "the word before me was <em>ms</em>"? That's the file for "novak", so it copies "novak".</p>
+      <p>That two-clerk team is an <span class="term">induction head</span>. Where a one-layer copier follows the pattern [B] … [A] → [B], an induction head follows [A][B] … [A] → [B]: it remembers what came <em>after</em> A last time. The paper found these in its two-layer models and tested them in the hardest way it could, on repeated sequences of completely random tokens, where no grammar or statistics can help. Chapter 2 is the story of how much they turned out to matter.</p>
+      <p>There are exactly three ways a later messenger can use an earlier one's notes, one for each thing it reads: its question (Q), the labels it matches against (K), or the notes it copies (V). Can you tell them apart?</p>
+    </div>
+    <div class="toy" style="max-width:820px">
+      <div class="toy-head"><h4>Which kind of composition?</h4><span class="label">A quiz</span></div>
+      <div class="quiz" id="c1Quiz"></div>
+      <p class="stat" id="c1QuizScore" style="margin-top:.8rem" aria-live="polite"></p>
+    </div>
+    <div class="prose" style="margin-top:1.4rem">
+      <details class="deeper">
+        <summary><span class="lvl">Go deeper</span> What they actually found inside a two-layer model</summary>
+        <div class="body">
+          <p>The authors measured how strongly each second-layer head reads from each first-layer head, for all three kinds of composition. In the model they studied, most heads weren't composing at all; roughly, they were just more skip-trigram tables. The striking signal was <strong>K-composition</strong> with one first-layer head that mostly attends to the previous token. The heads reading from it were induction heads.</p>
+          <p>They then checked the theory from the weights. An induction head needs a copying OV table and a "same-word matching" QK table. Plotted by how positive those two sets of eigenvalues are, "all the induction heads turn out to be in an extreme right hand corner". The authors point out this wasn't circular: nothing about strong composition required it to be positive.</p>
+          <p>This is also where looking only at attention would mislead. An induction head's attention points straight at "novak", so you might credit "novak"'s file alone. But the decision of where to look depends entirely on the previous-token head, one layer down, that wrote the label. Miss the K-composition and you misunderstand both clerks.</p>
+          <p class="inpaper">In the paper: <a href="https://transformer-circuits.pub/2021/framework/index.html#three-kinds-of-composition" target="_blank" rel="noopener">Three Kinds of Composition</a>, <a href="https://transformer-circuits.pub/2021/framework/index.html#induction-heads" target="_blank" rel="noopener">Induction Heads</a>, <a href="https://transformer-circuits.pub/2021/framework/index.html#checking-the-mechanistic-theory" target="_blank" rel="noopener">Checking the Mechanistic Theory</a></p>
+          <details class="deeper deepest">
+            <summary><span class="lvl">Deepest</span> Virtual heads, and a correction the authors published</summary>
+            <div class="body">
+              <p><strong>Virtual attention heads.</strong> V-composition is different in kind. When one messenger copies a note that another messenger had already copied, the pair acts like a single long-distance messenger, with its own attention pattern (A<sup>h2</sup>A<sup>h1</sup>) and its own copy table (W<sub>OV</sub><sup>h2</sup>W<sub>OV</sub><sup>h1</sup>). The number of these grows with the square of the number of heads, so in principle there are a lot of them. But in the small two-layer model, an ablation test found their combined effect was small. The authors speculate they may matter much more in big models; that remains open.</p>
+              <p><strong>A published correction.</strong> After the paper came out, the authors found a bug in a linear-algebra library they had written to handle these huge low-rank tables. It affected one diagram, the composition measurements. The corrected version shows more composition than first reported: two of the induction heads also read from a head that looks at the last several words, not just the previous one. The central finding, K-composition with the previous-token head, held up. The paper carries the correction openly at the end.</p>
+              <p class="inpaper">In the paper: <a href="https://transformer-circuits.pub/2021/framework/index.html#term-importance-analysis" target="_blank" rel="noopener">Term Importance Analysis</a>, <a href="https://transformer-circuits.pub/2021/framework/index.html#virtual-attention-heads" target="_blank" rel="noopener">Virtual Attention Heads</a>, <a href="https://transformer-circuits.pub/2021/framework/index.html#comment-errata" target="_blank" rel="noopener">Correction: Attention Head Composition Diagram</a></p>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c1s7">
+    <div class="prose">
+      <p class="scene-tag">Scene 7</p>
+      <h3 id="c1s7">What does "understand" mean?</h3>
+      <p>So had they fully understood a one-layer model? The authors gave a careful answer. Every number is now in context: there is "no longer any algorithmic mystery". But the understanding is the kind you have of a giant regression, or of a large database you know how to query. The tables are far too big to hold in your head, and summarising them well was still an open problem.</p>
+      <p>And then there were the thinkers they'd set aside. MLP layers hold about two thirds of a standard transformer's parameters, and the authors were blunt that their absence was "a major weakness of our work". They'd tried. Apart from some neurons early in the model that respond to clusters of short phrases, they found the neurons much harder to make sense of than the attention heads.</p>
+      <p>Over a year later, in a note added to the paper, they named their suspect. The thinkers seemed hard to read because of something called <em>superposition</em>: too many ideas sharing too few neurons. That is Chapter 3.</p>
+      <p class="inpaper">In the paper: <a href="https://transformer-circuits.pub/2021/framework/index.html#do-we-fully-understand-one-layer-models" target="_blank" rel="noopener">Do We "Fully Understand" One-Layer Models?</a>, <a href="https://transformer-circuits.pub/2021/framework/index.html#where-does-this-leave-us" target="_blank" rel="noopener">Where Does This Leave Us?</a>, <a href="https://transformer-circuits.pub/2021/framework/index.html#mlp-layers" target="_blank" rel="noopener">MLP Layers</a></p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c1s8">
+    <div class="prose">
       <p class="scene-tag">The end of the chapter</p>
-      <h3 id="c1s6">What we know, and what we don't</h3>
+      <h3 id="c1s8">What we know, and what we don't</h3>
     </div>
     <div class="learned">
-      <div class="card k"><h4>Known: the case file is a shared workspace</h4><p>Each word's file collects notes from every layer, and the final guess is read from the last file.</p></div>
-      <div class="card k"><h4>Known: messengers do two separable jobs</h4><p>Where to look and what to copy can be studied one at a time, and small models can be explained this way exactly.</p></div>
-      <div class="card k"><h4>Known: contributions add up</h4><p>Because clerks add rather than overwrite, you can split a guess into each clerk's vote and switch clerks off to test them.</p></div>
-      <div class="card u"><h4>Unknown: the thinkers</h4><p>The paper left out the MLP "thinker" layers, where much of a real model's work happens. They're much harder to read, for reasons Chapter 3 explains.</p></div>
-      <div class="card u"><h4>Unknown: does this scale?</h4><p>Exact explanations worked for one and two layers. Real models have dozens of layers and thousands of clerks.</p></div>
-      <div class="card u"><h4>Unknown: how much do induction heads matter?</h4><p>They were a neat find in tiny models. Whether they were central to big models was the next question.</p></div>
+      <div class="card k"><h4>Known: the case file is a shared, additive channel</h4><p>Every layer reads from the residual stream and adds to it. Words exist only at the doors; inside, everything is arrows.</p></div>
+      <div class="card k"><h4>Known: zero layers make a bigram table</h4><p>W<sub>U</sub>W<sub>E</sub> approximates which word follows which, and every deeper model keeps this direct path.</p></div>
+      <div class="card k"><h4>Known: messengers do two separable jobs</h4><p>Where to look (QK) and what to copy (OV) can be read straight from the weights. One-layer models are piles of skip-trigrams, many of them copying, with predictable bugs.</p></div>
+      <div class="card k"><h4>Known: contributions add up</h4><p>With attention frozen, the output splits exactly into routes, so you can itemise who voted for what.</p></div>
+      <div class="card u"><h4>Unknown: the thinkers</h4><p>The paper left out MLP layers, two thirds of a real model's parameters. The authors called it the paper's biggest weakness.</p></div>
+      <div class="card u"><h4>Unknown: do virtual heads matter at scale?</h4><p>They barely mattered in the small model. In big ones, nobody yet knew.</p></div>
+      <div class="card u"><h4>Unknown: how much do induction heads matter?</h4><p>They explained in-context learning in tiny models. Whether they drive it in big models was the next question.</p></div>
     </div>
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 2: The Copycat Trick</h4>
       <p>In 2022, the same team showed that induction heads appear suddenly during training, at the same moment models get much better at learning from the text in front of them. <a href="#copycat">Read Chapter 2 ↓</a></p>
+      <p class="stat">Source: Nelson Elhage, Neel Nanda, Catherine Olsson, Tom Henighan, Nicholas Joseph, Ben Mann, Amanda Askell and colleagues, with Chris Olah, <a href="https://transformer-circuits.pub/2021/framework/index.html" target="_blank" rel="noopener">A Mathematical Framework for Transformer Circuits</a>, Transformer Circuits Thread, 22 December 2021. Quotes are short excerpts from the paper; the toys and drawings here are our own.</p>
     </div>
   </section>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const {reduce} = window.LL;
+    const {story, probsHTML} = window.LL.shared.court;
+    const $ = id => document.getElementById(id);
+
+    /* Scene 2: counted bigram table vs a zero-layer model (T = W_U W_E) trained here with Adam */
+    {
+      const pairs = [];
+      story.forEach(s => { const w = s.split(' '); for (let i = 0; i + 1 < w.length; i++) pairs.push([w[i], w[i + 1]]); });
+      const vocab = [...new Set(story.join(' ').split(' '))], n = vocab.length, ix = Object.fromEntries(vocab.map((w, i) => [w, i]));
+      const cnt = vocab.map(() => new Float64Array(n));
+      pairs.forEach(([a, b]) => cnt[ix[a]][ix[b]]++);
+      const rows = vocab.map((_, i) => i).filter(i => cnt[i].some(c => c > 0));
+      const tot = cnt.map(r => r.reduce((a, b) => a + b, 0));
+      let H = 0; rows.forEach(i => cnt[i].forEach(c => { if (c) H -= c * Math.log2(c / tot[i]); }));
+      const best = H / pairs.length;
+      $('zlBest').textContent = best.toFixed(2);
+      $('zlNow').textContent = Math.log2(n).toFixed(2);
+      const rng = seed => { let s = seed >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; };
+      const DESKS = [1, 2, 3, 4, 8], STEPS = 400, LR = 0.05, WD = 1e-4;
+      let d = 2, E = null, U = null, trained = false, busy = false;
+      const init = () => {
+        const r = rng(1000 + d * 7), g = () => { let u = 0; for (let k = 0; k < 6; k++) u += r(); return (u - 3) * 0.4; };
+        E = Array.from({length: n}, () => Float64Array.from({length: d}, g));
+        U = Array.from({length: d}, () => Float64Array.from({length: n}, g));
+      };
+      const logitsFor = i => { const l = new Float64Array(n); for (let j = 0; j < n; j++) { let s = 0; for (let k = 0; k < d; k++) s += E[i][k] * U[k][j]; l[j] = s; } return l; };
+      const evaluate = () => {
+        let loss = 0, agree = 0;
+        rows.forEach(i => {
+          const l = logitsFor(i), m = Math.max(...l); let Z = 0; for (let j = 0; j < n; j++) Z += Math.exp(l[j] - m);
+          for (let j = 0; j < n; j++) if (cnt[i][j]) loss -= cnt[i][j] * (l[j] - m - Math.log(Z));
+          let top = 0; for (let j = 1; j < n; j++) if (l[j] > l[top]) top = j;
+          if (cnt[i][top] === Math.max(...cnt[i])) agree++;
+        });
+        return {bits: loss / pairs.length / Math.LN2, agree};
+      };
+      let mE, vE, mU, vU, t = 0;
+      const startOpt = () => { mE = E.map(() => new Float64Array(d)); vE = E.map(() => new Float64Array(d)); mU = U.map(() => new Float64Array(n)); vU = U.map(() => new Float64Array(n)); t = 0; };
+      const step = () => {
+        t++;
+        const gE = E.map(() => new Float64Array(d)), gU = U.map(() => new Float64Array(n));
+        rows.forEach(i => {
+          const l = logitsFor(i), m = Math.max(...l); let Z = 0; for (let j = 0; j < n; j++) Z += Math.exp(l[j] - m);
+          for (let j = 0; j < n; j++) {
+            const gl = (tot[i] * Math.exp(l[j] - m) / Z - cnt[i][j]) / pairs.length;
+            for (let k = 0; k < d; k++) { gE[i][k] += gl * U[k][j]; gU[k][j] += gl * E[i][k]; }
+          }
+        });
+        const upd = (W, G, M, Vv) => { for (let a = 0; a < W.length; a++) for (let b = 0; b < W[a].length; b++) {
+          const gg = G[a][b] + WD * W[a][b]; M[a][b] = .9 * M[a][b] + .1 * gg; Vv[a][b] = .999 * Vv[a][b] + .001 * gg * gg;
+          W[a][b] -= LR * (M[a][b] / (1 - .9 ** t)) / (Math.sqrt(Vv[a][b] / (1 - .999 ** t)) + 1e-8); } };
+        upd(E, gE, mE, vE); upd(U, gU, mU, vU);
+      };
+      let cur = 'ms';
+      const chipWords = ['ms', 'mr', 'dr', 'the', 'court', 'witness', 'thanked', 'said', 'of'];
+      const chips = $('bigramChips');
+      chips.innerHTML = chipWords.map(w => `<button class="chip" data-w="${w}" aria-pressed="false">${w}</button>`).join('');
+      const counted = w => { const i = ix[w]; return vocab.map((v, j) => [v, cnt[i][j] / tot[i]]).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]).slice(0, 5); };
+      const modelTop = w => { const l = logitsFor(ix[w]), m = Math.max(...l); let Z = 0; l.forEach(x => Z += Math.exp(x - m)); return vocab.map((v, j) => [v, Math.exp(l[j] - m) / Z]).sort((a, b) => b[1] - a[1]).slice(0, 5); };
+      const show = () => {
+        chips.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.w === cur));
+        $('bigramProbs').innerHTML = probsHTML(counted(cur)).replaceAll('class="prob"', 'class="prob plain"');
+        $('zlProbs').innerHTML = probsHTML(modelTop(cur));
+      };
+      const deskSeg = $('zlDesks');
+      deskSeg.innerHTML = DESKS.map(k => `<button data-d="${k}" aria-pressed="${k === d}">${k}</button>`).join('');
+      const log = [];
+      const report = (final) => {
+        const r = evaluate();
+        $('zlNow').textContent = r.bits.toFixed(2);
+        $('zlHead').textContent = `The zero-layer model, ${d} desk${d > 1 ? 's' : ''} (${trained ? 'trained' : t ? `training: step ${t} of ${STEPS}` : 'untrained'})`;
+        $('zlAgree').textContent = t ? `Top guess agrees with the table for ${r.agree} of ${rows.length} words` : '';
+        if (final) {
+          log.unshift(`${d} desk${d > 1 ? 's' : ''}: ${r.bits.toFixed(2)} bits · top guess agrees for ${r.agree} of ${rows.length} words`);
+          const seen = new Set(); $('zlLog').innerHTML = log.filter(x => !seen.has(x) && seen.add(x)).slice(0, 5).map(x => `<div>${x}</div>`).join('');
+          const gap = r.bits - best;
+          $('zlVerdict').innerHTML = gap < 0.1 ? `With ${d} desks it is within ${gap.toFixed(2)} bits of the counted table. Training rediscovered the bigram statistics.`
+            : `With ${d} desk${d > 1 ? 's' : ''} it is still ${gap.toFixed(2)} bits worse than the counted table. Too few directions to tell the words apart. Try more desks.`;
+        }
+        show();
+      };
+      const reset = () => { init(); startOpt(); trained = false; $('zlVerdict').textContent = ''; report(false); };
+      deskSeg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || busy) return; d = +b.dataset.d; deskSeg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', +x.dataset.d === d)); reset(); });
+      chips.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { cur = b.dataset.w; show(); } });
+      const trainBtn = $('zlTrain');
+      trainBtn.addEventListener('click', () => {
+        if (busy) return;
+        if (trained) reset();
+        busy = true; trainBtn.disabled = true;
+        const finish = () => { trained = true; busy = false; trainBtn.disabled = false; trainBtn.textContent = 'Train again'; report(true); };
+        if (reduce) { while (t < STEPS) step(); finish(); return; }
+        const frame = () => { for (let k = 0; k < 16 && t < STEPS; k++) step(); if (t < STEPS) { report(false); requestAnimationFrame(frame); } else finish(); };
+        requestAnimationFrame(frame);
+      });
+      reset();
+      window.LL.shared.c1zero = {train: k => { d = k; reset(); while (t < STEPS) step(); trained = true; report(true); return evaluate(); }, best};
+    }
+
+    /* Scene 3: skip-trigram cards (examples reported in the paper) */
+    {
+      const T = [
+        ['keep … at →', 'bay', 'English'], ['back and →', 'forth', 'English, one head on " and"'], ['def … ( →', 'self', 'Python'],
+        ['\\left … \\ →', 'right', 'LaTeX'], ['twitter … / →', 'status', 'URLs'], ['Israel … K →', 'nes', 'as in Knesset, the Israeli parliament'],
+      ];
+      const el = $('trigs'); let seen = 0;
+      el.innerHTML = T.map(([a, ans, note], i) => `<button class="trig" data-i="${i}" aria-expanded="false"><span>${a} <span class="ans">?</span></span><small>${note.startsWith('as in') ? 'tap to reveal' : note}</small></button>`).join('');
+      el.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b || b.getAttribute('aria-expanded') === 'true') return;
+        const [a, ans, note] = T[+b.dataset.i];
+        b.setAttribute('aria-expanded', 'true'); b.querySelector('.ans').textContent = ans; b.querySelector('small').textContent = note;
+        seen++;
+        $('trigCap').textContent = seen < T.length ? `${seen} of ${T.length} revealed.` : 'Each card is one entry from the joined QK and OV tables: the earlier word, the current word, and the next word it makes likelier. "nes" is a reminder that models work on word pieces (tokens), and that some cards only make sense with outside knowledge.';
+      });
+    }
+
+    /* Scene 4: the keep … in bay bug, as a real one-layer attention calculation with hand-set scores */
+    {
+      const PH = [{ctx: ['keep', 'it', 'in'], b: 'in', right: 'mind', wrong: 'bay'}, {ctx: ['keep', 'them', 'at'], b: 'at', right: 'bay', wrong: 'mind'}];
+      const QK_ON = 6, REST = 2, OV_ON = 5, OTHERS = 20;
+      let heads = [{q: {in: true, at: true}, o: {mind: true, bay: true}}], hired = false;
+      const fresh = () => ({q: {in: false, at: false}, o: {mind: false, bay: false}});
+      const evalPhrase = (p, hs) => {
+        const lg = {mind: 0, bay: 0}, srcs = ['<start>', ...p.ctx.slice(0, -1)];
+        hs.forEach(h => {
+          const sc = srcs.map(s => s === '<start>' ? REST : (s === 'keep' && h.q[p.b]) ? QK_ON : 0);
+          const m = Math.max(...sc), ex = sc.map(x => Math.exp(x - m)), Z = ex.reduce((a, b) => a + b, 0);
+          const aKeep = ex[1] / Z;
+          ['mind', 'bay'].forEach(c => { if (h.o[c]) lg[c] += aKeep * OV_ON; });
+        });
+        const Z = Math.exp(lg.mind) + Math.exp(lg.bay) + OTHERS;
+        return {mind: Math.exp(lg.mind) / Z, bay: Math.exp(lg.bay) / Z};
+      };
+      const status = (p, r) => {
+        const pr = r[p.right], pw = r[p.wrong];
+        if (pr > 0.6 && pw < 0.15) return ['ok', `Right: "${p.right}"`];
+        if (pw >= 0.15 && pr >= 0.15) return ['bug', `Cross-talk: also pushes "${p.wrong}"`];
+        if (pw >= 0.15) return ['bug', `Wrong: pushes "${p.wrong}"`];
+        return ['', 'Nothing much happens'];
+      };
+      const draw = () => {
+        $('kbHeads').innerHTML = heads.map((h, k) => `<div class="head ${k ? 'h2' : ''}"><h5>Messenger ${k + 1}</h5>
+          <p class="label">Where to look (QK)</p><div class="tog">${['in', 'at'].map(b => `<button data-h="${k}" data-t="q" data-k="${b}" aria-pressed="${h.q[b]}">from "${b}", look at "keep"</button>`).join('')}</div>
+          <p class="label">What to copy (OV)</p><div class="tog">${['mind', 'bay'].map(c => `<button data-h="${k}" data-t="o" data-k="${c}" aria-pressed="${h.o[c]}">"keep" → raise "${c}"</button>`).join('')}</div></div>`).join('');
+        let ok = 0, bug = 0;
+        $('kbPhrases').innerHTML = PH.map(p => {
+          const r = evalPhrase(p, heads), [cls, txt] = status(p, r);
+          ok += cls === 'ok'; bug += cls === 'bug';
+          return `<div class="phrase"><p class="prompt">${p.ctx.join(' ')} → ?</p><div class="probs">${probsHTML([['mind', r.mind], ['bay', r.bay], ['20 others', 1 - r.mind - r.bay]])}</div><p class="status ${cls}">${txt}</p></div>`;
+        }).join('');
+        $('kbVerdict').innerHTML = ok === 2 ? (heads.length > 1 ? 'Solved. It took a whole second messenger to keep the two idioms apart.' : 'Solved.')
+          : heads.length === 1 && ok + bug > 0 ? `${ok} of 2 right, ${bug} with cross-talk. With one messenger, whatever "keep" suggests goes to both phrases.` : `${ok} of 2 right.`;
+        $('kbHire').disabled = hired; $('kbHire').style.opacity = hired ? .4 : 1;
+      };
+      $('kbHeads').addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        const h = heads[+b.dataset.h]; h[b.dataset.t][b.dataset.k] = !h[b.dataset.t][b.dataset.k]; draw();
+      });
+      $('kbHire').addEventListener('click', () => { if (!hired) { hired = true; heads.push(fresh()); draw(); } });
+      $('kbReset').addEventListener('click', () => { hired = false; heads = [{q: {in: true, at: true}, o: {mind: true, bay: true}}]; draw(); });
+      draw();
+      window.LL.shared.c1keep = (hs) => PH.map(p => evalPhrase(p, hs));
+    }
+
+    /* Scene 6: composition quiz */
+    {
+      const Q = [
+        {p: 'A second-row messenger working on the final "ms" looks for earlier files whose label says "the word before me was ms". A first-row messenger wrote that label into each file.', a: 'K', why: 'The earlier clerk changed the <b>labels</b> (keys) on the files being searched. This is how induction heads work, and it was the main composition the paper found.'},
+        {p: 'A first-row messenger copies the note "this is about a person" into the final file. A second-row messenger in that same final file uses the note to decide what to ask for.', a: 'Q', why: 'The earlier clerk changed the <b>question</b> (query) being asked from the current file.'},
+        {p: 'A second-row messenger copies a note from an earlier file, but that note had itself been carried there by a first-row messenger from somewhere further back.', a: 'V', why: 'The earlier clerk changed <b>what gets copied</b> (values). The two messengers act like one long-distance messenger, a "virtual attention head".'},
+      ];
+      const el = $('c1Quiz'), done = {};
+      el.innerHTML = Q.map((q, i) => `<div class="qcard" data-i="${i}"><p>${q.p}</p><div class="seg" role="group" aria-label="Choose Q, K or V">${['Q', 'K', 'V'].map(k => `<button data-k="${k}" aria-pressed="false">${k}</button>`).join('')}</div><p class="reveal" aria-live="polite"></p></div>`).join('');
+      el.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        const card = b.closest('.qcard'), i = +card.dataset.i, q = Q[i], right = b.dataset.k === q.a;
+        card.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+        card.classList.toggle('right', right); card.classList.toggle('wrong', !right);
+        card.querySelector('.reveal').innerHTML = right ? `Yes, ${q.a}. ${q.why}` : `Not ${b.dataset.k}. Think about which of the later clerk's three readings the earlier note feeds into: its question, the labels it matches, or what it copies.`;
+        if (done[i] === undefined) done[i] = right;
+        const n = Object.keys(done).length;
+        $('c1QuizScore').textContent = n === Q.length ? `First-try score: ${Object.values(done).filter(Boolean).length} of ${Q.length}.` : '';
+      });
+    }
+  });
+  </script>
 </article>
 
 <article id="copycat">
@@ -1642,16 +2097,7 @@ the jury heard the evidence`.split('\n');
     const probsHTML = top => top.map(([w, p]) => `<div class="prob"><span>${w}</span><span class="bar"><i style="width:${(p * 100).toFixed(1)}%"></i></span><span>${Math.round(p * 100)}%</span></div>`).join('');
     shared.court = {bigramLogits, softmaxTop, probsHTML, V, story};
 
-    // scene 2 chips
-    const chipWords = ['the', 'ms', 'mr', 'dr', 'court', 'witness', 'thanked', 'said'];
-    const chips = document.getElementById('bigramChips'), bp = document.getElementById('bigramProbs');
-    const pick = w => {
-      chips.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.w === w));
-      bp.innerHTML = probsHTML(softmaxTop(bigramLogits(w, V), 5));
-    };
-    chips.innerHTML = chipWords.map(w => `<button class="chip" data-w="${w}" aria-pressed="false">${w}</button>`).join('');
-    chips.addEventListener('click', e => { const b = e.target.closest('button'); if (b) pick(b.dataset.w); });
-    pick('ms');
+    // the counted-table chips and the zero-layer trainer live in the script at the end of <article id="clerks">
 
     // scene 4: messenger. Hand-set "where to look" (query x key) and "what to copy" strengths.
     const titles = ['ms', 'mr', 'dr'], names = ['reyes', 'chen', 'patel', 'okafor', 'novak', 'garcia', 'singh', 'osei', 'tanaka'];
@@ -1672,14 +2118,20 @@ the jury heard the evidence`.split('\n');
     const run = () => {
       const w = txt.value.toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean).slice(-30);
       const spot = document.getElementById('c1Spot'), probs = document.getElementById('c1Probs'), verdict = document.getElementById('c1Verdict');
-      if (!w.length) { spot.innerHTML = ''; probs.innerHTML = ''; verdict.textContent = 'Type a few words to see a guess.'; return; }
+      if (!w.length) { spot.innerHTML = ''; probs.innerHTML = ''; document.getElementById('c1Receipt').innerHTML = ''; verdict.textContent = 'Type a few words to see a guess.'; return; }
       const last = w[w.length - 1], earlier = w.slice(0, -1);
       const sc = earlier.map(t => QUESTION[cat(last)][cat(t)] || 0), mx = Math.max(0, ...sc);
       const ex = sc.map(s => Math.exp(s - mx)), Z = ex.reduce((a, b) => a + b, 0) || 1, att = ex.map(e => e / Z);
       const cand = new Set([...V, ...w]);
-      const logit = dOn.checked ? bigramLogits(last, cand) : Object.fromEntries([...cand].map(c => [c, 0]));
-      if (hOn.checked) earlier.forEach((t, i) => logit[t] += STRENGTH * att[i] * COPY[cat(t)]);
+      const direct = bigramLogits(last, cand), floor = Math.min(...Object.values(direct));
+      const dPts = {}, mPts = {};
+      cand.forEach(c => { dPts[c] = dOn.checked ? direct[c] - floor : 0; mPts[c] = 0; });
+      if (hOn.checked) earlier.forEach((t, i) => mPts[t] += STRENGTH * att[i] * COPY[cat(t)]);
+      const logit = Object.fromEntries([...cand].map(c => [c, dPts[c] + mPts[c]]));
       const top = softmaxTop(logit, 5);
+      document.getElementById('c1Receipt').innerHTML = top.slice(0, 3).map(([c, p]) => `<tr><td>${c}</td><td class="d">${dOn.checked ? '+' + dPts[c].toFixed(1) : 'off'}</td><td class="m">${hOn.checked ? '+' + mPts[c].toFixed(1) : 'off'}</td><td class="t">${(dPts[c] + mPts[c]).toFixed(1)}</td><td>${Math.round(p * 100)}%</td></tr>`).join('');
+      document.getElementById('c1OV').textContent = hOn.checked ? 'What it copies (OV): each name or noun it looks at raises that same word, by up to 8 points.' : '';
+      shared.c1last = {top, dPts, mPts};
       spot.innerHTML = earlier.map((t, i) => `<span style="background:color-mix(in srgb, var(--sky) ${hOn.checked ? Math.round(att[i] * 90) : 0}%, var(--wash))" title="${Math.round(att[i] * 100)}% attention">${t}</span>`).join('') + `<span class="now">${last}</span>`;
       document.getElementById('c1Q').textContent = hOn.checked ? `Working on "${last}", the messenger asks: ${ASKS[cat(last)]}` : 'The messenger is switched off.';
       probs.innerHTML = probsHTML(top);
