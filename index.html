@@ -1291,17 +1291,69 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
 </article>
 
 <article id="epilogue">
+  <style>
+    #epilogue details.deeper{background:var(--wash);border-radius:var(--r);padding:14px 18px;font-size:1rem}
+    #epilogue details.deeper > summary{cursor:pointer;font-family:var(--f-display);font-weight:600;color:var(--plum);list-style:none;display:flex;gap:.5rem;align-items:baseline}
+    #epilogue details.deeper > summary::-webkit-details-marker{display:none}
+    #epilogue details.deeper > summary::before{content:"+";font-family:var(--f-mono);font-weight:600;width:1em;flex:none}
+    #epilogue details.deeper[open] > summary::before{content:"−"}
+    #epilogue details.deeper > summary small{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:400}
+    #epilogue details.deeper > div{display:grid;gap:.9rem;margin-top:.9rem}
+    #epilogue details.deeper details.deeper{background:var(--card)}
+    #epilogue .inpaper{font-family:var(--f-mono);font-size:.8rem;color:var(--ink-soft);border-left:3px solid var(--plum);padding-left:.7rem}
+    #epilogue .inpaper em{font-family:var(--f-body)}
+    #epilogue blockquote{margin:0;padding:.2rem 0 .2rem 1rem;border-left:4px solid var(--marigold);font-style:italic}
+    #epilogue blockquote cite{display:block;font-style:normal;font-family:var(--f-mono);font-size:.78rem;color:var(--ink-soft);margin-top:.3rem}
+    #epilogue .notation{font-family:var(--f-mono);font-size:.95rem;background:var(--card);border-radius:12px;padding:.7rem .9rem;overflow-x:auto}
+    #epilogue .numbers{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+    #epilogue .numbers > div{background:var(--card);border-radius:12px;padding:10px 12px}
+    #epilogue .numbers b{font-family:var(--f-display);font-size:1.45rem;display:block;font-variant-numeric:tabular-nums}
+    #epilogue .numbers small{font-size:.82rem;color:var(--ink-soft);line-height:1.35;display:block}
+    #epilogue .relay{grid-template-columns:repeat(2,minmax(0,1fr))}
+    #epilogue .relay .r{background:color-mix(in srgb, var(--plum) 14%, var(--card))}
+    @media (max-width:640px){#epilogue .relay{grid-template-columns:1fr}}
+    #epilogue .predict{border:2px dashed var(--plum);border-radius:14px;padding:12px 14px;display:grid;gap:.6rem;margin-top:1rem}
+    #epilogue .predict p{font-family:var(--f-display);font-weight:600}
+    #epilogue .predict .out{font-family:var(--f-body);font-weight:400;font-size:.95rem;color:var(--ink-soft)}
+    #epilogue .seg button.right{border-color:var(--good);background:color-mix(in srgb, var(--good) 18%, var(--card))}
+    #epilogue .seg button.wrongpick{border-color:var(--bad)}
+    #epilogue .capgrid{display:grid;gap:6px;justify-content:center;margin:0 auto}
+    #epilogue .capblock{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:4px;border-radius:8px;background:var(--wash)}
+    #epilogue .capblock i{width:clamp(14px,4.2vw,26px);aspect-ratio:1;border-radius:50%;background:var(--card);border:2px solid var(--line);display:block}
+    #epilogue .capblock i.on{background:var(--teal);border-color:var(--teal)}
+    #epilogue .capblock i.clash{background:var(--bad);border-color:var(--bad)}
+    #epilogue .alignwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.5rem;align-items:center}
+    @media (max-width:720px){#epilogue .alignwrap{grid-template-columns:1fr}}
+    #epilogue .cells{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+    #epilogue .cells i{aspect-ratio:1;border-radius:5px;display:block}
+    #epilogue .meterbar{height:16px;border-radius:99px;background:var(--wash);overflow:hidden;position:relative}
+    #epilogue .meterbar i{display:block;height:100%;border-radius:99px;background:var(--plum);transition:width .5s}
+    #epilogue .meterbar s{position:absolute;top:-3px;bottom:-3px;width:3px;background:var(--ink-soft);text-decoration:none}
+    #epilogue .evid{display:grid;gap:8px}
+    #epilogue .evid button{text-align:left;border-radius:14px;border-width:1.5px;font-family:var(--f-body);font-weight:400;font-size:.95rem;line-height:1.45;padding:.6rem .9rem}
+    #epilogue .evid button[aria-pressed="true"]{border-color:var(--plum);background:color-mix(in srgb, var(--plum) 12%, var(--card))}
+    #epilogue .evid .why{display:block;margin-top:.35rem;font-size:.9rem;color:var(--ink-soft)}
+    #epilogue .evid .why b{font-family:var(--f-display)}
+    #epilogue .evid .why.strong b{color:var(--good)}
+    #epilogue .evid .why.weak b{color:var(--bad)}
+    #epilogue .blank details.deeper{background:var(--wash);padding:10px 12px;font-size:.93rem}
+    #epilogue .blank details.deeper p{font-size:.93rem;color:var(--ink);line-height:1.5}
+    #epilogue .blank .label.hope{color:var(--marigold)}
+    #epilogue label.checks{flex-wrap:nowrap;gap:10px;align-items:center;flex:1 1 260px}
+    #epilogue label.checks input{flex:none}
+  </style>
+
   <div class="chapter-head">
     <span class="num epi">Epilogue</span>
     <h2>The Blank Spaces on the Map</h2>
-    <p class="based">Where the story stands, and where it goes next.</p>
+    <p class="based">Where the story stands, and where it goes next. This chapter steps outside the Transformer Circuits Thread to three papers from other groups: Burns, Ye, Klein &amp; Steinhardt (UC Berkeley and Peking University, 2022), Marks &amp; Tegmark (Northeastern and MIT, 2023) and Huh, Cheung, Wang &amp; Isola (MIT, 2024). It also draws on a few later notes from the Thread itself. Every source is linked at the end.</p>
   </div>
 
   <section class="scene" aria-labelledby="e1">
     <div class="prose">
       <p class="scene-tag">Looking back</p>
       <h3 id="e1">Follow the thread</h3>
-      <p>Read in order, this book is a relay. Every chapter answered one question and handed the next chapter a harder one. Pick a chapter to see its baton.</p>
+      <p>Read in order, this book is a relay. Every chapter answered one question and handed the next chapter a harder one. And every one of them comes back tonight, because the open questions at the end of the story are built out of the tools from the beginning. Pick a chapter to see its baton, and where it reappears below.</p>
     </div>
     <div class="toy">
       <div class="toy-head"><h4>Ten years, one question at a time</h4><span class="label">The story so far</span></div>
@@ -1310,6 +1362,7 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
         <div class="q"><span class="label">The question</span><p id="thQ"></p></div>
         <div class="a"><span class="label">What they found</span><p id="thA"></p></div>
         <div class="n"><span class="label">The question it raised</span><p id="thN"></p></div>
+        <div class="r"><span class="label">Where it returns in this epilogue</span><p id="thR"></p></div>
       </div>
       <div class="btns" style="margin-top:1rem"><button id="thNext" class="primary">Next chapter →</button></div>
     </div>
@@ -1319,65 +1372,397 @@ footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-
     <div class="prose">
       <p class="scene-tag">The biggest open question</p>
       <h3 id="e2">Is it truth, or just what people say?</h3>
-      <p>Since 2022, researchers outside the Transformer Circuits team have found what look like <strong>truth directions</strong> inside models: a direction that separates statements the model treats as true from ones it treats as false. If that's real, you could read what a model believes directly, instead of trusting what it says.</p>
-      <p>But there's a trap, and lawyers will spot it immediately. Models learn from human writing, which is full of popular myths. So is the direction tracking <em>what is true</em>, or <em>what most people say is true</em>? Researchers call the challenge of reliably getting at what a model really knows <span class="term">eliciting latent knowledge</span>.</p>
-      <p>The toy below shows the trap. Imagine a model that stores two things about every statement: whether it's actually true (across) and how widely it's repeated (up). We train a simple "truth detector", called a <span class="term">probe</span>, by showing it labelled examples. Everything depends on who wrote the labels.</p>
+      <p>Every trial lawyer knows the witness who repeats what the whole town says. They're sincere. They may even be right. But you can't tell from their confidence whether they saw it themselves or heard it at the pub.</p>
+      <p>A language model is trained to continue human writing, and human writing is full of things the whole town says. In 2022 a team at UC Berkeley put the worry bluntly: train a model to imitate people, and <q>they may reproduce errors that humans make</q>; train it to please human raters, and it may produce <q>errors that human evaluators can't detect</q>. So they asked a different question. Forget what the model <em>says</em>. Is there something in its case files that tracks what's actually true?</p>
+      <p>Researchers call this <span class="term">eliciting latent knowledge</span>: getting at what a model knows, even when its words don't show it. The simplest tool for the job is a <span class="term">probe</span>, a tiny detector that reads a model's case file and outputs a single verdict, true or false. Everything depends on how you train it.</p>
+      <p>Below is a model we've imagined so you can see its insides. It stores two notes about every statement: whether the statement is <em>actually true</em> (across) and how <em>widely repeated</em> it is (up). A real model's case file has thousands of directions and nobody labels them. Here, you get to see the two that matter.</p>
     </div>
     <div class="toy">
       <div class="toy-head"><h4>Train a truth detector</h4><span class="label">Real calculation · imagined model</span></div>
-      <div class="toggles" role="group" aria-label="Who labels the training examples" id="probeSeg">
-        <button data-m="0" aria-pressed="false">Labels from careful fact-checkers</button>
-        <button data-m="1" aria-pressed="true">Labels from what most people say</button>
+      <div class="toggles" role="group" aria-label="How the detector is trained" id="probeSeg">
+        <button data-m="0" aria-pressed="true">Labels from careful fact-checkers</button>
+        <button data-m="1" aria-pressed="false">Labels from what most people say</button>
+        <button data-m="2" aria-pressed="false">No labels: follow the biggest spread</button>
+      </div>
+      <div class="predict" id="probePredict">
+        <p>Predict before you press. This detector learned from fact-checkers and gets all 15 right. Retrain it on the crowd's labels. How many will it get wrong?</p>
+        <div class="seg" role="group" aria-label="Your prediction" id="probeGuess">
+          <button data-g="0">None</button><button data-g="1">1 to 4</button><button data-g="2">5 to 9</button><button data-g="3">10 or more</button>
+        </div>
+        <p class="out" id="probeGuessOut" aria-live="polite">Pick a number, then press "Labels from what most people say".</p>
       </div>
       <div class="model-grid" style="margin-top:1rem">
         <canvas id="probeCanvas" width="880" height="880" aria-label="Statements placed by truth and popularity, with the probe's dividing line" role="img"></canvas>
         <div style="display:grid;gap:.8rem">
-          <p class="verdict" id="probeVerdict" style="margin:0"></p>
+          <p class="verdict" id="probeVerdict" style="margin:0" aria-live="polite"></p>
           <div class="probe-list" id="probeList"></div>
         </div>
       </div>
-      <p class="caption">The probe is real: it finds the direction that best separates the two groups of labels (the difference between their averages) and draws a dividing line. The "model" is imagined: we placed each statement by hand on its truth and popularity. <strong>Try this:</strong> switch between the two kinds of labels. With crowd labels, the detector learns <em>popularity</em>, so it calls popular myths true and little-known facts false, and it still looks like a truth detector.</p>
+      <div class="controls">
+        <div class="ctl"><label for="probeLoud">How strongly the model stores "widely repeated"</label>
+          <input type="range" id="probeLoud" min="0" max="4" step="1" value="2"><output id="probeLoudOut" for="probeLoud"></output></div>
+      </div>
+      <p class="caption">The detector is real. With labels, it takes the average position of the "true" statements and the average of the "false" ones, points an arrow from one to the other, and draws its dividing line halfway: a <em>difference-of-means</em> probe, the same kind Marks and Tegmark used. With no labels, it finds the direction in which the statements are most spread out (the top principal component) and splits along that; because an unlabelled method can't know which end means "true", we let it peek at the answers to choose the end, as Burns et al. did when scoring their method. The "model" is imagined: we placed each statement by hand. <strong>Try this:</strong> with crowd labels it gets 9 of 15 wrong, calling popular myths true and little-known facts false, yet it agrees with every label it was trained on. Then try "no labels" and slide the popularity note from quiet to loud. While truth is the bigger signal, the unlabelled detector finds it and scores 15 of 15. Once popularity is louder, it follows popularity instead.</p>
     </div>
+
     <div class="prose" style="margin-top:2rem">
-      <p>In a real model, nobody gets to see the axes. That's why this problem is so hard. Interpretability may help: if you can see <em>which</em> features a probe is relying on, you can tell "true" from "popular". That's the kind of forensic examination the earlier chapters made possible.</p>
+      <p>That last setting is the whole puzzle in miniature. A method with no labels has nothing to go on except the shape of the case files. It finds whatever stands out. If truth stands out, wonderful. If "what everyone says" stands out more, it will hand you that, and it will look just as confident.</p>
+
+      <details class="deeper">
+        <summary>Go deeper: how do you find truth with no labels at all? <small>Burns et al., 2022</small></summary>
+        <div>
+          <p>Burns and colleagues needed a property that truth has and most other notes in a case file don't. They chose logic. A statement and its opposite can't both be true, and one of them must be. So they built <span class="term">contrast pairs</span>: the same yes-or-no question answered "Yes" and answered "No". Then they searched for a direction in the case file where the two halves of every pair land at opposite ends. They called the method <span class="term">contrast-consistent search</span> (CCS).</p>
+          <p>Written the paper's way, with <em>p</em> as the probe's probability that a statement is true, x⁺ the "Yes" version and x⁻ the "No" version, the search rewards two things:</p>
+          <p class="notation">consistency: p(x⁺) ≈ 1 − p(x⁻)<br>confidence: min{ p(x⁺), p(x⁻) } ≈ 0</p>
+          <p>In words: the two answers' chances of being true should add up to one, and the probe shouldn't hedge at fifty-fifty. Neither rule works alone. Consistency by itself is satisfied by a probe that says 0.5 to everything, a witness who answers every question with "possibly".</p>
+          <div class="numbers">
+            <div><b>71.2%</b><small>CCS accuracy, averaged over 5 models and 10 datasets, using no labels and no model outputs</small></div>
+            <div><b>67.2%</b><small>the model's own answers (calibrated zero-shot) on the same questions</small></div>
+            <div><b>83.7%</b><small>a probe trained <em>with</em> labels: the ceiling CCS was chasing</small></div>
+          </div>
+          <p>The most telling test was a trap. They put wrong answers to earlier questions at the start of the prompt, inviting the model to play along. In one model (UnifiedQA), the model's spoken answers fell from 80.4% to 70.9% correct. CCS, reading the case files, went from 82.1% to 83.8%. The words were swayed; the hidden signal wasn't. The authors add a footnote of caution: the trick may have worked partly because the odd prompt was unusual, not because the model was "playing along".</p>
+          <p class="inpaper">In the paper: section 2.2, <em>Method: Contrast-Consistent Search</em>; section 3.2.2, <em>CCS Is Robust To Misleading Prompts</em>.</p>
+          <details class="deeper">
+            <summary>Deeper still: truth is "salient", and the catch that follows</summary>
+            <div>
+              <p>Burns et al. found that a direction separating true from false is often <em>easy</em> to find. It sometimes works from a single contrast pair, and simply taking the biggest spread of the differences between the two halves of each pair (the method they called CRC) scored 70.1%, almost as well as CCS. Their section title says it plainly: <q>Truth is a Salient Feature</q>.</p>
+              <p>That's encouraging, and it's also the trap from the toy. Consistency is a property of any belief held coherently. A town that believes bats are blind also believes "bats are not blind" is false. A consistent popular myth passes the same test as a fact. The authors were candid about the gap: CCS only works if the model <em>evaluates</em> the truth of what it reads, and they didn't test models that were actively lying, because no good test setup existed yet.</p>
+              <p class="inpaper">In the paper: section 3.3.3, <em>Truth is a Salient Feature</em>; section 5.1, <em>Limitations and Future Work</em>.</p>
+            </div>
+          </details>
+        </div>
+      </details>
+
+      <details class="deeper">
+        <summary>Go deeper: does the truth direction actually do anything? <small>Marks &amp; Tegmark, 2023</small></summary>
+        <div>
+          <p>A year later, Samuel Marks and Max Tegmark went back to basics. Earlier probes had a bad habit: some broke as soon as you added the word "not". So they built clean, boring datasets where nothing varies except truth: "The city of Tokyo is in Japan", "Sixty-one is larger than seventy-four", "The Spanish word 'nariz' does not mean 'giraffe'". Then they looked inside three LLaMA-2 models of 7, 13 and 70 billion parameters.</p>
+          <p><strong>Where the verdict lives.</strong> By swapping one case file at a time between a true and a false version of a prompt (Chapter 6's but-for test again), they found the truth signal gathered in the case files over the end of the statement, especially the full stop. The model seems to file a summary of the whole sentence there.</p>
+          <p><strong>What it looks like.</strong> Squash those case files down to two directions, as in the Prologue's word map, and true statements fall on one side and false ones on the other. The pattern sharpens with size. In the 7-billion model, number statements clustered by surface details, such as whether they contained the word "eighty". In the 13-billion model, "larger than" and "smaller than" statements separated in <em>opposite</em> directions. In the 70-billion model they lined up along one shared direction.</p>
+          <p><strong>Our toy is their probe.</strong> Their favourite detector was the <span class="term">mass-mean probe</span>: θ = μ⁺ − μ⁻, the arrow from the average false statement to the average true one. That is exactly what the toy above computes. They preferred it to the more common logistic regression for a reason Chapter 3 explains: when concepts share space in superposition, logistic regression tilts its arrow to dodge the overlap and can miss the real direction.</p>
+          <p><strong>Pushing on it.</strong> The decisive test was causal, like clamping the Golden Gate feature in Chapter 5. They added the truth arrow to the case file of a false statement and asked the model whether it was true. Shifts found from city statements and their negations made the 13-billion model call false Spanish translations true, at up to 85% of the strength it gives genuinely true ones (and 97% the other way). Training on one topic changed the verdict on another.</p>
+          <div class="numbers">
+            <div><b>r = +0.85</b><small>how closely "probable text" and "true" go together for city statements</small></div>
+            <div><b>r = −0.63</b><small>the same, for the negated cities: "Paris is not in France" sounds natural and is false</small></div>
+          </div>
+          <p>Those two numbers are their answer to "is it just tracking likely-sounding text?" Add "not" and plausibility and truth come apart, so a detector that only knew "sounds familiar" would fail. Probes trained on a dataset of merely likely text did worse than chance on such sets. Training on statements <em>and</em> their negations helped the real probes generalise.</p>
+          <blockquote>"we focus on simple, uncontroversial statements, and therefore cannot disambiguate truth from closely related features, such as 'commonly believed' or 'verifiable'."<cite>Marks &amp; Tegmark, section 7.1</cite></blockquote>
+          <p>That sentence is the toy's trap, in the authors' own words. On their datasets, "true" and "believed by everyone" are the same thing, so nothing in the data could pull them apart. The question this scene is named after is still open.</p>
+          <p class="inpaper">In the paper: section 3, <em>Localizing truth representations via patching</em>; section 4, <em>Visualizing LLM representations</em>; section 5.1, <em>Challenges with logistic regression, and mass-mean probing</em>; section 6, <em>Causal intervention experiments</em>; appendix A, <em>Scoping of truth</em>.</p>
+        </div>
+      </details>
+
+      <p>So what would separate the two? Here is a hope, and it is only a hope. A popular myth is a weak precedent. It survives on its own, but put it next to the rest of the case law and it clashes. "Goldfish forget in three seconds" sits awkwardly beside everything else the model has read about how fish are trained to respond to feeding times. If a large model is under pressure to keep a thousand related notes coherent, the consistent picture may win out over the merely popular one. Nobody has shown that this happens. It's a reason to test, not a reason to trust.</p>
+    </div>
+
+    <div class="toy">
+      <div class="toy-head"><h4>Would you trust the probe over the experts?</h4><span class="label">A puzzle · no single right answer</span></div>
+      <p>Suppose a probe says a claim is true and the expert consensus says it's false. Which of these, if you had them, would actually make you take the probe's side? Pick the ones you'd accept, then check your reasoning.</p>
+      <div class="evid" id="evidList" role="group" aria-label="Pieces of evidence"></div>
+      <div class="btns" style="margin-top:1rem"><button class="primary" id="evidReveal">Check my reasoning</button></div>
+      <p class="caption" id="evidSum" aria-live="polite">Courts ask similar questions before admitting scientific evidence: has the method been tested, what is its error rate, does it hold up outside the lab? A probe is a forensic instrument, and it deserves the same scrutiny.</p>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="e3">
     <div class="prose">
-      <p class="scene-tag">Looking ahead</p>
-      <h3 id="e3">The blank spaces</h3>
-      <p>Old maps marked unexplored land with blank space. Here are the biggest blank spaces on the map of AI, as the field saw them at the end of this story.</p>
+      <p class="scene-tag">A second open question</p>
+      <h3 id="e3">Can a model know something nobody knew?</h3>
+      <p>The sharpest critique of language models has a memorable name. A 2021 paper called them <span class="term">stochastic parrots</span>: systems that stitch together fragments of what they've seen, with no grasp of meaning. If that's all they are, they can never tell us anything new.</p>
+      <p>The honest reply starts with a concession. Models do recombine what they've read. But so do we. Most human creativity is recombination, and so is most good lawyering: a novel argument is usually an old principle applied to a new set of facts, or two lines of authority joined for the first time. Recombination can produce something genuinely new. The harder question is how anyone would <em>know</em> it's new, and right.</p>
+      <p>The answer that has worked so far is old-fashioned: propose, then check. Let a model suggest ideas, and let something that can't be talked round, a program that tests each idea, decide which ones survive. In 2023 a Google DeepMind team built exactly that, called <span class="term">FunSearch</span>, and pointed it at a puzzle the mathematician Terence Tao had called <q>perhaps my favourite open question</q>: the <span class="term">cap set problem</span>.</p>
+      <p>Here's the puzzle in a small version you can play. Each dot is a point in a little four-dimensional grid. Three dots form a "line" if, in every coordinate, they're either all the same or all different. A cap set is a collection of dots with no line anywhere in it. How many dots can you pick?</p>
     </div>
-    <div class="blanks">
-      <div class="blank"><span class="label">From Chapter 6</span><h4>The other three quarters</h4><p>Today's tools explain a model's reasoning for only some prompts, and each explanation takes hours. Reading a model routinely, at scale, needs far more automation.</p></div>
-      <div class="blank"><span class="label">From Chapters 4 and 5</span><h4>What the dictionaries miss</h4><p>Part of every model's activity slips through even the biggest dictionaries. Nobody yet knows how much of what matters lives there.</p></div>
-      <div class="blank"><span class="label">A bold hypothesis</span><h4>Do all models draw the same map?</h4><p>A 2024 paper argued that very different models, trained on text or on images, are converging on similar internal geometry as they grow. If so, the map may reflect the world itself, not just our words. It's still debated.</p></div>
-      <div class="blank"><span class="label">A moving target</span><h4>Models that keep learning</h4><p>Today's models are frozen after training. Models that update themselves as they work would be more useful, and much harder to audit: yesterday's check might not hold today.</p></div>
-      <div class="blank"><span class="label">The highest stakes</span><h4>AI that improves AI</h4><p>Models already help write the code and data used to train new models. If that loop speeds up, checking what each change did becomes essential, like auditing an upgradeable smart contract before every upgrade.</p></div>
-      <div class="blank"><span class="label">New senses</span><h4>Agents that test the world</h4><p>Models learned from our words. Agents can run code, search and experiment, checking ideas against reality. That's the likeliest route to models discovering things we don't know, and another reason to see what they're thinking.</p></div>
+    <div class="toy">
+      <div class="toy-head"><h4>Propose, then check</h4><span class="label">Real calculation · a blind proposer</span></div>
+      <div class="controls" style="margin-top:0">
+        <div class="seg" role="group" aria-label="Size of the grid" id="capDim">
+          <button data-n="3" aria-pressed="false">3 dimensions · 27 dots</button>
+          <button data-n="4" aria-pressed="true">4 dimensions · 81 dots</button>
+        </div>
+        <label class="checks"><input type="checkbox" id="capTrust"> Skip the checker: trust every proposal</label>
+      </div>
+      <div class="predict">
+        <p>Predict: in four dimensions the best possible cap set has 20 dots. Will random proposals plus a strict checker find one?</p>
+        <div class="seg" role="group" aria-label="Your prediction" id="capGuess">
+          <button data-g="1">Yes, given time</button><button data-g="0">No, it will get stuck</button>
+        </div>
+        <p class="out" id="capGuessOut" aria-live="polite">Pick one, then press "Run 2,000 rounds".</p>
+      </div>
+      <div class="capgrid" id="capGrid" style="margin-top:1rem" aria-label="The grid of dots, with the current best set highlighted" role="img"></div>
+      <div class="scores">
+        <div class="score"><span class="label">Rounds</span><b id="capRounds">0</b><small>proposals made</small></div>
+        <div class="score"><span class="label">Best set</span><b id="capBest">0</b><small id="capBestNote">dots, checked</small></div>
+        <div class="score"><span class="label">Hidden lines</span><b id="capLines">0</b><small>lines inside the "best" set</small></div>
+      </div>
+      <div class="btns" style="margin-top:1rem"><button class="primary" id="capRun">Run 2,000 rounds</button><button id="capStep">Propose once</button><button id="capReset">Start over</button></div>
+      <p class="caption" id="capCaption">Each round, the proposer takes the best set so far, drops a few dots at random and adds a few at random. The checker tests every triple of dots for a line and rejects any proposal that contains one. Both are real. <strong>Try this:</strong> tick "skip the checker" and run it. The "record" shoots past 60 dots, and every one of those sets is riddled with lines: confident, impressive and wrong. With the checker on, three dimensions is easy (the best possible is 9). In four, our blind proposer usually stalls at 17 or 18, short of the 20 that's known to be possible.</p>
+    </div>
+    <div class="prose" style="margin-top:2rem">
+      <p>Stalling is the interesting part. A checker keeps you honest, but it can't make you clever. Random edits get trapped in sets that can't be improved one dot at a time. FunSearch's trick was to make the proposer smarter: instead of random edits, a language model wrote small <em>programs</em> that build cap sets, the checker scored them, and the best programs were fed back to the model as examples to improve on.</p>
+
+      <details class="deeper">
+        <summary>Go deeper: what propose-then-check has actually found</summary>
+        <div>
+          <p><strong>FunSearch</strong> (Romera-Paredes et al., Google DeepMind, <em>Nature</em>, 2024). In eight dimensions it found a cap set of 512 dots, larger than any previously known. On the deeper question, how fast the best cap sets grow as dimensions are added, it nudged the best proven lower bound from 2.2180 to 2.2202, which the authors describe as the largest improvement in 20 years. Because FunSearch outputs a program rather than a list of dots, mathematicians could read the code, spot the symmetry it was using, and push the result further by hand. The authors' framing: a frozen language model <q>to provide creative solutions</q>, paired with an evaluator <q>which guards against confabulations</q>.</p>
+          <p><strong>AlphaEvolve</strong> (Google DeepMind white paper, June 2025) scaled up the same loop. Its most quoted result: a way to multiply two 4×4 complex-valued matrices using 48 multiplications, which the paper calls <q>the first improvement, after 56 years, over Strassen's algorithm in this setting</q>. It also found a faster way to schedule Google's data centres, and sped up the training of the very model that AlphaEvolve runs on. Keep that last one in mind for the blank spaces below.</p>
+          <p><strong>And a cautionary tale.</strong> In October 2025, researchers at OpenAI announced that GPT-5 had solved ten "open" Erdős problems. The mathematician who maintains the list where they were marked open, Thomas Bloom, called this <q>a dramatic misrepresentation</q>: the model had <q>found references, which solved these problems, that I personally was unaware of</q>. "Open" on his site meant only that he hadn't seen a solution. The model had done something genuinely useful, an excellent literature search, but it hadn't discovered anything. Every lawyer who has drafted a patent knows the lesson: before you claim something is new, search the prior art.</p>
+          <p class="inpaper">FunSearch: sections <em>Cap sets</em> and <em>Admissible sets</em>. AlphaEvolve: the abstract. The Erdős episode: reported by eWeek, 20 October 2025.</p>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="e4">
     <div class="prose">
-      <p class="scene-tag">Why it matters</p>
-      <h3 id="e4">Testimony and forensics</h3>
-      <p>A court never relies on a witness's account alone. It tests testimony against physical evidence. For AI, the model's own explanation is the testimony, and Chapter 6 showed it can be sincere and still wrong. Interpretability is the forensic lab: a way to check the account against what actually happened inside.</p>
-      <p>That matters for anyone who has to answer for an AI system's decisions: the people who build it, the people who deploy it, the regulators who oversee it, and the judges who may one day have to decide who was responsible. "The model said so" is not a reason. Being able to look inside is how it might become one.</p>
-      <p>Ten years ago, nobody could say what happened inside these systems. Today we can trace some of their thoughts, step by step, and change them on purpose. Most of the map is still blank. But the blank spaces now have edges, and people are filling them in.</p>
+      <p class="scene-tag">New senses</p>
+      <h3 id="e4">Shadows on the cave wall</h3>
+      <p>Notice what the checker did. It was the one part of FunSearch that touched reality. For most of this story, a language model had no senses of its own. Everything it knew came through us: text we wrote about things we had seen. We were its only eyes and ears, and it inherited our blind spots along with our insights.</p>
+      <p><span class="term">Agents</span> change that. A model that can run code, search, query a database or run an experiment can check an idea against the world instead of against the opinion of the crowd. That's the same move a court makes when it orders a site inspection rather than relying on the witnesses' accounts. It's the likeliest route to models finding things out that nobody wrote down, and it's one more reason to want to see what they're thinking while they do it.</p>
+      <p>But is there a world in a model's head at all, or only words? In 2024 a team at MIT made a bold claim. They argued that models trained on completely different things, pictures for some and text for others, are drifting towards the <em>same</em> internal map as they get better. They named the idea after Plato's cave, where prisoners see only shadows of real objects on a wall: the <span class="term">Platonic representation hypothesis</span>.</p>
+      <blockquote>"Neural networks, trained with different objectives on different data and modalities, are converging to a shared statistical model of reality in their representation spaces."<cite>Huh, Cheung, Wang &amp; Isola, 2024</cite></blockquote>
+      <p>How do you compare two maps drawn in different languages? You can't line up their directions; they don't share any. Instead you ask, for each thing, which other things each model thinks are its closest neighbours, and how often the two lists overlap. Try it on a toy world.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Two senses, one world</h4><span class="label">Real calculation · toy world</span></div>
+      <div class="alignwrap">
+        <div style="display:grid;gap:.8rem">
+          <p>Forty things exist in a hidden world with ten properties. A "camera" model and a "text" model each see some of those properties. For every thing, we list its 5 nearest neighbours in each model and count the overlap.</p>
+          <div class="ctl"><label for="alShared">Properties both senses capture</label><input type="range" id="alShared" min="0" max="6" step="1" value="2"><output id="alSharedOut" for="alShared"></output></div>
+          <label class="checks"><input type="checkbox" id="alPrivate" checked> Each sense also sees two things the other can't (colour for the camera, abstract ideas for the text)</label>
+        </div>
+        <div style="display:grid;gap:.6rem">
+          <p class="verdict" style="margin:0">Alignment: <span id="alScore">0</span></p>
+          <div class="meterbar" aria-hidden="true"><i id="alBar"></i><s id="alChance"></s></div>
+          <p class="stat" id="alChanceTxt"></p>
+          <div class="cells" id="alCells" aria-label="One square per thing; darker squares share more neighbours across the two senses" role="img"></div>
+        </div>
+      </div>
+      <p class="caption">This is the paper's own measure, <em>mutual nearest-neighbour alignment</em>, computed live on a world we invented. 1 means the two models agree perfectly about what resembles what; the grey tick marks what pure chance would give. <strong>Try this:</strong> slide the shared properties up and watch alignment rise. With private senses on, it climbs from 0.10 to about 0.5 and stops there, because each model knows something the other can't, and that private knowledge reshuffles its idea of who resembles whom. Now untick the private senses. As soon as the two share even one property, alignment jumps to 1.00: with nothing private, they are seeing the same world through the same window.</p>
+    </div>
+    <div class="prose" style="margin-top:2rem">
+      <details class="deeper">
+        <summary>Go deeper: the evidence, and the Prologue's word map returns <small>Huh et al., 2024</small></summary>
+        <div>
+          <p><strong>The evidence.</strong> Across 78 vision models, the ones that did best on a broad set of tasks had the most similar internal maps. In the authors' Tolstoy-flavoured phrase, <q>all strong models are alike, each weak model is weak in its own way</q>. Then the cross-modal test: using Wikipedia images and their captions, they compared language models with vision models. The better a language model was at predicting text, the more its map of the captions resembled a vision model's map of the pictures.</p>
+          <p><strong>Why it might happen.</strong> They offer three pressures. More tasks leave fewer ways to solve them all. Bigger models are more likely to find the shared best solution. And deep networks lean towards simple fits, like the judge in Chapter 4 who prefers the account with the fewest moving parts.</p>
+          <p><strong>The callback.</strong> In an idealised world, they show that a family of learning methods ends up with a map where the closeness of two things equals their <em>pointwise mutual information</em>: how much more often they turn up together than chance would predict. That's the quantity the Prologue's word map was built from, live in your browser, eight chapters ago. "You shall know a word by the company it keeps" may be a special case of a much bigger rule.</p>
+          <p class="inpaper">In the paper: section 2.2, <em>Alignment increases with scale and performance</em>; section 2.3, <em>Representations are converging across modalities</em>; section 4.2, on contrastive learners and PMI.</p>
+          <details class="deeper">
+            <summary>Deeper still: what the authors themselves doubt</summary>
+            <div>
+              <p>The authors list their own counterexamples, and they're good ones. Different senses carry different information: can text capture a total solar eclipse, or a photo capture "I believe in the freedom of speech"? Their mathematical argument only strictly holds when every sense captures everything about the world, which no real sense does. Specialised systems, like a protein-folder or a lane-follower, may find shortcuts that have little to do with reality. And the field itself may be pushing models towards human-like maps by copying human designs.</p>
+              <p>The numbers are humbling too. The language-vision alignment in their main figure rises clearly, but only to 0.16 on a scale where 1 is perfect. The authors leave open whether that's strong agreement plus noise, or <q>poor alignment with major differences left to explain</q>.</p>
+              <p>Even if the hypothesis is right, the map is still made of data. A model can only converge on the parts of reality its training data leaves a trace of. A fact nobody ever measured, wrote down or photographed can't be conjured from the shadows. The authors say as much: their hope that scale will reduce hallucination is conditioned on training data that is a <q>sufficiently lossless and diverse set of measurements</q>.</p>
+              <p class="inpaper">In the paper: section 6, <em>Counterexamples and limitations</em>, including <em>Lots left to explain</em>; section 5, <em>Scaling may reduce hallucination and bias</em>.</p>
+            </div>
+          </details>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="e5">
     <div class="prose">
-      <p class="scene-tag">Keep exploring</p>
-      <h3 id="e5">Where to go next</h3>
-      <p>Every chapter links to its original paper, and the papers are written to be read, with excellent interactive diagrams of their own. The <a href="https://transformer-circuits.pub" target="_blank" rel="noopener">Transformer Circuits Thread</a> keeps publishing, so the story continues there. The earlier image-model work from the Prologue lives on <a href="https://distill.pub/2020/circuits/" target="_blank" rel="noopener">Distill</a>.</p>
-      <p>And if a chapter here left you with a question, that's the point. Every discovery in this book started as one.</p>
-      <p class="stat">Epilogue sources: <a href="https://arxiv.org/abs/2212.03827" target="_blank" rel="noopener">Burns et al., 2022 (latent knowledge without supervision)</a> · <a href="https://arxiv.org/abs/2310.06824" target="_blank" rel="noopener">Marks &amp; Tegmark, 2023 (the geometry of truth)</a> · <a href="https://arxiv.org/abs/2405.07987" target="_blank" rel="noopener">Huh et al., 2024 (the Platonic representation hypothesis)</a></p>
+      <p class="scene-tag">Looking ahead</p>
+      <h3 id="e5">The blank spaces</h3>
+      <p>Old maps marked unexplored land with blank space. Here are the biggest blank spaces on the map of AI, as they look in late 2026. Each one opens up: some with early findings, some with nothing more than an intuition, clearly labelled.</p>
+    </div>
+    <div class="blanks">
+      <div class="blank"><span class="label">From Chapter 6</span><h4>The other three quarters</h4><p>Attribution graphs gave a satisfying explanation for about a quarter of the prompts tried, and each took hours of expert work. Reading a model routinely needs far more automation.</p>
+        <details class="deeper"><summary>Early findings</summary><div>
+          <p>In July 2025 Anthropic researchers built AI agents to do the auditing. In a test where a model had been deliberately trained with a hidden goal, a single investigator agent found the root cause 10–13% of the time with realistic tools, and 42% when many agents' findings were pooled. Its success depended on having interpretability tools or a search over training data. Their caveat: the hidden goals were planted by researchers and may not resemble real problems.</p>
+          <p class="inpaper">Bricken et al., <em>Building and evaluating alignment auditing agents</em>, Alignment Science Blog, 2025.</p>
+        </div></details>
+      </div>
+      <div class="blank"><span class="label">From Chapters 4 and 5</span><h4>What the dictionaries miss</h4><p>Part of every model's activity slips through even the biggest dictionaries. Nobody yet knows how much of what matters lives there.</p>
+        <details class="deeper"><summary>Why it matters here</summary><div>
+          <p>A truth probe, an audit or a safety monitor is only as good as the features it can see. If the decisive step of some reasoning sits in the unexplained remainder, a clean-looking graph can be clean and incomplete at the same time, like a ledger that balances because a page is missing.</p>
+        </div></details>
+      </div>
+      <div class="blank"><span class="label">A moving target</span><h4>Models that keep learning</h4><p>Today's models are mostly frozen after training. Models that keep learning as they work would be more useful, and much harder to audit: yesterday's clean bill of health might not hold today.</p>
+        <details class="deeper"><summary>Known problem, and an intuition</summary><div>
+          <p><strong>Known:</strong> neural networks that learn new things in sequence tend to overwrite old skills. It's called <span class="term">catastrophic forgetting</span>, and it has been studied since the late 1980s.</p>
+          <p><span class="label hope">An intuition, not a finding:</span> superposition may make this worse. In Chapter 3's crowded office, every desk is shared, so adjusting one dial to learn a new concept also nudges every concept that shares its desk. A model that edits itself constantly could disturb things nobody was watching. Nobody has shown how large this effect is in big models.</p>
+        </div></details>
+      </div>
+      <div class="blank"><span class="label">The highest stakes</span><h4>AI that improves AI</h4><p>Models already help write the code and data used to train new models. AlphaEvolve, above, sped up the training of the model it runs on. If that loop tightens, every upgrade needs an audit of what it changed.</p>
+        <details class="deeper"><summary>The smart-contract view</summary><div>
+          <p>Crypto has lived this problem. An <span class="term">upgradeable smart contract</span> can have its logic replaced after deployment, so users' safety rests entirely on someone checking each new version before it goes live. Tezos went further and made the blockchain <em>self-amending</em>: the protocol itself proposes, votes on and installs its own upgrades. A model that trains its successor is the same design, with weights instead of code, and no readable diff.</p>
+          <p>Building that diff is now a research topic. In a December 2024 note, Anthropic researchers compared a model's dictionary features before and after a fine-tune that secretly planted a "sleeper agent" behaviour, and the comparison picked out features tied to the planted behaviour. They described the method as having good sensitivity but not specificity: it found the needle, along with straw that had to be checked by steering.</p>
+          <p class="inpaper">Bricken et al., <em>Stage-Wise Model Diffing</em>, Transformer Circuits Thread, December 2024 (a preliminary note).</p>
+        </div></details>
+      </div>
+      <div class="blank"><span class="label">The open question of this chapter</span><h4>True, or merely believed?</h4><p>Truth directions exist in the models tested, and they're causal. Whether they track what is true or what is commonly believed is exactly what current datasets can't separate.</p>
+        <details class="deeper"><summary>What would settle it</summary><div>
+          <p>Datasets where truth and popularity are deliberately pulled apart, at scale: settled myths, claims that were once consensus and later overturned, and specialist facts that few people repeat. Then the forensic step: interpretability tools that show which features a probe is actually reading.</p>
+        </div></details>
+      </div>
+      <div class="blank"><span class="label">New senses</span><h4>Agents that test the world</h4><p>Models learned from our words. Agents can run code, search and experiment. That's the likeliest route to discoveries nobody has made, and it makes seeing their reasoning more important, not less.</p>
+        <details class="deeper"><summary>The open part</summary><div>
+          <p>A checker only certifies what it was built to check. FunSearch's evaluator could prove a cap set had no lines; it couldn't judge whether a problem was worth solving. As agents choose their own experiments, deciding what counts as a good check becomes the human's job, and possibly the hardest one.</p>
+        </div></details>
+      </div>
     </div>
   </section>
+
+  <section class="scene" aria-labelledby="e6">
+    <div class="prose">
+      <p class="scene-tag">Why it matters</p>
+      <h3 id="e6">Testimony and forensics</h3>
+      <p>A court never relies on a witness's account alone. It tests testimony against physical evidence. For AI, the model's own explanation is the testimony, and Chapter 6 showed it can be sincere and still wrong: the model described carrying the one while its circuits did something else entirely. Interpretability is the forensic lab: a way to check the account against what actually happened inside.</p>
+      <p>The lab has started examining the witness directly. In October 2025, Jack Lindsey at Anthropic planted concepts in a model's case file, such as an "all caps" direction, and asked whether it noticed anything. The most capable models tested sometimes did, naming the planted concept before it could have shown up in their own words. But only about 20% of the time at best, and the paper is blunt that <q>failures of introspection remain the norm</q>. Its conclusion reads like a brief for this book:</p>
+      <blockquote>"the most important role of interpretability research may shift from dissecting the mechanisms underlying models' behavior, to building 'lie detectors' to validate models' own self-reports about these mechanisms."<cite>Lindsey, Emergent Introspective Awareness in Large Language Models, 2025</cite></blockquote>
+      <p>That matters for anyone who has to answer for an AI system's decisions: the people who build it, the people who deploy it, the regulators who oversee it, and the judges who may one day have to decide who was responsible. "The model said so" is not a reason. Being able to look inside is how it might become one.</p>
+      <p>Ten years ago, nobody could say what happened inside these systems. Today we can trace some of their thoughts, step by step, change them on purpose, and even catch them disagreeing with their own words. Most of the map is still blank. But the blank spaces now have edges, and people are filling them in.</p>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="e7">
+    <div class="prose">
+      <p class="scene-tag">The end of the story, for now</p>
+      <h3 id="e7">What we know, and what we don't</h3>
+    </div>
+    <div class="learned" style="max-width:960px;margin-inline:auto">
+      <div class="card k"><h4>Known: simple probes find a truth signal</h4><p>In the models tested, a single direction in the case file separates simple true statements from false ones, and it can be found with labels or, often, without.</p></div>
+      <div class="card k"><h4>Known: the truth direction is causal</h4><p>Pushing a LLaMA-2 model's case file along it makes the model call false statements true, even on topics the probe never saw.</p></div>
+      <div class="card k"><h4>Known: propose-then-check finds new results</h4><p>Pairing a language model with a strict evaluator produced verified new mathematics, including larger cap sets and a faster 4×4 matrix method.</p></div>
+      <div class="card u"><h4>Unknown: truth, or what's believed?</h4><p>On current datasets the two coincide, so no one can yet say which one the direction tracks. The coherence argument is a hope.</p></div>
+      <div class="card u"><h4>Unknown: one map for all models?</h4><p>Different models' maps are growing more alike, but alignment is still low, and different senses capture different parts of the world.</p></div>
+      <div class="card u"><h4>Unknown: auditing a moving target</h4><p>Models that keep learning, or help build their successors, need audits of every change. The tools for that are preliminary.</p></div>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="e8">
+    <div class="prose">
+      <p class="scene-tag">Keep exploring</p>
+      <h3 id="e8">Where to go next</h3>
+      <p>Every chapter links to its original paper, and the papers are written to be read, with excellent interactive diagrams of their own. The <a href="https://transformer-circuits.pub" target="_blank" rel="noopener">Transformer Circuits Thread</a> keeps publishing, so the story continues there. The earlier image-model work from the Prologue lives on <a href="https://distill.pub/2020/circuits/" target="_blank" rel="noopener">Distill</a>.</p>
+      <p>And if a chapter here left you with a question, that's the point. Every discovery in this book started as one.</p>
+      <p class="stat">Epilogue sources (outside the Thread): <a href="https://arxiv.org/abs/2212.03827" target="_blank" rel="noopener">Burns, Ye, Klein &amp; Steinhardt, 2022, Discovering Latent Knowledge in Language Models Without Supervision</a> · <a href="https://arxiv.org/abs/2310.06824" target="_blank" rel="noopener">Marks &amp; Tegmark, 2023, The Geometry of Truth</a> · <a href="https://arxiv.org/abs/2405.07987" target="_blank" rel="noopener">Huh, Cheung, Wang &amp; Isola, 2024, The Platonic Representation Hypothesis</a> · <a href="https://www.nature.com/articles/s41586-023-06924-6" target="_blank" rel="noopener">Romera-Paredes et al., 2024, FunSearch (Nature)</a> · <a href="https://arxiv.org/abs/2506.13131" target="_blank" rel="noopener">Google DeepMind, 2025, AlphaEvolve (white paper)</a> · <a href="https://www.eweek.com/news/openai-math-hype/" target="_blank" rel="noopener">eWeek, 20 October 2025, on the Erdős claim</a> · <a href="https://alignment.anthropic.com/2025/automated-auditing/" target="_blank" rel="noopener">Bricken et al., 2025, alignment auditing agents</a></p>
+      <p class="stat">From the Thread, after Chapter 6: <a href="https://transformer-circuits.pub/2024/model-diffing/index.html" target="_blank" rel="noopener">Stage-Wise Model Diffing (December 2024)</a> · <a href="https://transformer-circuits.pub/2025/introspection/index.html" target="_blank" rel="noopener">Lindsey, Emergent Introspective Awareness in Large Language Models (October 2025)</a></p>
+    </div>
+  </section>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const LL = window.LL; if (!LL) return;
+
+    /* evidence puzzle */
+    {
+      const E = [
+        ['It scores 99% against the labels it was trained on.', 0, 'The crowd-trained detector above agrees with every one of its own labels and is still wrong about 9 of 15 facts. Fitting your training labels only shows you learned the labels.'],
+        ['It agrees with what the model says when you ask it directly.', 0, 'Then it adds nothing. The point of a probe is to catch the cases where what the model says and what it represents come apart, as in Burns et al.\'s misleading prompts.'],
+        ['It still works on topics and sentence forms it never saw, including negations.', 1, 'Strong. Marks and Tegmark made this their main test. "Sounds familiar" breaks when you add "not"; truth doesn\'t.'],
+        ['Pushing the model\'s case file along the probe\'s direction flips the model\'s verdict.', 1, 'Strong. It shows the model actually uses this direction, the but-for test. It still doesn\'t say whether the model\'s notion is truth or belief.'],
+        ['On settled myths, where the evidence is in and the crowd is wrong, it sides with the evidence.', 1, 'Strong, and the most direct test of "true versus popular". It needs datasets built to pull the two apart, which mostly don\'t exist yet.'],
+        ['When it disagreed with consensus in the past, later evidence proved it right.', 1, 'The strongest of all, like an expert witness\'s track record. It\'s also the slowest to collect: you can only score it in hindsight.'],
+      ];
+      const list = document.getElementById('evidList'); let shown = false;
+      const render = () => {
+        list.innerHTML = E.map((e, k) => {
+          const on = list.dataset['p' + k] === '1';
+          const why = shown ? `<span class="why ${e[1] ? 'strong' : 'weak'}"><b>${e[1] ? 'Helps.' : 'Doesn\'t help.'}</b> ${e[2]}</span>` : '';
+          return `<button data-k="${k}" aria-pressed="${on}">${e[0]}${why}</button>`;
+        }).join('');
+      };
+      list.addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; const k = b.dataset.k; list.dataset['p' + k] = list.dataset['p' + k] === '1' ? '0' : '1'; render(); });
+      document.getElementById('evidReveal').addEventListener('click', () => {
+        shown = true; render();
+        const picked = E.map((e, k) => list.dataset['p' + k] === '1'), right = E.filter((e, k) => picked[k] === !!e[1]).length;
+        document.getElementById('evidSum').innerHTML = `You sorted <strong>${right} of ${E.length}</strong> the way we would. No single item is enough. Generalisation, causal tests and a record against the crowd together start to look like evidence a court would admit. Courts ask similar questions before admitting scientific evidence: has the method been tested, what is its error rate, does it hold up outside the lab?`;
+      });
+      render();
+    }
+
+    /* propose, then check: cap sets in Z_3^n */
+    {
+      const grid = document.getElementById('capGrid'), trust = document.getElementById('capTrust'), dimSeg = document.getElementById('capDim');
+      let n = 4, N = 81, third = [], best = new Set(), rounds = 0, running = false, seed = 12345, resets = 0;
+      const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+      const dig = i => { const d = []; for (let k = 0; k < n; k++) { d.push(i % 3); i = Math.floor(i / 3); } return d; };
+      const setup = () => {
+        N = 3 ** n; third = [];
+        const D = Array.from({length: N}, (_, i) => dig(i));
+        for (let a = 0; a < N; a++) { third[a] = new Int16Array(N); for (let b = 0; b < N; b++) { let t = 0; for (let k = n - 1; k >= 0; k--) t = t * 3 + (6 - D[a][k] - D[b][k]) % 3; third[a][b] = t; } }
+        // layout: outer blocks by the high coordinates, a 3x3 block per pair of low coordinates
+        const rowsB = n === 4 ? 3 : 1, colsB = 3;
+        grid.style.gridTemplateColumns = `repeat(${colsB}, auto)`;
+        let html = '';
+        for (let br = 0; br < rowsB; br++) for (let bc = 0; bc < colsB; bc++) {
+          html += '<div class="capblock">';
+          for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { const i = c + 3 * r + 9 * bc + 27 * br; html += `<i data-i="${i}"></i>`; }
+          html += '</div>';
+        }
+        grid.innerHTML = html;
+      };
+      const lineList = S => { const arr = [...S], out = []; for (let i = 0; i < arr.length; i++) for (let j = i + 1; j < arr.length; j++) { const t = third[arr[i]][arr[j]]; if (S.has(t) && t > arr[j] && t > arr[i]) out.push([arr[i], arr[j], t]); } return out; };
+      const propose = () => {
+        const S = new Set(best), rem = Math.floor(rnd() * 3);
+        for (let k = 0; k < rem && S.size; k++) { const a = [...S]; S.delete(a[Math.floor(rnd() * a.length)]); }
+        const add = 1 + Math.floor(rnd() * 3); for (let k = 0; k < add; k++) S.add(Math.floor(rnd() * N));
+        const ok = trust.checked || lineList(S).length === 0;
+        if (ok && S.size >= best.size) best = S;
+        rounds++;
+      };
+      const draw = () => {
+        const L = lineList(best), clash = new Set(L.flat());
+        grid.querySelectorAll('i').forEach(el => { const i = +el.dataset.i; el.className = best.has(i) ? (clash.has(i) ? 'clash' : 'on') : ''; });
+        document.getElementById('capRounds').textContent = rounds.toLocaleString('en');
+        document.getElementById('capBest').textContent = best.size;
+        document.getElementById('capBestNote').textContent = trust.checked ? 'dots, claimed (unchecked)' : 'dots, checked: no lines';
+        document.getElementById('capLines').textContent = L.length;
+        LL.shared.epiCap = {n, size: best.size, lines: L.length, rounds};
+      };
+      const guessOut = () => {
+        const g = document.getElementById('capGuess').dataset.g; if (g === undefined || n !== 4 || trust.checked || rounds < 2000) return;
+        const stuck = best.size < 20;
+        document.getElementById('capGuessOut').textContent = (stuck ? (g === '0' ? 'Well predicted. ' : 'Not this time. ') + `It reached ${best.size} and stalled: random edits can't escape a set that can't be grown one dot at a time.` : `It reached 20 this run. That's rare for a blind proposer; try "Start over".`);
+      };
+      const run = total => {
+        if (running) return; running = true; let left = total;
+        const tick = () => { const k = LL.reduce ? left : Math.min(left, 40); for (let i = 0; i < k; i++) propose(); left -= k; draw(); if (left > 0) requestAnimationFrame(tick); else { running = false; guessOut(); } };
+        tick();
+      };
+      const reset = () => { best = new Set(); rounds = 0; seed = 12345 + n + 7919 * resets++; draw(); };
+      document.getElementById('capRun').addEventListener('click', () => run(2000));
+      document.getElementById('capStep').addEventListener('click', () => { if (!running) { propose(); draw(); } });
+      document.getElementById('capReset').addEventListener('click', () => { if (!running) reset(); });
+      trust.addEventListener('change', () => { if (!running) reset(); });
+      dimSeg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || running) return; n = +b.dataset.n; dimSeg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); setup(); reset(); });
+      document.getElementById('capGuess').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; e.currentTarget.dataset.g = b.dataset.g; e.currentTarget.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); document.getElementById('capGuessOut').textContent = 'Locked in. Now press "Run 2,000 rounds" in 4 dimensions, with the checker on.'; guessOut(); });
+      setup(); reset();
+    }
+
+    /* two senses, one world: mutual k-NN alignment (Huh et al. 2024) */
+    {
+      let s = 7; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+      const gauss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-12)) * Math.cos(2 * Math.PI * rnd());
+      const N = 40, D = 10, K = 5, Z = Array.from({length: N}, () => Array.from({length: D}, gauss));
+      const knn = X => X.map((x, i) => X.map((y, j) => [j, i === j ? Infinity : x.reduce((a, v, d) => a + (v - y[d]) ** 2, 0)]).sort((a, b) => a[1] - b[1]).slice(0, K).map(a => a[0]));
+      const sl = document.getElementById('alShared'), priv = document.getElementById('alPrivate');
+      const chance = K / (N - 1);
+      const update = () => {
+        const sh = +sl.value, base = [...Array(sh).keys()], dA = priv.checked ? [...base, 6, 7] : base, dB = priv.checked ? [...base, 8, 9] : base;
+        let per;
+        if (!dA.length) per = Array(N).fill(chance);
+        else {
+          const na = knn(Z.map(z => dA.map(d => z[d]))), nb = knn(Z.map(z => dB.map(d => z[d])));
+          per = na.map((l, i) => l.filter(j => nb[i].includes(j)).length / K);
+        }
+        const score = per.reduce((a, b) => a + b, 0) / N;
+        document.getElementById('alSharedOut').textContent = `${sh} of the 6 shared properties` + (sh === 0 ? (priv.checked ? ': they see different things' : ': they see nothing') : '');
+        document.getElementById('alScore').textContent = score.toFixed(2);
+        document.getElementById('alBar').style.width = (score * 100) + '%';
+        document.getElementById('alChance').style.left = (chance * 100) + '%';
+        document.getElementById('alChanceTxt').textContent = `Chance level: about ${chance.toFixed(2)}. Each square below is one thing; the darker it is, the more neighbours the two senses agree on.`;
+        document.getElementById('alCells').innerHTML = per.map(p => `<i style="background:color-mix(in srgb, var(--plum) ${Math.round(p * 100)}%, var(--wash))"></i>`).join('');
+        LL.shared.epiAlign = score;
+      };
+      sl.addEventListener('input', update); priv.addEventListener('change', update); update();
+    }
+  });
+  </script>
 </article>
 
 <footer>
@@ -2072,18 +2457,18 @@ tourists walk across the bridge in the fog`.split('\n');
   /* ---------- epilogue: follow the thread ---------- */
   {
     const T = [
-      ['Prologue', 'What does a word mean to a computer?', 'Its company. Meaning lives in directions, and bigger models get predictably better.', 'What actually grows inside a big model?'],
-      ['Ch. 1', 'What happens inside a transformer?', 'Clerks add notes to a case file for each word. Messengers move notes between files, and every clerk\'s vote adds up.', 'How do models learn from the text in front of them?'],
-      ['Ch. 2', 'How do models learn from context?', 'Induction heads: a two-clerk team that copies patterns, appearing suddenly in training.', 'Why are the thinker clerks\' neurons such a jumble?'],
-      ['Ch. 3', 'Why are neurons jumbled?', 'Superposition. Models squeeze more concepts than they have directions, sharing space between rare ideas.', 'Can we pull the squeezed concepts apart?'],
-      ['Ch. 4', 'Can we untangle the concepts?', 'Yes: sparse dictionaries unpack neurons into single-meaning features, in a tiny model.', 'Does it work on a big, real model?'],
-      ['Ch. 5', 'Does it work at scale?', 'Yes: millions of abstract features in Claude 3 Sonnet, and turning them up changes behaviour.', 'How do the features combine into reasoning?'],
-      ['Ch. 6', 'How do features combine?', 'Attribution graphs trace real steps, plans and shortcuts, for some prompts, and show self-explanations can be wrong.', 'Everything in the blank spaces below.'],
+      ['Prologue', 'What does a word mean to a computer?', 'Its company. Meaning lives in directions, and bigger models get predictably better.', 'What actually grows inside a big model?', 'The word map was built from how often words keep company. The Platonic hypothesis argues that same quantity is where many kinds of model end up.'],
+      ['Ch. 1', 'What happens inside a transformer?', 'Clerks add notes to a case file for each word. Messengers move notes between files, and every clerk\'s vote adds up.', 'How do models learn from the text in front of them?', 'Truth probes read the case file. Marks and Tegmark found the truth signal gathered in the files over the end of a statement, especially its full stop.'],
+      ['Ch. 2', 'How do models learn from context?', 'Induction heads: a two-clerk team that copies patterns, appearing suddenly in training.', 'Why are the thinker clerks\' neurons such a jumble?', 'Learning from context cuts both ways. Burns et al. filled a prompt with wrong answers; the model\'s words followed the bad example more than its case files did.'],
+      ['Ch. 3', 'Why are neurons jumbled?', 'Superposition. Models squeeze more concepts than they have directions, sharing space between rare ideas.', 'Can we pull the squeezed concepts apart?', 'Shared desks are why a simple probe can be fooled, and maybe why a model that keeps learning could disturb concepts nobody was watching.'],
+      ['Ch. 4', 'Can we untangle the concepts?', 'Yes: sparse dictionaries unpack neurons into single-meaning features, in a tiny model.', 'Does it work on a big, real model?', 'Dictionaries return as a way to diff a model before and after an upgrade, the audit that AI improving AI would need.'],
+      ['Ch. 5', 'Does it work at scale?', 'Yes: millions of abstract features in Claude 3 Sonnet, and turning them up changes behaviour.', 'How do the features combine into reasoning?', 'Steering returns as a test of truth: push a case file along the truth direction and the model calls false statements true.'],
+      ['Ch. 6', 'How do features combine?', 'Attribution graphs trace real steps, plans and shortcuts, for some prompts, and show self-explanations can be wrong.', 'Everything in the blank spaces below.', 'A model\'s account of itself can be wrong. That is the case for treating its words as testimony and interpretability as the forensic lab.'],
     ];
     const seg = document.getElementById('threadSeg'); let i = 0;
     seg.innerHTML = T.map((t, k) => `<button data-i="${k}" aria-pressed="${k === 0}">${t[0]}</button>`).join('');
     const show = () => {
-      document.getElementById('thQ').textContent = T[i][1]; document.getElementById('thA').textContent = T[i][2]; document.getElementById('thN').textContent = T[i][3];
+      document.getElementById('thQ').textContent = T[i][1]; document.getElementById('thA').textContent = T[i][2]; document.getElementById('thN').textContent = T[i][3]; document.getElementById('thR').textContent = T[i][4];
       seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.i === i));
       document.getElementById('thNext').textContent = i < T.length - 1 ? 'Next chapter →' : 'Back to the start';
     };
@@ -2102,39 +2487,68 @@ tourists walk across the bridge in the fog`.split('\n');
       ['The Great Wall is visible from space with the naked eye', 0, .78], ['The Moon is made of rock and ice cream', 0, .05], ['Humans have four lungs', 0, .03], ['Paris is the capital of Spain', 0, .04],
     ];
     const jit = k => ((k * 37) % 11) / 11 - .5;
-    const P = S.map(([t, truth, pop], k) => ({t, truth, x: (truth ? .55 : -.55) + jit(k) * .6, y: (pop - .5) * 1.6 + jit(k + 5) * .2}));
-    const cv = document.getElementById('probeCanvas'), ctx = cv.getContext('2d'), seg = document.getElementById('probeSeg');
-    let mode = 1, d = [1, 0], thr = 0;
-    const label = p => mode === 0 ? p.truth : (S[P.indexOf(p)][2] > .5 ? 1 : 0);
+    const LOUD = [[.5, 'very quiet'], [.75, 'quiet'], [1, 'as strong as truth'], [1.5, 'loud'], [2, 'very loud']];
+    const base = S.map(([t, truth, pop], k) => ({t, truth, pop, x: (truth ? .55 : -.55) + jit(k) * .6, y0: (pop - .5) * 1.6 + jit(k + 5) * .2}));
+    let P = base;
+    const cv = document.getElementById('probeCanvas'), ctx = cv.getContext('2d'), seg = document.getElementById('probeSeg'), loudEl = document.getElementById('probeLoud');
+    let mode = 0, d = [1, 0], thr = 0, loud = 1, guess = null, crowdSeen = false;
+    const crowd = p => p.pop > .5 ? 1 : 0;
+    const label = p => mode === 0 ? p.truth : crowd(p);
     const train = () => {
-      const g = [0, 1].map(L => P.filter(p => label(p) === L)), mean = g.map(arr => [arr.reduce((a, p) => a + p.x, 0) / arr.length, arr.reduce((a, p) => a + p.y, 0) / arr.length]);
-      d = [mean[1][0] - mean[0][0], mean[1][1] - mean[0][1]]; const nn = Math.hypot(...d); d = [d[0] / nn, d[1] / nn];
-      const proj = q => q[0] * d[0] + q[1] * d[1]; thr = (proj(mean[0]) + proj(mean[1])) / 2;
+      P = base.map(p => ({...p, y: p.y0 * loud}));
+      if (mode < 2) {
+        // difference of means: arrow from the average "false" to the average "true", boundary halfway
+        const g = [0, 1].map(L => P.filter(p => label(p) === L)), mean = g.map(arr => [arr.reduce((a, p) => a + p.x, 0) / arr.length, arr.reduce((a, p) => a + p.y, 0) / arr.length]);
+        d = [mean[1][0] - mean[0][0], mean[1][1] - mean[0][1]]; const nn = Math.hypot(...d); d = [d[0] / nn, d[1] / nn];
+        const proj = q => q[0] * d[0] + q[1] * d[1]; thr = (proj(mean[0]) + proj(mean[1])) / 2;
+      } else {
+        // no labels: top principal component, split at the mean; an unsupervised method can't know which end is "true",
+        // so (as Burns et al. do when scoring) we pick the end that agrees with the answers
+        const mx = P.reduce((a, p) => a + p.x, 0) / P.length, my = P.reduce((a, p) => a + p.y, 0) / P.length;
+        let sxx = 0, syy = 0, sxy = 0; P.forEach(p => { const a = p.x - mx, b = p.y - my; sxx += a * a; syy += b * b; sxy += a * b; });
+        const th = .5 * Math.atan2(2 * sxy, sxx - syy); d = [Math.cos(th), Math.sin(th)]; thr = mx * d[0] + my * d[1];
+        const acc = () => P.filter(p => (p.x * d[0] + p.y * d[1] > thr ? 1 : 0) === p.truth).length;
+        const a1 = acc(); d = [-d[0], -d[1]]; thr = -thr; if (acc() < a1) { d = [-d[0], -d[1]]; thr = -thr; }
+      }
     };
     const says = p => p.x * d[0] + p.y * d[1] > thr ? 1 : 0;
     const draw = () => {
-      const S2 = cv.width, c = S2 / 2, R = S2 * .4, X = x => c + x * R, Y = y => c - y * R;
+      const S2 = cv.width, c = S2 / 2, span = Math.max(1.1, ...P.map(p => Math.abs(p.y) + .12)), R = S2 * .44 / span, X = x => c + x * R, Y = y => c - y * R;
       ctx.clearRect(0, 0, S2, S2);
-      ctx.strokeStyle = C.line; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(X(-1.1), c); ctx.lineTo(X(1.1), c); ctx.moveTo(c, Y(-1.1)); ctx.lineTo(c, Y(1.1)); ctx.stroke();
-      ctx.fillStyle = C.soft; ctx.font = '600 28px "JetBrains Mono", monospace'; ctx.textAlign = 'right'; ctx.fillText('actually true →', X(1.1), c + 40);
-      ctx.textAlign = 'left'; ctx.fillText('← actually false', X(-1.1), c + 40);
-      ctx.textAlign = 'left'; ctx.fillText('↑ widely repeated', c + 16, Y(1.08));
-      ctx.textAlign = 'left'; ctx.fillText('↓ rarely said', c + 16, Y(-1.04));
-      // probe's dividing line: points q with q·d = thr
+      ctx.strokeStyle = C.line; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(X(-span), c); ctx.lineTo(X(span), c); ctx.moveTo(c, Y(-span)); ctx.lineTo(c, Y(span)); ctx.stroke();
+      ctx.fillStyle = C.soft; ctx.font = '600 28px "JetBrains Mono", monospace'; ctx.textAlign = 'right'; ctx.fillText('actually true →', X(span), c + 40);
+      ctx.textAlign = 'left'; ctx.fillText('← actually false', X(-span), c + 40);
+      ctx.fillText('↑ widely repeated', c + 16, Y(span * .97));
+      ctx.fillText('↓ rarely said', c + 16, Y(-span * .94));
       const p0 = [d[0] * thr, d[1] * thr], perp = [-d[1], d[0]];
-      ctx.save(); ctx.beginPath(); ctx.rect(X(-1.1), Y(1.1), R * 2.2, R * 2.2); ctx.clip();
-      ctx.strokeStyle = C.plum; ctx.lineWidth = 6; ctx.setLineDash([16, 12]); ctx.beginPath(); ctx.moveTo(X(p0[0] - perp[0] * 2), Y(p0[1] - perp[1] * 2)); ctx.lineTo(X(p0[0] + perp[0] * 2), Y(p0[1] + perp[1] * 2)); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
-      arrow(ctx, X(p0[0]), Y(p0[1]), X(p0[0] + d[0] * .45), Y(p0[1] + d[1] * .45), C.plum, 10);
+      ctx.save(); ctx.beginPath(); ctx.rect(X(-span), Y(span), R * 2 * span, R * 2 * span); ctx.clip();
+      ctx.strokeStyle = C.plum; ctx.lineWidth = 6; ctx.setLineDash([16, 12]); ctx.beginPath(); ctx.moveTo(X(p0[0] - perp[0] * 4), Y(p0[1] - perp[1] * 4)); ctx.lineTo(X(p0[0] + perp[0] * 4), Y(p0[1] + perp[1] * 4)); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+      arrow(ctx, X(p0[0]), Y(p0[1]), X(p0[0] + d[0] * .45 * span), Y(p0[1] + d[1] * .45 * span), C.plum, 10);
       P.forEach(p => {
         const ok = says(p) === p.truth;
         ctx.fillStyle = p.truth ? css('--good') : C.bad; ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), 16, 0, Math.PI * 2); ctx.fill();
         if (!ok) { ctx.strokeStyle = C.ink; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), 27, 0, Math.PI * 2); ctx.stroke(); }
       });
-      const wrong = P.filter(p => says(p) !== p.truth);
-      document.getElementById('probeVerdict').innerHTML = wrong.length ? `The detector gets <span>${wrong.length} of ${P.length}</span> wrong (circled). It has learned "widely repeated", not "true".` : `The detector gets <span>all ${P.length}</span> right. With honest labels, it learns the truth direction.`;
-      document.getElementById('probeList').innerHTML = P.map(p => { const v = says(p); return `<div><span style="width:14px;height:14px;border-radius:50%;background:var(${p.truth ? '--good' : '--bad'})"></span><span class="${v !== p.truth ? 'wrong' : ''}">${p.t}</span><span class="tag ${v ? 't' : 'f'}">says ${v ? 'true' : 'false'}</span></div>`; }).join('');
+      const wrong = P.filter(p => says(p) !== p.truth).length, fitOwn = mode === 1 ? P.filter(p => says(p) === crowd(p)).length : 0;
+      const tilt = Math.abs(d[1]) > .8 ? 'popularity' : Math.abs(d[0]) > .8 ? 'truth' : 'a mix of truth and popularity';
+      let v;
+      if (mode === 0) v = wrong ? `The detector gets <span>${wrong} of ${P.length}</span> wrong.` : `The detector gets <span>all ${P.length}</span> right. With honest labels, it learns the truth direction.`;
+      else if (mode === 1) v = `The detector gets <span>${wrong} of ${P.length}</span> wrong (circled). It learned "widely repeated", yet it matches ${fitOwn} of the ${P.length} crowd labels it was trained on.`;
+      else v = wrong ? `No labels: the biggest spread is <em>${tilt}</em>, so the detector gets <span>${wrong} of ${P.length}</span> wrong.` : `No labels: the biggest spread is <em>truth</em>, and the detector gets <span>all ${P.length}</span> right without being told a single answer.`;
+      document.getElementById('probeVerdict').innerHTML = v;
+      document.getElementById('probeList').innerHTML = P.map(p => { const s = says(p); return `<div><span style="width:14px;height:14px;border-radius:50%;background:var(${p.truth ? '--good' : '--bad'})"></span><span class="${s !== p.truth ? 'wrong' : ''}">${p.t}</span><span class="tag ${s ? 't' : 'f'}">says ${s ? 'true' : 'false'}</span></div>`; }).join('');
+      document.getElementById('probeLoudOut').textContent = LOUD[+loudEl.value][1];
+      cv.dataset.wrong = wrong; cv.dataset.mode = mode;
     };
-    seg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; mode = +b.dataset.m; seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); train(); draw(); });
+    const guessText = () => {
+      const out = document.getElementById('probeGuessOut');
+      if (guess === null) return;
+      if (!crowdSeen) { out.textContent = 'Locked in. Now press "Labels from what most people say".'; return; }
+      out.innerHTML = guess === 2 ? 'Well predicted: 9 of 15. Every popular myth flips to "true" and every little-known fact flips to "false".' : 'The answer is 9 of 15. Every popular myth flips to "true" and every little-known fact flips to "false", and the detector still fits its training labels perfectly.';
+    };
+    document.getElementById('probeGuess').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; guess = +b.dataset.g; e.currentTarget.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); guessText(); });
+    seg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; mode = +b.dataset.m; if (mode === 1 && loud === 1) crowdSeen = true; seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); train(); draw(); guessText(); });
+    loudEl.addEventListener('input', () => { loud = LOUD[+loudEl.value][0]; train(); draw(); });
     redrawers.push(draw); train(); draw();
   }
 
