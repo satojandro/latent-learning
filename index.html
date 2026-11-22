@@ -1613,20 +1613,114 @@ html{scroll-padding-top:16px}
 </article>
 
 <article id="copycat">
+  <style>
+    #copycat details.deeper{border-left:4px solid var(--pink);background:color-mix(in srgb, var(--pink) 6%, var(--card));border-radius:0 var(--r) var(--r) 0;padding:.2rem 1.1rem}
+    #copycat details.deeper[open]{padding-bottom:1rem}
+    #copycat details.deeper > summary{cursor:pointer;font-family:var(--f-display);font-weight:600;padding:.7rem 0;list-style-position:outside}
+    #copycat details.deeper > summary .label{color:var(--pink);margin-right:.5rem}
+    #copycat details.deeper > div{display:grid;gap:.9rem}
+    #copycat details.deeper details.deeper{border-left-color:var(--plum);background:color-mix(in srgb, var(--plum) 7%, var(--card))}
+    #copycat details.deeper details.deeper > summary .label{color:var(--plum)}
+    #copycat .paperref{font-family:var(--f-mono);font-size:.78rem;color:var(--ink-soft);line-height:1.5}
+    #copycat .paperref a{color:var(--plum)}
+    #copycat .formula{font-family:var(--f-mono);font-size:.95rem;background:var(--wash);border-radius:12px;padding:.7rem .9rem;overflow-x:auto;white-space:nowrap}
+    #copycat .formula + p{margin-top:-.3rem}
+    #copycat blockquote{margin:0;border-left:4px solid var(--marigold);padding:.2rem 0 .2rem 1rem;font-style:italic}
+    #copycat blockquote cite{display:block;font-style:normal;font-family:var(--f-mono);font-size:.75rem;color:var(--ink-soft);margin-top:.3rem}
+    #copycat .quiz{background:var(--card);border:2px dashed var(--line);border-radius:var(--r);padding:16px 18px;display:grid;gap:.7rem}
+    #copycat .quiz .label{color:var(--tomato)}
+    #copycat .quiz .q{font-family:var(--f-display);font-weight:600;font-size:1.05rem;line-height:1.35}
+    #copycat .quiz .opts{display:grid;gap:8px}
+    #copycat .quiz .opts button{text-align:left;border-radius:14px;border-width:1.5px;font-weight:400;font-family:var(--f-body);font-size:.95rem;line-height:1.4}
+    #copycat .quiz .opts button.right{border-color:var(--good);background:color-mix(in srgb, var(--good) 16%, var(--card))}
+    #copycat .quiz .opts button.wrong{border-color:var(--bad);background:color-mix(in srgb, var(--bad) 10%, var(--card))}
+    #copycat .quiz .fb{font-size:.95rem;line-height:1.5;min-height:1.2em}
+    #copycat .quiz .fb:empty{display:none}
+    #copycat .challenges{display:grid;gap:10px;margin-top:1rem}
+    #copycat .challenge{background:var(--wash);border-radius:14px;padding:12px 14px;display:grid;gap:.5rem;font-size:.95rem}
+    #copycat .challenge b{font-family:var(--f-display)}
+    #copycat .challenge button{justify-self:start;font-size:.85rem;padding:.3rem .8rem;border-width:1.5px}
+    #copycat .challenge .ans[hidden]{display:none}
+    #copycat .cv{width:100%;display:block}
+    #copycat .tok{display:flex;flex-wrap:wrap;gap:4px;margin-top:.5rem}
+    #copycat .tok span{font-family:var(--f-mono);font-size:.78rem;padding:.15rem .35rem;border-radius:6px;background:var(--wash)}
+    #copycat .legend-row{display:flex;flex-wrap:wrap;gap:6px 16px;font-family:var(--f-mono);font-size:.75rem;color:var(--ink-soft);margin-top:.4rem;align-items:center}
+    #copycat .legend-row i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:5px}
+    #copycat .lines{display:grid;gap:4px;font-family:var(--f-mono);font-size:.9rem}
+    #copycat .lines .ln{display:grid;grid-template-columns:minmax(0,1fr) 64px;gap:8px;align-items:center;padding:.2rem .5rem;border-radius:8px;background:var(--wash)}
+    #copycat .lines .ln.q{outline:2px dashed var(--plum);outline-offset:1px}
+    #copycat .lines .ln .bar{height:10px;border-radius:99px;background:var(--card);overflow:hidden}
+    #copycat .lines .ln .bar i{display:block;height:100%;background:var(--pink);border-radius:99px}
+    #copycat .guess{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:.8rem}
+    #copycat .guess button{min-width:3rem}
+    #copycat .guess button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+    #copycat .exhibits{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+    #copycat .panel p{font-size:.98rem}
+    #copycat .exhibits button{border-radius:14px;border-width:1.5px;text-align:left;font-size:.88rem;line-height:1.3;padding:.5rem .8rem}
+    #copycat .exhibits button small{display:block;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:400}
+    #copycat .exhibits button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+    #copycat .exhibits button[aria-pressed="true"] small{color:var(--paper);opacity:.8}
+    #copycat .panel{margin-top:1rem;display:grid;gap:.7rem}
+    #copycat .panel h5{font-family:var(--f-display);font-size:1.15rem;margin:0}
+    #copycat .grades{display:grid;grid-template-columns:minmax(90px,.8fr) repeat(3,minmax(0,1fr));gap:6px;font-size:.82rem;text-align:center}
+    #copycat .grades > div{border-radius:10px;padding:.45rem .3rem;line-height:1.25}
+    #copycat .grades .h{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);align-self:end}
+    #copycat .grades .r{font-family:var(--f-display);font-weight:600;text-align:left;font-size:.85rem;align-self:center}
+    #copycat .grades .g-strong{background:color-mix(in srgb, var(--teal) 30%, var(--card))}
+    #copycat .grades .g-medium{background:color-mix(in srgb, var(--marigold) 30%, var(--card))}
+    #copycat .grades .g-weak{background:color-mix(in srgb, var(--tomato) 16%, var(--card))}
+    #copycat .grades .g-na{border:1.5px dashed var(--line);color:var(--ink-soft)}
+    #copycat .heads{display:grid;gap:10px}
+    #copycat .heads .hd{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:center;font-size:.88rem}
+    #copycat .heads .hd .bar{height:12px;border-radius:99px;background:var(--wash);overflow:hidden}
+    #copycat .heads .hd .bar i{display:block;height:100%;border-radius:99px}
+    #copycat .heads .hd small{font-family:var(--f-mono);font-size:.72rem;color:var(--ink-soft)}
+    @media (max-width:520px){#copycat .grades{grid-template-columns:repeat(3,minmax(0,1fr))}#copycat .grades .r{grid-column:1/-1}#copycat .grades .corner{display:none}#copycat .heads .hd{grid-template-columns:1fr 1fr}#copycat .heads .hd > :first-child{grid-column:1/-1}}
+  </style>
+
   <div class="chapter-head">
     <span class="num c2">Chapter 2</span>
     <h2>The Copycat Trick</h2>
     <p class="based">Based on <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener"><em>In-context Learning and Induction Heads</em></a> (Olsson, Elhage, Nanda et al., Anthropic, 2022)</p>
   </div>
 
+  <div class="prose">
+    <p>It started with a bump. Training curves are supposed to be dull: the model's error falls quickly at first, then more and more slowly, like a ball rolling to rest. But while training a small two-layer model, Chris Olah noticed a little kink early on, where the curve briefly sagged faster than it should. In the paper that followed, it turned out to be the only place in training where the curve broke its usual shape.</p>
+    <p>Catherine Olsson led the investigation that came next. The team trained and dissected 34 models, from one layer up to 40 layers and 13 billion parameters, saving snapshots throughout training and knocking out attention heads more than 50,000 times. They were chasing one question: <strong>is Chapter 1's two-clerk copycat team the engine behind a model's ability to learn from the text in front of it?</strong></p>
+    <p>This chapter follows their case, step by step. Each scene starts simply. When you want the real mechanism and the numbers, open the <em>Go deeper</em> panels.</p>
+  </div>
+
   <section class="scene" aria-labelledby="c2s1">
     <div class="prose">
       <p class="scene-tag">Scene 1</p>
       <h3 id="c2s1">Learning without changing</h3>
-      <p>Here's a puzzle. Once a model has finished training, its billions of numbers are frozen. Nothing about it changes while you talk to it. And yet it clearly learns from what you tell it.</p>
-      <p>Lawyers do this with every contract. Write <em>"Northwind Logistics Ltd (the 'Supplier')"</em> on page one, and from then on a good reader knows exactly who "the Supplier" is. A language model does the same thing. Introduce a made-up name, a new term or an odd format, and a few lines later it's using it correctly.</p>
-      <p>Researchers call this <span class="term">in-context learning</span>: learning from the text in front of you, rather than from training. You can measure it. A model guesses the 500th word of a document much better than the 50th, because by then it has 450 more words of context to learn from.</p>
-      <p>The 2022 paper asked: <strong>which clerks make this possible?</strong> Their answer was the induction heads we met at the end of Chapter 1.</p>
+      <p>Here's the puzzle. Once a model has finished training, its billions of numbers, its <span class="term">weights</span>, are frozen. Nothing inside it changes while you talk to it. And yet it plainly learns from what you tell it.</p>
+      <p>Lawyers rely on the same skill every day. Page one of a contract says <em>"Northwind Logistics Ltd (the 'Supplier')"</em>, and from then on every careful reader knows exactly who "the Supplier" is. Nobody rewired their brain. They read the definition, and they carry it forward. Introduce a made-up name, a new term or an odd format to a language model, and a few lines later it's using it correctly too.</p>
+      <p>Researchers call this <span class="term">in-context learning</span>: learning from the text in the model's window (its <em>context</em>), rather than from training. The 2022 paper asked which clerks make it possible.</p>
+      <div class="aside">
+        <p class="label">So what is AI "memory"?</p>
+        <p>When a chat product "remembers" you between conversations, it usually works like a learning log that a new session reads before it starts. The product saves notes somewhere outside the model, then slips them into the text of your next conversation. The weights haven't changed. The model is simply reading a longer file. Everything in this chapter happens inside one context window, while the weights stay exactly as they are.</p>
+      </div>
+      <div class="quiz" data-quiz>
+        <p class="label">Quick check</p>
+        <p class="q">Which of these changes the model's weights?</p>
+        <div class="opts">
+          <button data-ok="1" data-fb="Right. This is training (fine-tuning): the numbers inside the model are adjusted. Everything else on this list happens in the context.">Fine-tuning the model on a firm's past contracts</button>
+          <button data-fb="No weights change here. The note reaches the model as text in its context window, so whatever it does with the note is in-context learning.">A chat app saving "prefers British spelling" to a notes file and adding it to next week's chat</button>
+          <button data-fb="No weights change. This is exactly what the paper measures as in-context learning: better guesses later in a document than earlier.">Guessing "Supplier" more confidently on page 9 of a contract than on page 1</button>
+        </div>
+        <p class="fb" aria-live="polite"></p>
+      </div>
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span>Two ways to measure it, and an argument about the word "learning"</summary>
+        <div>
+          <p>The paper notes two common ways to think about in-context learning. One is <strong>few-shot learning</strong>, made famous by GPT-3: show the model a few worked examples of a task (say, English → French) and see whether it does the next one. The authors call this the "micro" view, because it depends on which tasks you pick.</p>
+          <p>The other, which they adopt, is the "macro" view from Kaplan and colleagues: simply measure how much better the model predicts words <em>late</em> in a document than early on. It doesn't need anyone to choose tasks. Its weakness is the flip side: it lumps every kind of context use together. You'll compute this measure yourself in Scene 4.</p>
+          <p>There's a subtle argument hidden in a footnote. Some people call this ability <em>meta-learning</em>, which implies the model learns a genuinely new skill. Others say it is "locating" a skill it already has, working out which job it's being asked to do. The authors call the question both controversial and not entirely precise. The contract example leans towards "locating": you already knew what a supplier is, and the definition only tells you <em>which party</em> it is.</p>
+          <p>The authors also flag why this matters for safety: in-context learning means a model's behaviour can, in their words, <q>in some sense "change" during inference, without further training</q>, which makes long conversations harder to predict.</p>
+          <p class="paperref">In the paper: <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#in-context-learning-key-concept" target="_blank" rel="noopener">Key Concepts › In-context Learning</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#safety-implications" target="_blank" rel="noopener">Discussion › Safety Implications</a></p>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -1636,20 +1730,50 @@ html{scroll-padding-top:16px}
       <h3 id="c2s2">The copycat rule</h3>
       <p>An induction head follows one simple rule:</p>
       <p style="font-family:var(--f-display);font-weight:600;font-size:1.25rem;text-align:center">If you've seen <span style="color:var(--tomato)">A</span> followed by <span style="color:var(--sky)">B</span> before, then the next time you see <span style="color:var(--tomato)">A</span>, guess <span style="color:var(--sky)">B</span>.</p>
-      <p>That sounds almost too simple to matter. But it's exactly the trick you need for "the Supplier", for names, for repeated phrases, and for any pattern that appears earlier in the same text.</p>
-      <p>The researchers' favourite test makes the point vividly. Take a list of <em>random</em> words, so there's no meaning or grammar to lean on, and repeat it. The first time through, nothing can predict what comes next. The second time through, a model with induction heads gets almost every word right.</p>
+      <p>The paper writes it as <code>[A][B] … [A] → [B]</code>. It's the trick you need for "the Supplier", for names, for repeated phrases, and for any pattern that appears earlier in the same text. After "Northwind Logistics Ltd" has appeared once, the next "Northwind" makes "Logistics" a very good bet.</p>
+      <p>The rule doesn't care what A and B are. That's what makes it powerful: it isn't a memorised table of which word follows which. It works on names the model has never seen in training, as long as they appeared earlier in this document.</p>
+      <p>To prove a head really follows the rule, the researchers used a deliberately meaningless test. Take 25 random tokens and repeat them four times. With no meaning or grammar to lean on, the only way to predict the repeats is to copy from earlier. Below is that exact test, with three hand-built heads. Each square shows how much attention one word (row) pays to one earlier word (column).</p>
     </div>
     <div class="toy">
-      <div class="toy-head"><h4>The repeated-nonsense test</h4><span class="label">Real calculation</span></div>
-      <p class="label" style="margin-bottom:.5rem">A random list, then the same list again. Green means the copycat rule guessed that word correctly.</p>
-      <div class="seq" id="nonsenseSeq"></div>
-      <div class="scores">
-        <div class="score"><small>Copycat rule, first time through</small><b id="sc1">0%</b></div>
-        <div class="score"><small>Copycat rule, second time through</small><b id="sc2">0%</b></div>
-        <div class="score"><small>Random guessing</small><b id="sc3">0%</b></div>
+      <div class="toy-head"><h4>The paper's test: 25 random words, four times</h4><span class="label">Real calculation · hand-set heads</span></div>
+      <div class="quiz" data-quiz style="margin-bottom:1rem">
+        <p class="label">Predict before you press</p>
+        <p class="q">In the second repeat, the current word is A. Where should an induction head look?</p>
+        <div class="opts">
+          <button data-fb="That's where a simpler head looks: the one-layer 'same word' head below. It finds A, but copying A just predicts A again.">At the earlier copy of A itself</button>
+          <button data-ok="1" data-fb="Yes. It looks one step to the right of the earlier A, at B, the word that came next last time, and copies it. Switch to the induction head to see the stripe.">At the word just after the earlier copy of A</button>
+          <button data-fb="That word came before A. Copying it would predict the wrong thing. The previous-word head looks one step back, but only within the current position.">At the word just before the earlier copy of A</button>
+        </div>
+        <p class="fb" aria-live="polite"></p>
       </div>
-      <div class="btns" style="margin-top:1rem"><button class="primary" id="nonsenseNew">New nonsense</button></div>
-      <p class="caption">This toy runs the copycat rule exactly as written above: for each word, find where it appeared before, and guess whatever came after it. It isn't a trained model, but it's the same rule the paper found trained models carrying out. Real models aren't quite this perfect, but they show the same dramatic jump on the second pass.</p>
+      <div class="seg" id="gridHeads" role="group" aria-label="Which head to show">
+        <button data-h="prev" aria-pressed="false">Clerk 1: previous-word head</button>
+        <button data-h="ind" aria-pressed="true">Clerk 2: induction head</button>
+        <button data-h="same" aria-pressed="false">One-layer "same word" head</button>
+      </div>
+      <div class="canvas-box" style="margin-top:1rem;max-width:560px"><canvas id="gridCanvas" class="cv" aria-label="Attention pattern on a repeated random sequence" role="img"></canvas></div>
+      <p class="stat" style="margin-top:.4rem">Rows: the word doing the looking. Columns: earlier words. Darker = more attention. Dashed lines mark where each repeat starts. The first square is the "start" token.</p>
+      <div class="scores">
+        <div class="score"><small>Prefix-matching score</small><b id="gPrefix">–</b></div>
+        <div class="score"><small>Previous-word score</small><b id="gPrev">–</b></div>
+        <div class="score"><small>Next word guessed right, repeats 2–4</small><b id="gAcc">–</b></div>
+      </div>
+      <p class="verdict" id="gridVerdict"></p>
+      <div class="btns" style="margin-top:.8rem"><button class="primary" id="gridNew">New random words</button></div>
+      <p class="caption">The three heads are hand-set, and the softmax attention and scores are computed for real on the sequence shown. The induction head's stripe runs one step to the right of the diagonals where the current word repeated: it attends to "what came next last time". In the first pass there is nothing to match, so it rests on the start token, which copies nothing. Real heads are fuzzier than these.</p>
+    </div>
+    <div class="prose" style="margin-top:1.4rem">
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span>How the paper defines an induction head</summary>
+        <div>
+          <p>In 2021 the term was a bit loose: a cluster of behaviours that tended to appear together. For this paper the authors pinned it down by behaviour alone, because the weights of big models with MLPs are too tangled to inspect. On a repeated sequence of random tokens, an induction head must show both:</p>
+          <p><strong>Prefix matching</strong> (a "where to look" property, the QK circuit): it attends to earlier tokens whose preceding token matches the current one. The score above is our version of their evaluator: 25 random tokens, repeated 4 times, after a start token, and we measure the share of attention that lands on those positions.</p>
+          <p><strong>Copying</strong> (a "what to copy" property, the OV circuit): its output raises the score of the very token it attends to. The paper's copying score runs from −1 to 1.</p>
+          <p>Why random tokens? Because on real text a head could look like it's predicting well by guessing a plausible next word. On random tokens there's nothing plausible to guess. Only genuine copying from the earlier repeat helps.</p>
+          <p>A consequence: induction heads repeat whole sequences. Given "Ms Reyes asked the witness about the contract … Ms Reyes asked", they push the model towards "the witness about the contract". Repeating an arbitrary sequence after one example is already a simple form of few-shot learning.</p>
+          <p class="paperref">In the paper: <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#definition-of-induction-heads" target="_blank" rel="noopener">Key Concepts › Induction Heads</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#head-activation-evaluators" target="_blank" rel="noopener">Head activation evaluators</a></p>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -1659,7 +1783,7 @@ html{scroll-padding-top:16px}
       <h3 id="c2s3">Two clerks, one trick</h3>
       <p>Remember the mix-up at the end of Chapter 1? In "mr osei and ms novak spoke then the judge thanked ms", a single messenger found both names but couldn't tell which one belonged to "ms".</p>
       <p>An induction head is a team of two clerks:</p>
-      <p><strong>Clerk 1, in an early row</strong>, works on every file and writes down one fact: "the word just before me was…". So the file for "novak" gets the note <em>"before me: ms"</em>.</p>
+      <p><strong>Clerk 1, in an early row</strong>, works on every file and writes down one fact: "the word just before me was…". So the file for "novak" gets the note <em>"before me: ms"</em>. That's the previous-word head from the grid above.</p>
       <p><strong>Clerk 2, in a later row</strong>, works on the last file, "ms". It asks: "which earlier file has the note <em>before me: ms</em>?" That's the file for "novak", so it copies "novak" forward.</p>
       <p>Clerk 2 can only ask that question because Clerk 1 left the note. This is the <span class="term">composition</span> from Chapter 1: one clerk's notes changing where another clerk looks.</p>
     </div>
@@ -1683,64 +1807,436 @@ html{scroll-padding-top:16px}
         </div>
       </div>
       <p class="verdict" id="c2Verdict"></p>
-      <p class="caption">Both settings also use the one-word guesser from Chapter 1. When nothing earlier matches, the induction team looks at the "start" position, which copies nothing. Real models often use the first position as this kind of "look nowhere" option. <strong>Try this:</strong> switch between the two clerks on the first example, then type a sentence of your own that repeats a pair of words.</p>
+      <p class="caption">Both settings also use the one-word guesser from Chapter 1, learned from the 25-sentence courtroom story. When nothing earlier matches, the induction team looks at the "start" position, which copies nothing. <strong>Try this:</strong> switch clerks on Example 1. Then try Example 3, where two different people were called "ms". The copycat rule only knows what followed "ms" before, and now there are two answers, so it splits its vote between them, and the old habit "reyes" edges back into first place. The paper saw the same thing in real models: after two "Mrs Dursley"s in the first paragraph of <em>Harry Potter</em>, the first "Mrs Potter" became <em>harder</em> to predict once induction heads had formed.</p>
+    </div>
+    <div class="prose" style="margin-top:1.4rem">
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span>Why it takes two layers</summary>
+        <div>
+          <p>When a messenger decides where to look, it compares two things only: the file it's working on (the <em>query</em>) and the label on the file it's considering (the <em>key</em>). Nothing else. So a lone messenger can ask "is this file about ms?", but never "was the word <em>before</em> this file ms?", because that fact isn't on the label.</p>
+          <p>Clerk 1 fixes this by writing the previous word into every file. Clerk 2's key is then built partly from Clerk 1's note. The paper calls this <span class="term">K-composition</span>: a later head's keys read from what an earlier head wrote. There's a neat split of duties. When deciding <em>where to look</em>, the induction head practically ignores the attended word itself and only checks the note about its predecessor. When deciding <em>what to copy</em>, the attended word is all that matters.</p>
+          <p>That's why one-layer models can't build induction heads, and, as Scene 5 shows, why they never get the big jump in in-context learning.</p>
+          <details class="deeper">
+            <summary><span class="label">Deeper still</span>Independent replications, and a second recipe</summary>
+            <div>
+              <p>The paper includes comments from outside researchers who replicated the finding. A team at Redwood Research found induction heads reliably in two-layer attention-only models, with a previous-token head in the first layer. When they swapped the previous-token head's attention for a perfect "look one back" pattern, the model kept 99% of that head's contribution to loss. A simple idealised version of the induction head's attention kept about 65%, and adding longer matches like <code>[A][B][C] … [A][B] → [C]</code> recovered roughly another 10%.</p>
+              <p>Not every model uses Clerk 1's note. In GPT-2 the authors saw signs of a different recipe, "pointer arithmetic": an earlier head copies the <em>position</em> of the previous A, and the induction head shifts that position one step forward. The paper's own models couldn't use this trick, because of how they encode positions.</p>
+              <p class="paperref">In the paper: <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#argument-induction-head-mechanism" target="_blank" rel="noopener">Argument 5 › Summary of Reverse Engineering Induction Heads</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#comment-redwood" target="_blank" rel="noopener">Comments &amp; Replications</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#phase-change-more-closely" target="_blank" rel="noopener">the Harry Potter example</a></p>
+            </div>
+          </details>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="c2s4">
     <div class="prose">
       <p class="scene-tag">Scene 4</p>
-      <h3 id="c2s4">The bump in the curve</h3>
-      <p>Here's what made the paper famous. When you train a model, its error usually falls smoothly. But the researchers spotted a small <strong>bump</strong> early in training, where progress stalls and then lurches forward.</p>
-      <p>When they looked closely, three things happened at the same moment, in model after model:</p>
-      <p><strong>1.</strong> Induction heads suddenly formed. <strong>2.</strong> The model's in-context learning jumped: it got much better at using earlier text. <strong>3.</strong> The bump appeared in the training curve.</p>
-      <p>And models with only <em>one</em> layer, which can't build the two-clerk team, showed no bump and no jump. Scrub through training below to see the pattern.</p>
+      <h3 id="c2s4">Measuring the learning</h3>
+      <p>To link induction heads to in-context learning, the researchers needed a number they could track through training. They chose something blunt and simple. Take thousands of documents. Measure how badly the model guesses the 50th token, and how badly it guesses the 500th. The 500th has 450 more tokens of context behind it, so if the model learns from context, it should do better there.</p>
+      <div class="formula">ICL score = L(500) − L(50)</div>
+      <p>In words: the <strong>loss</strong> (how surprised the model was by the right answer) at token 500, minus the loss at token 50, averaged over documents. A more negative score means more learning from context. Loss is measured in <span class="term">nats</span>: if the model gave the right word probability <em>p</em>, its loss is −ln <em>p</em>. A drop of 0.4 nats means the model gives the right word about 1.5 times more probability, on (geometric) average.</p>
+      <p>The paper's headline numbers: before the phase change, models showed <strong>less than 0.15 nats</strong> of in-context learning. After it, <strong>about 0.4 nats</strong>, and then it stayed there for the rest of training. Below, you can compute the same score on our courtroom toy: Chapter 1's one-word guesser, plus the induction head from Scene 3.</p>
     </div>
-    <div class="toy">
-      <div class="toy-head"><h4>A model's training, replayed</h4><span class="label">Shape from the paper · illustrative numbers</span></div>
-      <div class="canvas-box"><canvas id="phaseCanvas" width="1800" height="820" aria-label="Training curves showing a sudden phase change" role="img"></canvas></div>
-      <div class="controls">
-        <div class="ctl"><label for="phaseT">Training so far</label><input type="range" id="phaseT" min="0" max="100" step="1" value="20"><output id="phaseOut" for="phaseT"></output></div>
-        <div class="checks"><label for="phaseOne"><input type="checkbox" id="phaseOne"> Show a one-layer model instead</label></div>
+    <div class="toy" id="c2icl">
+      <div class="toy-head"><h4>Compute an in-context learning score</h4><span class="label">Real calculation · 1,000 documents of 512 words</span></div>
+      <div class="seg" id="iclKind" role="group" aria-label="Kind of document">
+        <button data-k="court" aria-pressed="true">Courtroom transcripts</button>
+        <button data-k="nonsense" aria-pressed="false">Repeated nonsense</button>
       </div>
-      <p class="verdict" id="phaseVerdict"></p>
-      <p class="caption">The blue line is the model's overall error. The pink line is its in-context learning score: how much better it guesses late words than early ones. The shaded band is the phase change, which in the paper's models came early, after a few billion words of training. The curves here are drawn to match the shape the paper reported, not taken from its data.</p>
+      <div class="controls">
+        <div class="ctl"><label for="iclK">How strongly the induction head copies</label><input type="range" id="iclK" min="0" max="2" step="0.125" value="0"><output id="iclKOut" for="iclK"></output></div>
+      </div>
+      <div class="scores">
+        <div class="score"><small>Loss at word 50</small><b id="iclL50">–</b></div>
+        <div class="score"><small>Loss at word 500</small><b id="iclL500">–</b></div>
+        <div class="score"><small>ICL score, L(500) − L(50)</small><b id="iclScore">–</b></div>
+        <div class="score"><small>Average loss, all words</small><b id="iclAvg">–</b></div>
+      </div>
+      <div class="canvas-box" style="margin-top:1rem"><canvas id="iclCanvas" class="cv" aria-label="Average loss at each position in the document" role="img"></canvas></div>
+      <p class="label" style="margin-top:1rem">One document, word by word, compared with no copying</p>
+      <div class="tok" id="iclTok"></div>
+      <div class="legend-row"><span><i style="background:color-mix(in srgb, var(--good) 55%, var(--card))"></i>easier to predict</span><span><i style="background:color-mix(in srgb, var(--bad) 45%, var(--card))"></i>harder to predict</span><span id="iclTokCount"></span></div>
+      <div class="challenges">
+        <div class="challenge"><p><b>1. Predict before you press.</b> With copying at ×0, what will the ICL score be?</p><button data-ans="a1">Reveal</button><p class="ans" id="a1" hidden>Roughly zero. The one-word guesser only ever looks at the current word, so word 500 is no easier than word 50. Any small leftover is noise from using a finite number of documents.</p></div>
+        <div class="challenge"><p><b>2. Be the trainer.</b> Training keeps whatever setting gives the lowest <em>average</em> loss. On the transcripts, find the best copying strength.</p><button data-ans="a2">Reveal</button><p class="ans" id="a2" hidden>Around ×0.625 to ×0.75, where the average loss falls from about 2.85 to about 2.08 nats. On the repeated nonsense, more copying is always better, because the pattern never breaks. How much to trust the copycat depends on how reliable the document's patterns are.</p></div>
+        <div class="challenge"><p><b>3. Break the metric.</b> On the transcripts, push copying to ×2. What happens to the ICL score, and to the average loss?</p><button data-ans="a3">Reveal</button><p class="ans" id="a3" hidden>The ICL score keeps getting "better" (more negative), while the average loss gets worse than with no copying at all. The score only compares late words with early ones. The paper ran into a real version of this: knocking out most <em>other</em> heads in small models made the ICL score go up, because a model that is worse at ordinary prediction has more left for context to fix.</p></div>
+      </div>
+      <p class="caption">Everything here is computed live: each "transcript" is 512 words of shuffled sentences from the courtroom story, with fresh names swapped in, so only the context can tell you who "ms" is. Our transcripts repeat themselves far more than real documents, so the toy's scores are much bigger than the paper's 0.4 nats. The colours in the word strip show the per-word change: green where copying helps (mostly names and repeated phrases), red where an earlier pattern misleads it.</p>
+    </div>
+    <div class="prose" style="margin-top:1.4rem">
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span>Pulling the average apart, and a puzzle about big models</summary>
+        <div>
+          <p>A loss curve is an average over millions of individual predictions. The researchers took it apart token by token, which they call <span class="term">per-token loss analysis</span>. Comparing the start and end of the phase change on the first paragraph of <em>Harry Potter</em>, they found that most of the change came from tokens that repeat: the model got much better at the fourth token of "The Dursleys" (which appears several times), and worse at the first "Mrs Potter", because both earlier "Mrs" had been followed by "Dursley". The authors are clear this is one passage, an illustration rather than systematic evidence. The word strip in the toy shows the same pattern.</p>
+          <p>Why tokens 50 and 500? The authors chose them "somewhat arbitrarily": 500 is near the end of a 512-token window, and by 50 the basics (language, kind of document) are established. They checked that other choices don't change the conclusions.</p>
+          <div class="quiz" data-quiz>
+            <p class="label">Predict</p>
+            <p class="q">After the phase change, how does a 13-billion-parameter model's ICL score compare with a small two-layer model's?</p>
+            <div class="opts">
+              <button data-fb="That's what most people expect, but no. Read on.">Much bigger: bigger models learn more from context</button>
+              <button data-ok="1" data-fb="Right, and the authors found it strange. Large models still predict better at every position, but they gain their advantage very early: most of the gap opens in the first ten tokens. After that, every model improves by roughly the same fixed amount.">About the same, roughly 0.4 nats</button>
+              <button data-fb="Not quite. Both improve with context, and by a similar amount.">Smaller: big models already know everything</button>
+            </div>
+            <p class="fb" aria-live="polite"></p>
+          </div>
+          <p>The authors suspect the same 0.4 nats is "harder" learning for a big model, since it starts from a lower loss. Why the two forces balance so exactly, they write, is still a mystery.</p>
+          <p class="paperref">In the paper: <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#in-context-learning-key-concept" target="_blank" rel="noopener">Key Concepts › In-context Learning</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#phase-change-more-closely" target="_blank" rel="noopener">Looking at the Phase Change More Closely</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#seemingly-constant" target="_blank" rel="noopener">Unexplained Curiosities › Seemingly Constant In-Context Learning Score</a></p>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="c2s5">
     <div class="prose">
       <p class="scene-tag">Scene 5</p>
-      <h3 id="c2s5">More than copying</h3>
-      <p>In bigger models, the researchers found induction heads doing looser versions of the trick. Instead of "A followed by B", it becomes "something <em>like</em> A, followed by something <em>like</em> B". Some heads helped with translation, lining up a word in one language with its partner in another. Others continued patterns that were similar in meaning rather than identical in spelling.</p>
-      <p>That led to the paper's bold suggestion: induction heads might be the mechanism behind <strong>most</strong> of the in-context learning in large models, not just the literal copying.</p>
-      <div class="aside">
-        <p class="label">How strong is the evidence?</p>
-        <p>The authors were careful to grade their own claims. In small models with no thinker layers, the evidence was <strong>causal</strong>: switch the induction heads off, and in-context learning largely disappears. They even changed the architecture so a one-layer model could form induction heads, and the bump moved with them.</p>
-        <p style="margin-top:.6rem">In large models, the evidence was mostly <strong>correlational</strong>: induction heads and in-context learning arrive together, but that doesn't prove one causes the other. As a lawyer might put it, a strong circumstantial case, not a confession.</p>
+      <h3 id="c2s5">The bump in the curve</h3>
+      <p>Now back to the bump. When the team lined up their measurements against training time, four things happened in the same narrow window, in model after model:</p>
+      <p><strong>1.</strong> The in-context learning score jumped. <strong>2.</strong> Induction heads formed. <strong>3.</strong> The loss curve showed its bump, a stretch of visibly steeper improvement. <strong>4.</strong> The model's overall behaviour changed direction (in a summary of its per-token losses).</p>
+      <p>In the paper's main figures the window falls at roughly <strong>2.5 to 5 billion tokens</strong> of training. For the largest models that's maybe 1–2% of the way through. The authors call it a <span class="term">phase change</span>, an abrupt shift with both a visible, big-picture side (the curves) and a microscopic side (the heads), <q>perhaps analogous to e.g. ice melting</q>.</p>
+      <p>One-layer models, which can't build the two-clerk team, showed no bump, no induction heads and little in-context learning. Then came the cleverest experiment in the paper. If induction heads really drive the jump, then making them <em>easier to build</em> should move the jump. So they gave one-layer models a shortcut, called <span class="term">smeared keys</span>, that lets a single clerk see a little of the previous word.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>A model's training, replayed</h4><span class="label">Score levels from the paper · curve shapes drawn by us</span></div>
+      <div class="quiz" data-quiz style="margin-bottom:1rem">
+        <p class="label">Predict before you press</p>
+        <p class="q">Give a one-layer model smeared keys. What happens?</p>
+        <div class="opts">
+          <button data-fb="That's what you'd expect if the jump needed depth for some other reason. It isn't what happened.">Nothing changes: one layer is still one layer</button>
+          <button data-ok="1" data-fb="Yes. In the paper's smeared-key experiment, in-context learning formed in one-layer models, which never got it before, and arrived earlier in two-layer models. Try both smeared settings below.">In-context learning appears, though it never did before</button>
+          <button data-fb="No. It helped. Try the smeared settings below.">The model gets worse at learning from context</button>
+        </div>
+        <p class="fb" aria-live="polite"></p>
       </div>
+      <div class="seg" id="phaseModel" role="group" aria-label="Which model">
+        <button data-m="2L" aria-pressed="true">Two layers</button>
+        <button data-m="1L" aria-pressed="false">One layer</button>
+        <button data-m="1Ls" aria-pressed="false">One layer + smeared keys</button>
+        <button data-m="2Ls" aria-pressed="false">Two layers + smeared keys</button>
+      </div>
+      <div class="canvas-box" style="margin-top:1rem"><canvas id="phaseCanvas" class="cv" aria-label="Training curves: loss, in-context learning score and induction heads against tokens of training" role="img"></canvas></div>
+      <div class="controls">
+        <div class="ctl"><label for="phaseT">Training so far</label><input type="range" id="phaseT" min="0" max="100" step="1" value="20"><output id="phaseOut" for="phaseT"></output></div>
+      </div>
+      <p class="verdict" id="phaseVerdict"></p>
+      <p class="caption">The x-axis spans the small models' 10 billion tokens of training. The pink in-context-learning levels (under 0.15 nats before, about 0.4 after) are the paper's reported numbers. The shapes of all three curves, the height of the bump and the timing of the smeared-key runs are our sketch of what the paper's figures show, not its data.</p>
+    </div>
+    <div class="prose" style="margin-top:1.4rem">
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span>Ruling out other suspects, and the smeared-key formula</summary>
+        <div>
+          <p>A good investigator checks the alibis. Could the bump be caused by the training schedule? The authors checked: the window doesn't line up with a scheduled change in learning rate, warm-up or weight decay. (The small models' warm-up ends at 1.5 billion tokens, and a weight-decay change at about 5 billion causes a separate small hiccup.) Small models trained on a different dataset showed the same phase change. One caveat they state themselves: apart from that test, all the models saw the same tokens in the same order.</p>
+          <p>Over 75% of the final in-context learning forms inside the window. It's tempting to conclude that induction heads cause at least that much. The authors resist: they have only shown that the two arrive together.</p>
+          <p>Here is the smeared-key change, in the paper's notation:</p>
+          <div class="formula">k<sub>j</sub> ← σ(α) · k<sub>j</sub> + (1 − σ(α)) · k<sub>j−1</sub></div>
+          <p>In words: each file's label <em>k</em> becomes a blend of its own label and the label of the file just before it. The blend is set by one trainable dial α per head (σ squashes it to between 0 and 1). With that blend, a single clerk can do Clerk 1's job itself, so even one layer can build an induction head.</p>
+          <p>The authors don't oversell it. This shows induction heads are the <em>minimal</em> mechanism for the big jump. Larger models might have more going on, and the mechanism could change later in training.</p>
+          <p class="paperref">In the paper: <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#argument-phase-change" target="_blank" rel="noopener">Argument 1</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#assessing-the-evidence" target="_blank" rel="noopener">Assessing the Evidence</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#argument-architectural-requirements" target="_blank" rel="noopener">Argument 2</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#small-models" target="_blank" rel="noopener">Model Details</a></p>
+        </div>
+      </details>
     </div>
   </section>
 
   <section class="scene" aria-labelledby="c2s6">
     <div class="prose">
+      <p class="scene-tag">Scene 6</p>
+      <h3 id="c2s6">More than copying</h3>
+      <p>Copying exact words is useful, but it can't explain translation, or picking up a rule from examples. So the authors went looking inside a 40-layer, 13-billion-parameter model for induction heads that do something looser:</p>
+      <p style="font-family:var(--f-display);font-weight:600;font-size:1.15rem;text-align:center">If you've seen something <em>like</em> <span style="color:var(--tomato)">A</span> followed by something <em>like</em> <span style="color:var(--sky)">B</span>, then after <span style="color:var(--tomato)">A</span>, guess something <em>like</em> <span style="color:var(--sky)">B</span>.</p>
+      <p>The paper writes it <code>[A*][B*] … [A] → [B]</code> and calls it "fuzzy" or "nearest neighbour" pattern completion. They found heads that pass the strict random-token test <em>and</em> do much more. One translates, attending to the word in an earlier English, French or German sentence that should come next. Another does the puzzle below.</p>
+      <p>The authors built a synthetic task: each line is two random words and a number, and the number depends only on what <em>kinds</em> of words they are. You don't know the rule. Neither does the model. Read the lines and work it out.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>Learn the rule from the page</h4><span class="label">Real calculation · hand-set heads · task from the paper</span></div>
+      <div class="lines" id="fzLines"></div>
+      <div class="guess" role="group" aria-label="Your guess for the last line"><span class="label">Your guess for the last line</span><button data-g="0">0</button><button data-g="1">1</button><button data-g="2">2</button><button data-g="3">3</button></div>
+      <div id="fzReveal" hidden>
+        <div class="two-col" style="margin-top:1.2rem">
+          <div><p class="label" style="margin-bottom:.5rem">Literal induction head: matches exact words</p><div class="lines" id="fzLit"></div><p class="stat" style="margin-top:.5rem" id="fzLitG"></p></div>
+          <div><p class="label" style="margin-bottom:.5rem">Fuzzy induction head: matches kinds of words</p><div class="lines" id="fzFuz"></div><p class="stat" style="margin-top:.5rem" id="fzFuzG"></p></div>
+        </div>
+        <p class="verdict" id="fzVerdict"></p>
+      </div>
+      <p class="stat" id="fzTally" style="margin-top:.6rem"></p>
+      <div class="btns" style="margin-top:.8rem"><button class="primary" id="fzNew">New puzzle</button></div>
+      <p class="caption">The bars show where each head attends from the last ":" and the guess it copies. Both heads are hand-set and computed for real: the literal one scores earlier lines by exactly matching words; the fuzzy one by matching kinds of words (month or colour, animal or fruit), which in a real model would come from earlier layers. The paper's real head put about 65% of its attention on lines of the right kind. Ours is cleaner than that.</p>
+    </div>
+    <div class="prose" style="margin-top:1.4rem">
+      <p>Notice what you just did: you learned a rule from a few examples on the page, without changing anything in your head's long-term wiring. That's in-context learning. The paper's suggestion is that a model's version of it might be built largely from heads like these.</p>
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span>Three heads from the 13-billion-parameter model</summary>
+        <div>
+          <p>Each of these heads counts as an induction head by the strict definition, scoring well on copying and prefix matching on random tokens. The very same head also does the fancier job. As the authors put it, <q>The comparison is not a metaphor or a blurring of the definition</q>.</p>
+          <div class="heads" id="fzHeads"></div>
+          <p>The translation head's copying score is low, probably because its output is processed further by later layers before it affects the guess. Its attention "meanders" across the earlier sentence, because word order and word lengths differ between languages.</p>
+          <p>Why would one head do both? The authors offer two possibilities. Literal copying could be a special case of the general skill: translating English into English <em>is</em> copying. Or the head copies literally when it reads raw words, and abstractly when earlier layers have already placed, say, "cat" and "chat" near each other. Mechanistically, they argue, the same machinery works as an in-context <span class="term">nearest neighbour</span> method: the earlier text is a set of examples, and more examples help.</p>
+          <p class="paperref">In the paper: <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#argument-induction-heads-can-implement-abstract-behaviors" target="_blank" rel="noopener">Argument 4</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#performing-translation" target="_blank" rel="noopener">Behavior 2: Translation</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#pattern-matching" target="_blank" rel="noopener">Behavior 3: Pattern matching</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#argument-induction-head-mechanism" target="_blank" rel="noopener">Argument 5</a></p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c2s7">
+    <div class="prose">
+      <p class="scene-tag">Scene 7</p>
+      <h3 id="c2s7">Grading the evidence</h3>
+      <p>The paper's bold claim is that induction heads might be the mechanism behind <strong>most</strong> of the in-context learning in large models. What makes the paper unusual is how it argues. It lays out six separate lines of evidence and grades each one, for each kind of model, the way a careful barrister would assess the evidence before trial.</p>
+      <p>Their own summary uses a phrase any lawyer will recognise: the claims together <q>establish a circumstantial case</q>. A strong circumstantial case, not a confession. Open each exhibit below.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>The evidence file</h4><span class="label">Grades as given in the paper</span></div>
+      <div class="quiz" data-quiz style="margin-bottom:1rem">
+        <p class="label">Before you open the file</p>
+        <p class="q">Which exhibit involves knocking induction heads out of the largest, 13-billion-parameter model?</p>
+        <div class="opts">
+          <button data-fb="Exhibit 3 is the knockouts, but they were only run on the small models.">Exhibit 3, the knockouts</button>
+          <button data-fb="Smeared keys were only tried in one- and two-layer models, and it changes the architecture rather than knocking anything out.">Exhibit 2, the smeared keys</button>
+          <button data-ok="1" data-fb="Right. Knocking out every head, at every snapshot, on 10,000 examples, gets expensive fast as models grow, so the full-scale models got none. That's why the case for large models leans on correlation, examples and analogy.">None of them</button>
+        </div>
+        <p class="fb" aria-live="polite"></p>
+      </div>
+      <div class="exhibits" id="exhibits" role="group" aria-label="Exhibits"></div>
+      <div class="panel" id="exhibitPanel" aria-live="polite"></div>
+      <p class="caption">Columns are the three kinds of model studied. "Contributes some" asks whether induction heads do part of in-context learning; "contributes majority" asks whether they do most of it. A dashed cell means that exhibit says nothing about that case. The courtroom comparisons are ours.</p>
+    </div>
+    <div class="prose" style="margin-top:1.4rem">
+      <details class="deeper">
+        <summary><span class="label">Go deeper</span>The defence's best arguments</summary>
+        <div>
+          <p>The authors list the weaknesses of their own case, which is part of why it's persuasive.</p>
+          <p><strong>A hidden common cause.</strong> Maybe the phase change is really the moment a model learns to compose layers at all. That would produce induction heads <em>and</em> other composition tricks at once. Bigger models have more heads to spare for such tricks, so above some size they might matter more than induction heads.</p>
+          <p><strong>Few snapshots.</strong> The large models were saved only 14 or 15 times during training, so "at the same moment" is a coarser claim for them.</p>
+          <p><strong>A flat score can hide change.</strong> The ICL score stays at 0.4 nats, but the mechanisms producing it might keep changing. The case is stronger for what happens at the phase change than at the end of training.</p>
+          <p><strong>MLPs complicate knockouts.</strong> In attention-only models, the final guess is a sum of contributions from each head plus a direct path, and the direct path can't use context, so knockouts measure contributions cleanly. Once thinker layers are added, removing a head can disturb them in roundabout ways.</p>
+          <p>The paper also explains why it reports evidence this indirect at all: it is likely to be common as interpretability advances, and the authors wanted <q>to establish a norm of reporting it even when it is not fully conclusive</q>.</p>
+          <details class="deeper">
+            <summary><span class="label">Deeper still</span>Why this paper mattered beyond induction heads</summary>
+            <div>
+              <p>As far as the authors knew, this was <strong>the first time anyone had explained a phase change in machine learning by pointing to a specific mechanism</strong>. They describe it as a possible "Rosetta stone" between two worlds: the smooth statistics of scaling laws (the Prologue's world) and the circuit-by-circuit view of interpretability.</p>
+              <p>It also bears on safety. Capabilities that appear abruptly are hard to prepare for. And some had worried that in-context learning might secretly be a "mesa-optimizer", a model running its own hidden optimisation process. In their small models, the authors write, the main mechanism appears to be induction heads, and they saw no evidence of mesa-optimizers.</p>
+              <p class="paperref">In the paper: <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#toc-arguments" target="_blank" rel="noopener">Arguments Summary</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#argument-ablations" target="_blank" rel="noopener">Argument 3</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#argument-extrapolation" target="_blank" rel="noopener">Argument 6</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#discussion" target="_blank" rel="noopener">Discussion</a> · <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#phase-changes--discontinuous-model-behavior" target="_blank" rel="noopener">Related Work › Phase Changes</a></p>
+            </div>
+          </details>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="scene" aria-labelledby="c2s8">
+    <div class="prose">
       <p class="scene-tag">The end of the chapter</p>
-      <h3 id="c2s6">What we know, and what we don't</h3>
+      <h3 id="c2s8">What we know, and what we don't</h3>
     </div>
     <div class="learned">
-      <div class="card k"><h4>Known: models learn from context</h4><p>Without changing their weights, models get better the more of a document they read.</p></div>
-      <div class="card k"><h4>Known: induction heads copy patterns</h4><p>A two-clerk team carries out "A then B, so after A guess B", using one clerk's notes to direct another's attention.</p></div>
-      <div class="card k"><h4>Known: they arrive suddenly</h4><p>Induction heads, better in-context learning and a bump in the training curve appear together, early in training.</p></div>
-      <div class="card u"><h4>Unknown: is this most of it?</h4><p>Whether induction heads explain most in-context learning in large models was a well-argued hypothesis, not a proof.</p></div>
-      <div class="card u"><h4>Unknown: what about the thinkers?</h4><p>These results were cleanest in models without MLP "thinker" layers. Real models are full of them.</p></div>
-      <div class="card u"><h4>Unknown: why are the thinkers so hard to read?</h4><p>Their neurons kept responding to unrelated things at once. Explaining that puzzle is the next chapter.</p></div>
+      <div class="card k"><h4>Known: models learn from context</h4><p>With weights frozen, models predict later words better than early ones. After the phase change, models of every size gained about 0.4 nats between token 50 and token 500.</p></div>
+      <div class="card k"><h4>Known: induction heads copy patterns</h4><p>A two-clerk team carries out <code>[A][B] … [A] → [B]</code>, using one clerk's note to steer the other's attention. One layer isn't enough.</p></div>
+      <div class="card k"><h4>Known: they arrive together, suddenly</h4><p>Induction heads, the jump in in-context learning and the bump in the loss curve share one early window in training, and moving the heads (smeared keys) moved the jump.</p></div>
+      <div class="card k"><h4>Known, for small models: they do most of it</h4><p>In small attention-only models, knocking out induction heads removes almost all in-context learning. The authors grade this strong, causal evidence.</p></div>
+      <div class="card u"><h4>Unknown: is this most of it in big models?</h4><p>For large models the case is circumstantial: correlation, striking examples and continuity with small models. Other composition circuits might do much of the work.</p></div>
+      <div class="card u"><h4>Unknown: why exactly 0.4 nats?</h4><p>Why tiny and huge models end up with the same score was, in the authors' word, a mystery.</p></div>
+      <div class="card u"><h4>Unknown: learning that sticks</h4><p>In-context learning vanishes when the conversation ends. Models whose weights keep updating as they work ("continual learning") are an open question for later chapters, not something this paper studied.</p></div>
+      <div class="card u"><h4>Unknown: what about the thinkers?</h4><p>The cleanest results came from models without MLP "thinker" layers. In real models the thinkers are everywhere, and their neurons are hard to read.</p></div>
     </div>
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 3: The Crowded Office</h4>
       <p>Why do the thinkers' neurons look so jumbled? Because the model is squeezing far more ideas than it has room for into the same space. <a href="#crowded-office">Read Chapter 3 ↓</a></p>
     </div>
+    <p class="caption" style="max-width:66ch;margin:1.5rem auto 0">Source: Catherine Olsson, Nelson Elhage, Neel Nanda and colleagues, <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener">In-context Learning and Induction Heads</a>, Transformer Circuits Thread, 2022. Short quotations are the authors'. All toys, charts and explanations here are our own; where a chart sketches a shape rather than plotting the paper's data, it says so.</p>
   </section>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const LL = window.LL, root = document.getElementById('copycat');
+    const dpr = () => Math.min(2, window.devicePixelRatio || 1);
+    const fit = (cv, ratio, minH) => { const w = cv.parentElement.clientWidth || 600, h = Math.max(minH || 0, Math.round(w * ratio)), d = dpr(); if (cv.width !== Math.round(w * d) || cv.height !== Math.round(h * d)) { cv.width = Math.round(w * d); cv.height = Math.round(h * d); cv.style.height = h + 'px'; } return {w, h, d}; };
+    LL.shared.c2fit = fit;
+
+    /* quizzes: each option shows its own feedback; the correct one is marked */
+    root.querySelectorAll('[data-quiz]').forEach(q => {
+      const fb = q.querySelector('.fb');
+      q.querySelectorAll('.opts button').forEach(b => b.addEventListener('click', () => {
+        q.querySelectorAll('.opts button').forEach(o => o.classList.remove('right', 'wrong'));
+        b.classList.add(b.dataset.ok ? 'right' : 'wrong');
+        fb.textContent = (b.dataset.ok ? 'Correct. ' : 'Not quite. ') + b.dataset.fb;
+      }));
+    });
+    root.querySelectorAll('.challenge button[data-ans]').forEach(b => b.addEventListener('click', () => {
+      const a = document.getElementById(b.dataset.ans); a.hidden = !a.hidden; b.textContent = a.hidden ? 'Reveal' : 'Hide';
+    }));
+
+    /* ---- Scene 4: in-context learning score on a real (toy) model ---- */
+    {
+      const {V, story} = LL.shared.court;
+      // the one-word guesser's counts, rebuilt from Chapter 1's story (same smoothing as Chapter 1)
+      const big = {};
+      story.forEach(s => { const w = s.split(' '); for (let i = 0; i + 1 < w.length; i++) { big[w[i]] = big[w[i]] || {}; big[w[i]][w[i + 1]] = (big[w[i]][w[i + 1]] || 0) + 1; } });
+      const POOL = 'okafor novak osei garcia singh tanaka adeyemi kowalski haddad moreau larsen petrov silva nakamura obi rossi fischer kaur mendes walsh'.split(' ');
+      const NONSENSE = []; for (const a of 'bl fr z w pl gr sn qu dr v'.split(' ')) for (const b of 'aeiou') for (const c of 'ck mp x nt zz'.split(' ')) NONSENSE.push(a + b + c);
+      const rng = s => () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+      const LEN = 512, NDOC = 1000, SINK = 2, MATCH = 6, STR = 8;
+      const kinds = {};
+      const setup = kind => {
+        if (kinds[kind]) return kinds[kind];
+        const cand = [...new Set([...V, ...(kind === 'court' ? POOL : NONSENSE)])], A = 0.1, rows = {};
+        const row = last => rows[last] || (rows[last] = (() => { const r = big[last] || {}, tot = Object.values(r).reduce((a, b) => a + b, 0), b = new Float64Array(cand.length); let S = 0;
+          for (let i = 0; i < cand.length; i++) { b[i] = Math.log((r[cand[i]] || 0) + A) - Math.log(tot + A * cand.length); S += Math.exp(b[i]); } return {b, S}; })());
+        const CI = Object.fromEntries(cand.map((c, i) => [c, i])), r = rng(kind === 'court' ? 7 : 11), docs = [];
+        for (let n = 0; n < NDOC; n++) { const out = [];
+          if (kind === 'court') { const p = POOL.slice(); for (let i = p.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [p[i], p[j]] = [p[j], p[i]]; } const m = {reyes: p[0], chen: p[1], patel: p[2]};
+            while (out.length < LEN) out.push(...story[Math.floor(r() * story.length)].split(' ').map(w => m[w] || w)); }
+          else { const list = []; while (list.length < 64) { const w = NONSENSE[Math.floor(r() * NONSENSE.length)]; if (!list.includes(w)) list.push(w); } while (out.length < LEN) out.push(...list); }
+          docs.push(out.slice(0, LEN).map(w => CI[w])); }
+        return (kinds[kind] = {cand, row, docs, cache: {}});
+      };
+      // per-word loss (nats) of: one-word guesser + an induction head (attention: start token SINK, matching positions MATCH; copy strength k*STR)
+      const losses = (K, d, k) => { const out = new Float64Array(d.length), seen = new Map(), eS = Math.exp(SINK), eM = Math.exp(MATCH);
+        for (let i = 0; i < d.length - 1; i++) {
+          const cur = d[i], tgt = d[i + 1], {b, S} = K.row(K.cand[cur]);
+          if (i > 0) { let m = seen.get(d[i - 1]); if (!m) seen.set(d[i - 1], m = {n: 0, c: new Map()}); m.n++; m.c.set(cur, (m.c.get(cur) || 0) + 1); }
+          const m = seen.get(cur);
+          if (!k || !m) { out[i + 1] = Math.log(S) - b[tgt]; continue; }
+          const a = eM / (eS + m.n * eM); let S2 = S, bt = 0;
+          for (const [t, n] of m.c) { const v = k * STR * a * n; S2 += Math.exp(b[t] + v) - Math.exp(b[t]); if (t === tgt) bt = v; }
+          out[i + 1] = Math.log(S2) - b[tgt] - bt;
+        }
+        return out; };
+      const meanLoss = (K, k) => { if (K.cache[k]) return K.cache[k]; const sum = new Float64Array(LEN); for (const d of K.docs) { const l = losses(K, d, k); for (let i = 0; i < LEN; i++) sum[i] += l[i]; } const m = Array.from(sum, x => x / K.docs.length); m.avg = m.slice(1).reduce((a, b) => a + b, 0) / (LEN - 1); return (K.cache[k] = m); };
+      LL.shared.c2icl = {setup, meanLoss, losses};
+      const kindBtns = document.getElementById('iclKind'), slider = document.getElementById('iclK'), cv = document.getElementById('iclCanvas'), ctx = cv.getContext('2d');
+      let kind = 'court', ready = false;
+      const f2 = x => x.toFixed(2);
+      const draw = () => {
+        const K = setup(kind), k = +slider.value, m = meanLoss(K, k), m0 = meanLoss(K, 0), C = LL.C;
+        document.getElementById('iclKOut').textContent = k === 0 ? '×0: induction head switched off' : `×${k}`;
+        document.getElementById('iclL50').textContent = f2(m[50]) + ' nats';
+        document.getElementById('iclL500').textContent = f2(m[500]) + ' nats';
+        document.getElementById('iclScore').textContent = (m[500] - m[50] >= 0 ? '+' : '−') + f2(Math.abs(m[500] - m[50]));
+        document.getElementById('iclAvg').textContent = f2(m.avg) + ' nats';
+        // curve: loss against position, log x-axis, smoothed over a small window for display
+        const {w, h, d} = fit(cv, .42, 220); ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, w, h);
+        const fs = Math.max(11, Math.min(14, w / 45)), pl = fs * 3.2, pr = 12, pt = 14, pb = fs * 3, cw = w - pl - pr, ch = h - pt - pb;
+        const ymax = kind === 'court' ? 4 : 6.5, x = i => pl + Math.log(i) / Math.log(511) * cw, y = v => pt + (1 - Math.min(v, ymax) / ymax) * ch;
+        const sm = (arr, i) => { const r = Math.max(0, Math.floor(i * .06)); let s = 0, n = 0; for (let j = Math.max(1, i - r); j <= Math.min(511, i + r); j++) { s += arr[j]; n++; } return s / n; };
+        ctx.font = `${fs}px "JetBrains Mono", monospace`; ctx.fillStyle = C.soft; ctx.strokeStyle = C.line; ctx.lineWidth = 1;
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        for (let v = 0; v <= ymax; v += kind === 'court' ? 1 : 2) { ctx.beginPath(); ctx.moveTo(pl, y(v)); ctx.lineTo(pl + cw, y(v)); ctx.stroke(); ctx.fillText(v, pl - 6, y(v)); }
+        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        [1, 10, 50, 100, 500].forEach(i => ctx.fillText(i, x(i), pt + ch + 6));
+        ctx.fillText('word position in the document (log scale)', pl + cw / 2, pt + ch + fs * 1.6);
+        ctx.save(); ctx.translate(fs * .8, pt + ch / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('loss (nats)', 0, 0); ctx.restore();
+        [50, 500].forEach(i => { ctx.strokeStyle = C.plum; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(x(i), pt); ctx.lineTo(x(i), pt + ch); ctx.stroke(); ctx.setLineDash([]); });
+        const line = (arr, color, wd, dash) => { ctx.strokeStyle = color; ctx.lineWidth = wd; ctx.setLineDash(dash || []); ctx.beginPath(); for (let i = 1; i < 512; i++) { const X = x(i), Y = y(sm(arr, i)); i === 1 ? ctx.moveTo(X, Y) : ctx.lineTo(X, Y); } ctx.stroke(); ctx.setLineDash([]); };
+        line(m0, C.soft, 2, [6, 5]); if (k) line(m, C.feats[4], 3);
+        [50, 500].forEach(i => { ctx.fillStyle = k ? C.feats[4] : C.soft; ctx.beginPath(); ctx.arc(x(i), y(m[i]), 4.5, 0, Math.PI * 2); ctx.fill(); });
+        ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillStyle = C.soft; ctx.fillText('- - no copying', pl + 8, pt + ch - 6 - (k ? fs * 1.3 : 0)); if (k) { ctx.fillStyle = C.feats[4]; ctx.fillText('—  with copying ×' + k, pl + 8, pt + ch - 4); }
+        // word strip for one document
+        const doc = K.docs[0], a = losses(K, doc, 0), c = losses(K, doc, k), n = 96; let better = 0, worse = 0;
+        document.getElementById('iclTok').innerHTML = Array.from({length: n}, (_, i) => {
+          const D = i ? c[i] - a[i] : 0; if (D < -0.3) better++; else if (D > 0.3) worse++;
+          const col = D < 0 ? 'var(--good)' : 'var(--bad)', pct = Math.round(Math.min(1, Math.abs(D) / 3) * 55);
+          return `<span style="background:color-mix(in srgb, ${col} ${pct}%, var(--wash))" title="${i ? `loss ${f2(a[i])} → ${f2(c[i])} nats` : 'first word: nothing to predict from'}">${K.cand[doc[i]]}</span>`;
+        }).join('');
+        document.getElementById('iclTokCount').textContent = k ? `In these ${n} words: ${better} easier, ${worse} harder` : 'Copying is off, so nothing changes.';
+      };
+      kindBtns.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; kind = b.dataset.k; kindBtns.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); draw(); });
+      slider.addEventListener('input', draw);
+      LL.redrawers.push(() => ready && draw());
+      window.addEventListener('resize', () => ready && draw());
+      const start = () => { if (ready) return; ready = true; draw(); };
+      if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); start(); } }, {rootMargin: '400px'}); io.observe(document.getElementById('c2icl')); } else start();
+      LL.shared.c2iclStart = start;
+    }
+
+    /* ---- Scene 6: fuzzy pattern matching (the paper's month/colour × animal/fruit task) ---- */
+    {
+      const W = {month: 'january march april june august october'.split(' '), colour: 'red grey blue green yellow pink'.split(' '), animal: 'fish bird horse goat owl frog'.split(' '), fruit: 'apple lemon plum fig mango pear'.split(' ')};
+      const label = (a, b) => (a === 'month' ? 0 : 2) + (b === 'animal' ? 0 : 1);
+      const rng = s => () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+      let seed = 3, puzzle, guessed = false;
+      const tally = {n: 0, you: 0, lit: 0, fuz: 0};
+      const pick = (r, arr) => arr[Math.floor(r() * arr.length)];
+      const make = () => {
+        const r = rng(seed * 7919 + 1);
+        for (let tries = 0; tries < 200; tries++) {
+          const lines = Array.from({length: 8}, () => { const a = r() < .5 ? 'month' : 'colour', b = r() < .5 ? 'animal' : 'fruit'; return {a, b, w1: pick(r, W[a]), w2: pick(r, W[b])}; });
+          lines.forEach(l => l.y = label(l.a, l.b));
+          const qa = r() < .5 ? 'month' : 'colour', qb = r() < .5 ? 'animal' : 'fruit', q = {a: qa, b: qb, y: label(qa, qb)};
+          // the query shares an exact word with some wrong-kind line, and its kind appears at least once
+          const decoys = lines.filter(l => l.y !== q.y && (l.a === qa || l.b === qb));
+          if (!decoys.length || !lines.some(l => l.y === q.y)) continue;
+          const dec = decoys[Math.floor(r() * decoys.length)];
+          q.w1 = dec.a === qa ? dec.w1 : pick(r, W[qa]); q.w2 = dec.a === qa ? pick(r, W[qb]) : dec.w2;
+          if (lines.some(l => l.w1 === q.w1 && l.w2 === q.w2)) continue;
+          return {lines, q};
+        }
+      };
+      const head = (fuzzy) => {
+        const {lines, q} = puzzle, SINK = 2, BETA = 4, STR = 6;
+        const sc = lines.map(l => BETA * (fuzzy ? (l.a === q.a) + (l.b === q.b) : (l.w1 === q.w1) + (l.w2 === q.w2)));
+        const ex = sc.map(s => Math.exp(s)), Z = Math.exp(SINK) + ex.reduce((a, b) => a + b, 0), att = ex.map(e => e / Z);
+        const logit = [0, 0, 0, 0]; lines.forEach((l, i) => logit[l.y] += STR * att[i]);
+        const mx = Math.max(...logit), pe = logit.map(v => Math.exp(v - mx)), pz = pe.reduce((a, b) => a + b, 0), p = pe.map(v => v / pz);
+        const g = p.indexOf(Math.max(...p)), right = lines.reduce((s, l, i) => s + (l.y === q.y ? att[i] : 0), 0) / att.reduce((a, b) => a + b, 0);
+        return {att, p, g, right};
+      };
+      const linesEl = document.getElementById('fzLines'), rev = document.getElementById('fzReveal');
+      const render = () => {
+        const {lines, q} = puzzle;
+        linesEl.innerHTML = lines.map(l => `<div class="ln"><span>${l.w1} ${l.w2} : ${l.y}</span><span></span></div>`).join('') + `<div class="ln q"><span>${q.w1} ${q.w2} : ?</span><span></span></div>`;
+        document.querySelectorAll('#copycat .guess button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+        rev.hidden = true; guessed = false;
+        document.getElementById('fzTally').textContent = tally.n ? `So far: you ${tally.you}/${tally.n} · literal head ${tally.lit}/${tally.n} · fuzzy head ${tally.fuz}/${tally.n}` : 'Pick a number to see what the two heads do.';
+      };
+      const show = g => {
+        const {lines, q} = puzzle, L = head(false), F = head(true);
+        const col = (H, el) => { document.getElementById(el).innerHTML = lines.map((l, i) => `<div class="ln"><span>${l.w1} ${l.w2} : ${l.y}</span><span class="bar" title="${Math.round(H.att[i] * 100)}% attention"><i style="width:${Math.round(H.att[i] * 100)}%"></i></span></div>`).join(''); };
+        col(L, 'fzLit'); col(F, 'fzFuz');
+        const pc = x => Math.round(x * 100) + '%';
+        document.getElementById('fzLitG').textContent = `Copies: ${L.g} (${pc(L.p[L.g])}). Attention on lines of the right kind: ${pc(L.right)}.`;
+        document.getElementById('fzFuzG').textContent = `Copies: ${F.g} (${pc(F.p[F.g])}). Attention on lines of the right kind: ${pc(F.right)}.`;
+        if (!guessed) { tally.n++; tally.you += g === q.y; tally.lit += L.g === q.y; tally.fuz += F.g === q.y; guessed = true; }
+        document.getElementById('fzVerdict').innerHTML = `The answer is <span>${q.y}</span> (${q.a} + ${q.b}). ${g === q.y ? 'You got it.' : 'Not this time.'} The literal head ${L.g === q.y ? 'got it too' : 'was fooled by a shared word'}; the fuzzy head ${F.g === q.y ? 'got it' : 'missed'}. The rule: month + animal = 0, month + fruit = 1, colour + animal = 2, colour + fruit = 3.`;
+        document.getElementById('fzTally').textContent = `So far: you ${tally.you}/${tally.n} · literal head ${tally.lit}/${tally.n} · fuzzy head ${tally.fuz}/${tally.n}`;
+        rev.hidden = false;
+      };
+      root.querySelector('.guess').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; document.querySelectorAll('#copycat .guess button').forEach(x => x.setAttribute('aria-pressed', x === b)); show(+b.dataset.g); });
+      document.getElementById('fzNew').addEventListener('click', () => { seed++; puzzle = make(); render(); });
+      puzzle = make(); render();
+      LL.shared.c2fuzzy = {get puzzle() { return puzzle; }, head};
+      // the three heads from the paper's 40-layer model (scores as reported in Argument 4)
+      const heads = [['Literal copying head', 'layer 21 of 40', .89, .75], ['Translation head', 'layer 7 of 40', .20, .85], ['Pattern-matching head', 'the one behind this task', .69, .94]];
+      document.getElementById('fzHeads').innerHTML = heads.map(([n, l, c, p]) => `<div class="hd"><div><strong>${n}</strong><br><small>${l}</small></div><div><small>copying ${c.toFixed(2)}</small><span class="bar"><i style="width:${c * 100}%;background:var(--sky)"></i></span></div><div><small>prefix matching ${p.toFixed(2)}</small><span class="bar"><i style="width:${p * 100}%;background:var(--pink)"></i></span></div></div>`).join('');
+    }
+
+    /* ---- Scene 7: the evidence file (grades transcribed from the paper's tables) ---- */
+    {
+      const S = 'strong', M = 'medium', Wk = 'weak', N = 'na';
+      const ex = [
+        {n: 1, t: 'Co-occurrence', what: 'Across dozens of models, the jump in in-context learning, the formation of induction heads, the bump in the loss and the turn in the model\'s behaviour all land in the same window of training.', law: 'The suspect was seen at the scene at the time of the crime, in case after case. Hard to dismiss, but on its own it shows opportunity, not guilt.', g: [[[M, 'Medium, correlational'], [M, 'Medium, correlational'], [M, 'Medium, correlational']], [[M, 'Medium, correlational'], [M, 'Medium, correlational'], [M, 'Medium, correlational']]], id: 'argument-phase-change'},
+        {n: 2, t: 'Co-perturbation', what: 'Smeared keys make induction heads easier to form. One-layer models then gain in-context learning, and two-layer models gain it earlier. Moving the heads moves the jump.', law: 'Move the meeting to Tuesday and the suspect turns up on Tuesday. An intervention, so much better than coincidence, but it was only run on one- and two-layer models.', g: [[[M, 'Medium, interventional'], [M, 'Medium, interventional'], [Wk, 'Weak, interventional']], [[M, 'Medium, interventional'], [M, 'Medium, interventional'], [Wk, 'Weak, interventional']]], id: 'argument-architectural-requirements'},
+        {n: 3, t: 'Knockouts', what: 'Remove induction heads at test time and in-context learning largely disappears. In small attention-only models, almost all of it seems to come from these heads. Only small models were tested.', law: 'The but-for test: but for these heads, would the learning happen? In small models, mostly not. The authors call ablations "by far our strongest evidence" for the cases they cover.', g: [[[S, 'Strong, causal'], [S, 'Strong, causal'], [N, '']], [[S, 'Strong, causal'], [M, 'Medium, causal'], [N, '']]], id: 'argument-ablations'},
+        {n: 4, t: 'Generality', what: 'In a 13-billion-parameter model, heads that pass the strict copying test also translate and match abstract patterns, like the puzzle in Scene 6.', law: 'Similar-fact evidence: the same method shows up in other, more sophisticated jobs. It makes the theory plausible without proving it covers everything.', g: [[[N, ''], [N, ''], [S, 'Plausibility']], [[N, ''], [N, ''], [Wk, 'Plausibility']]], id: 'argument-induction-heads-can-implement-abstract-behaviors'},
+        {n: 5, t: 'Mechanism', what: 'In small models the circuit has been reverse-engineered from the weights: a previous-token head plus a copying head, joined by K-composition. The same machinery could naturally match fuzzier patterns.', law: 'Reading the source code of a smart contract: you can see exactly how it moves funds, so you know it can. Whether it moved most of the funds is a separate question.', g: [[[S, 'Strong, mechanistic'], [S, 'Strong, mechanistic'], [M, 'Medium, mechanistic']], [[Wk, 'Weak, mechanistic'], [N, ''], [N, '']]], id: 'argument-induction-head-mechanism'},
+        {n: 6, t: 'Continuity', what: 'Every measurement looks the same from small attention-only models to large models: the phase change, the 0.4 nats, the induction heads. If the mechanism changed with size, where is the sign of it?', law: 'Same modus operandi across every case on file. A reasonable inference, but big models have surprised people before, so the authors grade it as analogy.', g: [[[N, ''], [N, ''], [Wk, 'Analogy']], [[N, ''], [N, ''], [Wk, 'Analogy']]], id: 'argument-extrapolation'},
+        {n: 0, t: 'All six together', what: 'The authors\' overall summary, taking the strongest argument for each cell. Strong and causal for small models; for large models, medium and correlational.', law: 'A strong circumstantial case, not a confession. In the authors\' words, the arguments make "a relatively strong, though not conclusive, case".', g: [[[S, 'Strong, causal'], [S, 'Strong, causal'], [M, 'Medium, correlational & mechanistic']], [[S, 'Strong, causal'], [M, 'Medium, causal'], [M, 'Medium, correlational']]], id: 'toc-arguments'},
+      ];
+      const el = document.getElementById('exhibits'), panel = document.getElementById('exhibitPanel');
+      el.innerHTML = ex.map((e, i) => `<button data-i="${i}" aria-pressed="false"><small>${e.n ? 'Exhibit ' + e.n : 'Verdict'}</small>${e.t}</button>`).join('');
+      const show = i => {
+        const e = ex[i];
+        el.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.i === i));
+        const cell = ([k, t]) => `<div class="g-${k}">${k === 'na' ? '–' : t}</div>`;
+        panel.innerHTML = `<h5>${e.n ? 'Exhibit ' + e.n + ': ' : ''}${e.t}</h5><p>${e.what}</p><p><strong>In court terms:</strong> ${e.law}</p>
+          <div class="grades" role="table" aria-label="Strength of evidence"><div class="h corner"></div><div class="h">Small, attention-only</div><div class="h">Small, with MLPs</div><div class="h">Large models</div>
+          <div class="r">Contributes some</div>${e.g[0].map(cell).join('')}<div class="r">Contributes majority</div>${e.g[1].map(cell).join('')}</div>
+          <p class="paperref">In the paper: <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html#${e.id}" target="_blank" rel="noopener">${e.n ? 'Argument ' + e.n : 'Summary of Evidence for Sub-Claims'}</a></p>`;
+      };
+      el.addEventListener('click', e => { const b = e.target.closest('button'); if (b) show(+b.dataset.i); });
+      show(0);
+    }
+  });
+  </script>
 </article>
 
 <article id="crowded-office">
@@ -2756,27 +3252,53 @@ the jury heard the evidence`.split('\n');
 
   /* ---------- chapter 2: repeated-nonsense test (induction rule) ---------- */
   {
-    const vocab = 'blick frum zorp wix taddle plim gorf snerp quab dral vint mosk yemp kib lunt'.split(' ');
-    const el = document.getElementById('nonsenseSeq');
-    const make = () => {
-      const pool = vocab.slice().sort(() => Math.random() - .5), half = pool.slice(0, 10), seq = [...half, ...half];
-      let ok1 = 0, ok2 = 0, rnd1 = 0;
-      const marks = seq.map((w, i) => {
-        if (i === 0) return '';
-        let guess = null;
-        for (let j = i - 2; j >= 0; j--) if (seq[j] === seq[i - 1]) { guess = seq[j + 1]; break; }
-        const right = guess === w;
-        if (i < 10) ok1 += right; else ok2 += right;
-        if (vocab[Math.floor(Math.random() * vocab.length)] === w) rnd1++;
-        return right ? 'ok' : 'miss';
-      });
-      el.innerHTML = seq.map((w, i) => `<span class="${marks[i]} ${i === 10 ? 'half' : ''}">${w}</span>`).join('');
-      document.getElementById('sc1').textContent = Math.round(ok1 / 9 * 100) + '%';
-      document.getElementById('sc2').textContent = Math.round(ok2 / 10 * 100) + '%';
-      document.getElementById('sc3').textContent = Math.round(100 / vocab.length) + '%';
+    // The paper's induction-head test: a start token, then 25 random tokens repeated 4 times.
+    // Three hand-set heads; softmax attention and the scores are computed on the sequence shown.
+    const vocab = []; for (const a of 'bl fr z w pl gr sn qu dr v'.split(' ')) for (const b of 'aeiou') for (const c of 'ck mp x nt zz'.split(' ')) vocab.push(a + b + c);
+    const NT = 25, REP = 4, cv = document.getElementById('gridCanvas'), ctx = cv.getContext('2d'), segEl = document.getElementById('gridHeads');
+    let seq = [], headK = 'ind', A = [];
+    const newSeq = () => { const pool = vocab.slice(); for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; } const base = pool.slice(0, NT); seq = ['<start>']; for (let r = 0; r < REP; r++) seq.push(...base); };
+    const score = (h, i, j) => {
+      if (j === 0) return h === 'prev' ? 0 : 4;               // the start token: a resting place that copies nothing
+      if (h === 'prev') return j === i - 1 ? 10 : 0;          // Clerk 1: look one word back
+      if (h === 'ind') return seq[j - 1] === seq[i] && j < i ? 8 : 0; // Clerk 2: look where the PREVIOUS word matches mine
+      return seq[j] === seq[i] && j < i ? 8 : 0;              // one-layer head: look at earlier copies of my own word
     };
-    document.getElementById('nonsenseNew').addEventListener('click', make);
-    make();
+    const compute = () => {
+      const n = seq.length; A = [];
+      for (let i = 0; i < n; i++) { const s = []; for (let j = 0; j <= i; j++) s.push(score(headK, i, j)); const m = Math.max(...s), e = s.map(x => Math.exp(x - m)), Z = e.reduce((a, b) => a + b, 0); A.push(e.map(x => x / Z)); }
+      let pre = 0, prev = 0, acc = 0, cnt = 0;
+      for (let i = 1 + NT; i < n; i++) {
+        let p = 0; for (let j = 1; j < i; j++) if (seq[j - 1] === seq[i]) p += A[i][j];
+        pre += p; prev += A[i][i - 1]; cnt++;
+        if (i + 1 < n) { const vote = {}; for (let j = 1; j <= i; j++) vote[seq[j]] = (vote[seq[j]] || 0) + A[i][j]; const best = Object.entries(vote).sort((a, b) => b[1] - a[1])[0]; if (best && best[1] > A[i][0] && best[0] === seq[i + 1]) acc++; }
+      }
+      return {pre: pre / cnt, prev: prev / cnt, acc: acc / (cnt - 1)};
+    };
+    const draw = () => {
+      const r = compute(), C = LL.C, {w, h, d} = LL.shared.c2fit(cv, 1, 0), n = seq.length, cell = w / n;
+      ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = C.wash; for (let i = 0; i < n; i++) ctx.fillRect(0, i * cell, (i + 1) * cell, cell);
+      ctx.fillStyle = C.feats[4];
+      for (let i = 0; i < n; i++) for (let j = 0; j <= i; j++) { const a = A[i][j]; if (a < .01) continue; ctx.globalAlpha = Math.min(1, Math.pow(a, .6)); ctx.fillRect(j * cell, i * cell, cell + .3, cell + .3); }
+      ctx.globalAlpha = 1; ctx.strokeStyle = C.soft; ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+      for (let k = 1; k < REP; k++) { const p = (1 + k * NT) * cell; ctx.beginPath(); ctx.moveTo(0, p); ctx.lineTo(w, p); ctx.moveTo(p, 0); ctx.lineTo(p, h); ctx.stroke(); }
+      ctx.setLineDash([]);
+      const pc = x => Math.round(x * 100) + '%';
+      document.getElementById('gPrefix').textContent = r.pre.toFixed(2);
+      document.getElementById('gPrev').textContent = r.prev.toFixed(2);
+      document.getElementById('gAcc').textContent = pc(r.acc);
+      document.getElementById('gridVerdict').innerHTML = headK === 'ind' ? 'A bright stripe one step right of each repeat: <span>prefix matching</span>. This head passes the paper\'s test.'
+        : headK === 'prev' ? 'A single line just below the diagonal: every word looks one step back. Useless for guessing alone, but it writes the note Clerk 2 needs.'
+        : 'It finds earlier copies of the current word, then copies that same word. Prefix-matching score near zero: it fails the test.';
+      cv.dataset.prefix = r.pre; cv.dataset.prev = r.prev; cv.dataset.acc = r.acc;
+    };
+    segEl.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; headK = b.dataset.h; segEl.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); draw(); });
+    document.getElementById('gridNew').addEventListener('click', () => { newSeq(); draw(); });
+    newSeq();
+    document.addEventListener('DOMContentLoaded', draw);
+    redrawers.push(() => LL.shared.c2fit && draw());
+    window.addEventListener('resize', () => LL.shared.c2fit && draw());
   }
 
   /* ---------- chapter 2: induction team vs single messenger ---------- */
@@ -2787,6 +3309,7 @@ the jury heard the evidence`.split('\n');
     const presets = [
       'mr osei and ms novak spoke then the judge thanked ms',
       'mr osei and ms novak spoke then the judge thanked mr',
+      'ms okafor spoke and ms novak spoke then the judge thanked ms',
       'the court of appeal heard the case and the court of',
     ];
     const pre = document.getElementById('c2Presets'), txt = document.getElementById('c2Text');
@@ -2822,42 +3345,58 @@ the jury heard the evidence`.split('\n');
 
   /* ---------- chapter 2: phase-change replay (illustrative shape) ---------- */
   {
+    // x: billions of tokens of training (the paper's small models saw ~10B). ICL levels follow the paper
+    // (< 0.15 nats before the phase change, ~0.4 after); curve shapes, bump size and smeared-key timing are a sketch.
     const cv = document.getElementById('phaseCanvas'), ctx = cv.getContext('2d');
-    const tr = document.getElementById('phaseT'), one = document.getElementById('phaseOne'), out = document.getElementById('phaseOut');
-    const P0 = 30, P1 = 45; // phase-change window, as % of training shown
-    const sig = (x, c, k) => 1 / (1 + Math.exp(-(x - c) / k));
-    const loss = (t, oneLayer) => {
-      const base = 3.2 * Math.exp(-t / 9) + 2.6 - 0.004 * t;
-      if (oneLayer) return base + 0.35;
-      return base + 0.12 * Math.exp(-((t - 34) ** 2) / 18) - 0.4 * sig(t, 39, 2.5);
-    };
-    const icl = (t, oneLayer) => oneLayer ? 0.12 * sig(t, 12, 5) : 0.12 * sig(t, 12, 5) + 0.38 * sig(t, 38, 2.2);
+    const tr = document.getElementById('phaseT'), out = document.getElementById('phaseOut'), segEl = document.getElementById('phaseModel');
+    const M = {'2L': {c: 3.6, w: .4, ind: true, off: .3}, '1L': {ind: false, off: .3}, '1Ls': {c: 2.4, w: .4, ind: true, off: .3}, '2Ls': {c: 1.9, w: .35, ind: true, off: .3}};
+    let mk = '2L';
+    const sig = z => 1 / (1 + Math.exp(-z));
+    const icl = (t, m) => .12 * (1 - Math.exp(-t / .5)) + (m.ind ? .28 * sig((t - m.c) / m.w) : .003 * t);
+    const loss = (t, m) => 2.55 + .9 / Math.sqrt(t + .35) + 3 * Math.exp(-t / .2) + m.off + (m.ind ? .3 * (1 - sig((t - m.c) / m.w)) - .3 : 0);
+    const pm = (t, m) => m.ind ? .04 + .86 * sig((t - m.c - .1) / (m.w * .7)) : .04;
     const draw = () => {
-      const W = cv.width, H = cv.height, pl = 120, pr = 120, pt = 40, pb = 110, cw = W - pl - pr, ch = H - pt - pb;
-      const T = +tr.value, oneLayer = one.checked;
-      ctx.clearRect(0, 0, W, H);
-      const x = t => pl + t / 100 * cw;
-      if (!oneLayer) { ctx.fillStyle = C.wash; ctx.fillRect(x(P0), pt, x(P1) - x(P0), ch); ctx.fillStyle = C.soft; ctx.font = '600 30px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.fillText('phase change', x((P0 + P1) / 2), pt + 34); }
-      ctx.strokeStyle = C.line; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(pl, pt); ctx.lineTo(pl, pt + ch); ctx.lineTo(pl + cw, pt + ch); ctx.lineTo(pl + cw, pt); ctx.stroke();
-      const yL = v => pt + (1 - (v - 1.6) / 4.4) * ch, yI = v => pt + (1 - v / 0.6) * ch;
-      const curve = (f, y, color) => { ctx.strokeStyle = color; ctx.lineWidth = 8; ctx.lineCap = 'round'; ctx.beginPath(); for (let i = 0; i <= T * 4; i++) { const t = i / 4; i ? ctx.lineTo(x(t), y(f(t, oneLayer))) : ctx.moveTo(x(t), y(f(t, oneLayer))); } ctx.stroke(); ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x(T), y(f(T, oneLayer)), 16, 0, Math.PI * 2); ctx.fill(); };
-      ctx.globalAlpha = .18; ctx.strokeStyle = C.ink; ctx.lineWidth = 4; ctx.setLineDash([8, 12]);
-      ctx.beginPath(); for (let t = 0; t <= 100; t++) t ? ctx.lineTo(x(t), yL(loss(t, oneLayer))) : ctx.moveTo(x(t), yL(loss(t, oneLayer))); ctx.stroke();
-      ctx.beginPath(); for (let t = 0; t <= 100; t++) t ? ctx.lineTo(x(t), yI(icl(t, oneLayer))) : ctx.moveTo(x(t), yI(icl(t, oneLayer))); ctx.stroke();
-      ctx.setLineDash([]); ctx.globalAlpha = 1;
-      curve(loss, yL, C.feats[1]); curve(icl, yI, C.feats[4]);
-      ctx.font = '600 30px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.fillStyle = C.soft;
-      ctx.fillText('training →', pl + cw / 2, pt + ch + 60);
-      ctx.save(); ctx.translate(60, pt + ch / 2); ctx.rotate(-Math.PI / 2); ctx.fillStyle = C.feats[1]; ctx.fillText('error (lower is better)', 0, 0); ctx.restore();
-      ctx.save(); ctx.translate(W - 60, pt + ch / 2); ctx.rotate(Math.PI / 2); ctx.fillStyle = C.feats[4]; ctx.fillText('in-context learning', 0, 0); ctx.restore();
-      const stage = oneLayer ? 'none' : T < P0 ? 'none' : T < P1 ? 'forming' : 'present';
-      out.textContent = T === 0 ? 'Not started' : `${T}% of the way through`;
-      const pill = stage === 'present' ? '<span class="pill on">Induction heads: present</span>' : stage === 'forming' ? '<span class="pill mid">Induction heads: forming</span>' : '<span class="pill">Induction heads: none yet</span>';
-      document.getElementById('phaseVerdict').innerHTML = pill + ' ' + (oneLayer ? 'A one-layer model can\'t build the two-clerk team, so there\'s no bump and no jump.' : stage === 'none' ? 'The model is learning which words follow which, but barely uses earlier text.' : stage === 'forming' ? 'Progress stalls, then lurches: the two-clerk teams are assembling.' : 'Induction heads are in place, and the model now learns far more from the text in front of it.');
+      const C = LL.C, m = M[mk], T = +tr.value / 10, {w, h, d} = LL.shared.c2fit(cv, .62, 420);
+      ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, w, h);
+      const fs = Math.max(11, Math.min(14, w / 48)), pl = fs * 3.4, pr = 12, top = 8, bot = fs * 3, gap = fs * 2.2, ph = (h - top - bot - 2 * gap) / 3, cw = w - pl - pr;
+      const x = t => pl + t / 10 * cw;
+      const panels = [
+        {f: loss, lo: 2.6, hi: 3.9, col: C.feats[1], name: 'Loss (lower is better)', ticks: []},
+        {f: icl, lo: 0, hi: .5, col: C.feats[4], name: 'In-context learning (nats)', ticks: [0, .15, .4]},
+        {f: pm, lo: 0, hi: 1, col: C.feats[2], name: 'Induction heads (prefix matching)', ticks: [0, 1]},
+      ];
+      ctx.font = `${fs}px "JetBrains Mono", monospace`;
+      panels.forEach((p, k) => {
+        const y0 = top + k * (ph + gap) + fs * 1.3, H = ph - fs * 1.3, y = v => y0 + (1 - (Math.min(Math.max(v, p.lo), p.hi) - p.lo) / (p.hi - p.lo)) * H;
+        if (m.ind) { ctx.fillStyle = C.wash; ctx.fillRect(x(m.c - 2.5 * m.w), y0, x(m.c + 2.5 * m.w) - x(m.c - 2.5 * m.w), H); }
+        ctx.fillStyle = p.col; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText(p.name, pl, y0 - fs * .4);
+        ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.strokeRect(pl, y0, cw, H);
+        ctx.fillStyle = C.soft; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        p.ticks.forEach(v => { ctx.fillText(v, pl - 5, y(v)); if (v > 0 && v < p.hi) { ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(pl, y(v)); ctx.lineTo(pl + cw, y(v)); ctx.stroke(); ctx.setLineDash([]); } });
+        ctx.globalAlpha = .25; ctx.strokeStyle = p.col; ctx.lineWidth = 2; ctx.beginPath(); for (let i = 0; i <= 200; i++) { const t = i / 20; i ? ctx.lineTo(x(t), y(p.f(t, m))) : ctx.moveTo(x(t), y(p.f(t, m))); } ctx.stroke(); ctx.globalAlpha = 1;
+        ctx.lineWidth = 3.5; ctx.lineCap = 'round'; ctx.beginPath(); const nI = Math.round(T * 20); for (let i = 0; i <= nI; i++) { const t = i / 20; i ? ctx.lineTo(x(t), y(p.f(t, m))) : ctx.moveTo(x(t), y(p.f(t, m))); } ctx.stroke();
+        ctx.fillStyle = p.col; ctx.beginPath(); ctx.arc(x(T), y(p.f(T, m)), 5, 0, Math.PI * 2); ctx.fill();
+      });
+      ctx.fillStyle = C.soft; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      [0, 2.5, 5, 7.5, 10].forEach(t => ctx.fillText(t, x(t), h - bot + 4));
+      ctx.fillText('billions of tokens of training', pl + cw / 2, h - bot + fs * 1.5);
+      const st = !m.ind ? 'never' : T < m.c - 2 * m.w ? 'before' : T < m.c + 2 * m.w ? 'during' : 'after';
+      out.textContent = `${T.toFixed(1)} billion tokens · ICL ${icl(T, m).toFixed(2)} nats`;
+      const pill = st === 'after' ? '<span class="pill on">Induction heads: present</span>' : st === 'during' ? '<span class="pill mid">Induction heads: forming</span>' : '<span class="pill">Induction heads: none</span>';
+      const msg = st === 'never' ? 'One layer can\'t build the two-clerk team: no bump, no induction heads, and in-context learning stays low.'
+        : st === 'before' ? 'The model is learning which words follow which, but barely uses earlier text.'
+        : st === 'during' ? 'The phase change: induction heads assemble, in-context learning jumps and the loss dips faster.'
+        : mk === '1Ls' ? 'With smeared keys, even one layer builds an induction head, and in-context learning appears.'
+        : mk === '2Ls' ? 'Smeared keys make the heads easier to build, so the jump comes earlier.'
+        : 'Induction heads are in place. In-context learning has settled at about 0.4 nats and stays there.';
+      document.getElementById('phaseVerdict').innerHTML = pill + ' ' + msg;
+      cv.dataset.stage = st;
     };
-    redrawers.push(draw);
-    tr.addEventListener('input', draw); one.addEventListener('change', draw);
-    draw();
+    segEl.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; mk = b.dataset.m; segEl.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); draw(); });
+    tr.addEventListener('input', draw);
+    document.addEventListener('DOMContentLoaded', draw);
+    redrawers.push(() => LL.shared.c2fit && draw());
+    window.addEventListener('resize', () => LL.shared.c2fit && draw());
   }
 
   /* ---------- chapter 4: sparse autoencoder on the crowded office ---------- */
