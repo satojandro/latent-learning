@@ -3067,32 +3067,131 @@ document.addEventListener('DOMContentLoaded', () => {
 </article>
 
 <article id="untangling">
+  <style>
+    #untangling details.deeper{background:var(--wash);border-radius:var(--r);padding:0;font-size:1rem}
+    #untangling details.deeper > summary{cursor:pointer;list-style:none;padding:14px 18px;font-family:var(--f-display);font-weight:600;display:flex;gap:.6rem;align-items:baseline}
+    #untangling details.deeper > summary::-webkit-details-marker{display:none}
+    #untangling details.deeper > summary::before{content:"+";font-family:var(--f-mono);color:var(--plum);font-weight:600;width:1ch}
+    #untangling details.deeper[open] > summary::before{content:"−"}
+    #untangling details.deeper > summary small{font-family:var(--f-mono);font-weight:400;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+    #untangling details.deeper .in{padding:0 18px 18px;display:grid;gap:.9rem}
+    #untangling details.deeper.deepest{background:var(--card);border:2px dashed var(--line)}
+    #untangling .paper-ref{font-family:var(--f-mono);font-size:.8rem;color:var(--ink-soft);border-left:4px solid var(--marigold);padding:.2rem 0 .2rem .7rem}
+    #untangling .paper-ref em{font-family:var(--f-body)}
+    #untangling blockquote{margin:0;padding:.2rem 0 .2rem 1rem;border-left:4px solid var(--plum);font-style:italic}
+    #untangling blockquote cite{display:block;font-style:normal;font-family:var(--f-mono);font-size:.78rem;color:var(--ink-soft);margin-top:.3rem}
+    #untangling .eq{font-family:var(--f-mono);font-size:.92rem;background:var(--card);border-radius:12px;padding:.7rem .9rem;overflow-x:auto;white-space:nowrap}
+    #untangling .predict{border:2px dashed var(--plum);border-radius:14px;padding:12px 14px;font-size:.97rem;margin-top:1rem}
+    #untangling .predict b{font-family:var(--f-display);color:var(--plum)}
+    #untangling .kv{display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:.35rem 1rem;font-size:.95rem}
+    #untangling .kv dt{font-family:var(--f-mono);font-size:.78rem;color:var(--ink-soft);padding-top:.15rem}
+    #untangling .kv dd{margin:0}
+    /* tiny single-neuron puzzle */
+    #untangling .nchips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+    #untangling .lossbar{height:16px;border-radius:99px;background:var(--wash);overflow:hidden;margin-top:.4rem}
+    #untangling .lossbar i{display:block;height:100%;border-radius:99px;background:var(--plum);transition:width .4s}
+    /* feature viewer */
+    #untangling .fv-text{display:flex;flex-wrap:wrap;gap:4px 3px;margin-top:1rem;align-items:flex-end}
+    #untangling .tok{font-family:var(--f-mono);font-size:.95rem;border:0;border-radius:6px;padding:.25rem .35rem .45rem;color:var(--ink);position:relative;white-space:pre;cursor:pointer;line-height:1.3}
+    #untangling .tok:hover{outline:2px solid var(--line)}
+    #untangling .tok::after{content:"";position:absolute;left:4px;right:4px;bottom:3px;height:3px;border-radius:2px;background:transparent}
+    #untangling .tok.px::after{background:var(--teal)}
+    #untangling .tok.found{outline:2px solid var(--plum);outline-offset:1px}
+    #untangling .tok.sel{outline:2px dashed var(--ink);outline-offset:1px}
+    #untangling .fv-key{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--f-mono);font-size:.78rem;color:var(--ink-soft);margin-top:.8rem}
+    #untangling .fv-key i{display:inline-block;width:22px;height:12px;border-radius:3px;vertical-align:middle;margin-right:6px}
+    #untangling .fv-why{margin-top:1rem;min-height:4.5em;border-radius:14px;background:var(--wash);padding:12px 14px;font-size:.95rem}
+    #untangling .elements{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:1.2rem}
+    #untangling .el{background:var(--wash);border-radius:12px;padding:10px 12px;font-size:.88rem;line-height:1.45}
+    #untangling .el b{display:block;font-family:var(--f-display);font-size:.95rem;margin-bottom:.2rem}
+    /* splitting toy */
+    #untangling .fams{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:1rem}
+    @media (max-width:720px){#untangling .fams{grid-template-columns:1fr}}
+    #untangling .fam{border-radius:14px;padding:10px;display:grid;gap:8px;align-content:start;background:var(--wash)}
+    #untangling .ent{font-family:var(--f-display);font-weight:600;font-size:.88rem;border-radius:10px;padding:.35rem .6rem;background:var(--card);border-left:5px solid var(--line)}
+    #untangling .ent small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.68rem;color:var(--ink-soft)}
+    #untangling .kids{display:grid;gap:6px;margin-left:14px;padding-left:10px;border-left:2px dashed var(--line)}
+    #untangling .dead-row{margin-top:.8rem;font-family:var(--f-mono);font-size:.8rem;color:var(--ink-soft)}
+    /* state machine */
+    #untangling .fsa{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:.5rem}
+    @media (max-width:640px){#untangling .fsa{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    #untangling .node{border:2px solid var(--line);border-radius:14px;padding:10px;font-size:.86rem;line-height:1.4;background:var(--card);transition:border-color .25s, box-shadow .25s}
+    #untangling .node b{display:block;font-family:var(--f-mono);font-size:.78rem;color:var(--ink-soft)}
+    #untangling .node.on{border-color:var(--plum);box-shadow:0 0 0 4px color-mix(in srgb, var(--plum) 22%, transparent)}
+    #untangling .tape{font-family:var(--f-mono);font-size:.92rem;background:var(--wash);border-radius:12px;padding:.7rem .9rem;min-height:3.2em;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:1rem}
+    #untangling .tape span.last{background:color-mix(in srgb, var(--plum) 25%, transparent);border-radius:4px}
+    /* quiz */
+    #untangling .quiz{display:grid;gap:14px;margin:1.5rem auto 0;max-width:960px}
+    #untangling .q{background:var(--card);border-radius:var(--r);padding:18px;border:2px solid var(--line);display:grid;gap:.7rem}
+    #untangling .q h4{font-size:1.05rem;line-height:1.35}
+    #untangling .q .opts{display:grid;gap:8px}
+    #untangling .q .opts button{text-align:left;border-radius:14px;font-family:var(--f-body);font-weight:400;font-size:.95rem;border-width:1.5px;line-height:1.45}
+    #untangling .q .opts button.right{border-color:var(--good);background:color-mix(in srgb, var(--good) 14%, var(--card))}
+    #untangling .q .opts button.wrong{border-color:var(--bad);background:color-mix(in srgb, var(--bad) 10%, var(--card))}
+    #untangling .q .ans{font-size:.95rem;color:var(--ink-soft);line-height:1.55}
+    #untangling .q .ans[hidden]{display:none}
+  </style>
+
   <div class="chapter-head">
     <span class="num c4">Chapter 4</span>
     <h2>Untangling the Desks</h2>
-    <p class="based">Based on <a href="https://transformer-circuits.pub/2023/monosemantic-features/index.html" target="_blank" rel="noopener"><em>Towards Monosemanticity: Decomposing Language Models With Dictionary Learning</em></a> (Bricken, Templeton, Batson, Chen, Jermyn et al., Anthropic, 2023)</p>
+    <p class="based">Based on <a href="https://transformer-circuits.pub/2023/monosemantic-features/index.html" target="_blank" rel="noopener"><em>Towards Monosemanticity: Decomposing Language Models With Dictionary Learning</em></a> (Bricken, Templeton, Batson, Chen, Jermyn et al., Anthropic, October 2023)</p>
   </div>
 
+  <div class="prose">
+    <p>This chapter climbs. Each scene starts with the story. Open a <strong>Go deeper</strong> panel when you want the paper's own terms, numbers and notation. Everything marked <span class="label" style="color:var(--teal)">live</span> is computing the real thing in your browser; everything marked <span class="label" style="color:var(--marigold)">sketch</span> is hand-made to show an idea, and says so.</p>
+  </div>
+
+  <!-- Scene 1 -->
   <section class="scene" aria-labelledby="c4s1">
     <div class="prose">
       <p class="scene-tag">Scene 1</p>
-      <h3 id="c4s1">The detective's problem</h3>
-      <p>Chapter 3 left us with a crowded office. Concepts share desks, so each neuron responds to a jumble of unrelated things. Remember the neuron that fired for citations, dialogue, web requests and Korean? It was found in this very study.</p>
-      <p>The researchers now faced a detective's problem. They could see how busy each desk was at every moment: the neuron readings. What they wanted was the <strong>roster</strong>: who was actually sitting there.</p>
-      <p>A court faces the same problem when reconstructing events. The evidence is incomplete, and many stories could fit it. A sensible judge prefers the account that explains <em>all</em> the evidence with the <em>fewest</em> moving parts. That single principle turns out to be the key.</p>
+      <h3 id="c4s1">The simplest model nobody understood</h3>
+      <p>Remember the jumbled neuron from Chapter 3, the one that lit up for academic citations, English dialogue, web requests and Korean? It lives in the model this chapter is about.</p>
+      <p>That model is tiny. It has one messenger layer, one thinker layer with <strong>512 neurons</strong>, and a case file only 128 numbers wide. The team trained it on 100 billion words and word-pieces of public text called the Pile. By Chapter 1's standards it should be easy to read. It wasn't, because the thinker layer is a crowded office: far more concepts than desks.</p>
+      <blockquote>"In some sense, this is the simplest language model we profoundly don't understand."<cite>Bricken et al., Problem Setup</cite></blockquote>
+      <p>The team saw two ways out. They could <em>build</em> models where each neuron holds one idea. Or they could take an ordinary model as it is and work out, from the outside, who is sitting at each desk. They tried the first route for a long time. It failed in an instructive way.</p>
+      <p class="paper-ref">In the paper: <em>Problem Setup</em> and <em>Why not use architectural approaches?</em></p>
+    </div>
+
+    <div class="toy" style="max-width:760px">
+      <div class="toy-head"><h4>Puzzle: design the lone neuron</h4><span class="label">Live · the paper's own example</span></div>
+      <p style="font-size:.98rem">A model has <strong>one neuron</strong> that either fires or stays quiet. The text it reads has four equally common situations, A, B, C and D, and each one is followed by its own next word. When the neuron fires, the model spreads its guess evenly over the words it fires for. When it's quiet, it spreads its guess evenly over the rest. There's no crowding here: only one thing can happen at a time.</p>
+      <div class="predict"><b>Predict first.</b> Which neuron scores better: one that cleanly means "A", or one that fires for both A and B?</div>
+      <p class="label" style="margin-top:1rem">The neuron fires for</p>
+      <div class="nchips" id="nlChips" role="group" aria-label="Which situations the neuron fires for"></div>
+      <div class="scores">
+        <div class="score"><small>Average surprise (cross-entropy loss, lower is better)</small><b id="nlLoss">–</b><div class="lossbar"><i id="nlBar"></i></div></div>
+        <div class="score"><small>Kind of neuron</small><b id="nlKind" style="font-size:1.2rem">–</b></div>
+      </div>
+      <p class="caption" id="nlVerdict"></p>
+    </div>
+
+    <div class="prose" style="margin-top:1.5rem">
+      <details class="deeper">
+        <summary>Go deeper: why this sank the "build it clean" plan <small>Problem Setup</small></summary>
+        <div class="in">
+          <p>The scores are exact. If the neuron fires for <em>s</em> of the four situations, the loss is (<em>s</em>·ln <em>s</em> + (4−<em>s</em>)·ln(4−<em>s</em>)) ÷ 4. One situation gives ¾·ln 3 ≈ 0.82. Two gives ln 2 ≈ 0.69. The paper uses exactly these two numbers.</p>
+          <p>So the model gets a better score by making its only neuron mean two unrelated things. That is polysemanticity without any superposition at all. The team pushed sparsity during training as far as it goes, up to models where only one neuron fires at a time, and the neurons were still jumbled. Their conclusion: models trained to predict the next word will generally prefer to cover more situations vaguely than fewer situations cleanly.</p>
+          <p>A lawyer will recognise the incentive. If you are scored on how surprised you are by the verdict, a brief that keeps two outcomes in play beats one that bets everything on a single outcome and is silent on the rest.</p>
+          <p>The escape hatch is the loss function. A mean-squared-error loss, the "check your work" score you'll meet in Scene 2, doesn't reward hedging in the same way. So the plan became: leave the model alone, and decompose it afterwards with a tool trained on that kind of loss.</p>
+        </div>
+      </details>
     </div>
   </section>
 
+  <!-- Scene 2 -->
   <section class="scene" aria-labelledby="c4s2">
     <div class="prose">
       <p class="scene-tag">Scene 2</p>
-      <h3 id="c4s2">Explain every day with as few people as possible</h3>
-      <p>Their tool is called <span class="term">dictionary learning</span>, carried out with a <span class="term">sparse autoencoder</span>. It works like a translator with a strict rule:</p>
-      <p><strong>1. Expand.</strong> Take the neuron readings and translate them into a much longer list of possible concepts, the "dictionary". The model in the paper had 512 neurons, and the dictionary had thousands of entries.</p>
-      <p><strong>2. Be stingy.</strong> For each moment, use as <em>few</em> dictionary entries as possible. Most entries must stay silent. That's what "sparse" means.</p>
-      <p><strong>3. Check your work.</strong> Translate back, and make sure the result matches the original readings.</p>
-      <p>Train that translator on millions of moments, and each dictionary entry tends to settle on one real concept. Researchers call the entries <span class="term">features</span>.</p>
-      <p>You can try it on the crowded office from Chapter 3. Below, five hidden concepts share two desks, arranged in the pentagon you saw the model invent. The autoencoder only sees the dots, which are the desk readings at different moments. It has to discover where the five concepts are.</p>
+      <h3 id="c4s2">The judge's rule: fewest moving parts</h3>
+      <p>Here is the detective's problem. At every moment you can see how busy each desk is: the 512 neuron readings. You want the <strong>roster</strong>, the list of who is sitting where. Many rosters fit the same readings, just as many stories fit the same evidence.</p>
+      <p>A good judge prefers the account that explains <em>all</em> the evidence with the <em>fewest</em> moving parts. The tool the team used, a <span class="term">sparse autoencoder</span>, writes that rule into its score. It works in three steps:</p>
+      <p><strong>1. Expand.</strong> Translate the 512 readings into a much longer list of possible concepts, the <span class="term">dictionary</span>. In the run studied most closely it had 4,096 entries, eight per neuron.</p>
+      <p><strong>2. Be stingy.</strong> For each moment, switch on as few entries as possible. Each entry that switches on costs a fee in proportion to how strongly it's on.</p>
+      <p><strong>3. Check your work.</strong> Translate back and compare with the original readings. Every difference costs a fee too.</p>
+      <p>The training balances the two fees. Each entry that survives tends to settle on one real concept. Researchers call the entries <span class="term">features</span>.</p>
+      <p>You can try it on Chapter 3's crowded office. Five hidden concepts share two desks in the pentagon you saw the model invent. The autoencoder only sees the grey dots, which are desk readings at different moments, and has to work out where the five concepts are.</p>
     </div>
     <div class="toy">
       <div class="toy-head"><h4>Untangle the crowded office</h4><span class="label" id="saeStatus">Training…</span></div>
@@ -3103,6 +3202,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="scores" style="margin:0">
             <div class="score"><small>Concepts found</small><b id="saeFound">0 of 5</b></div>
             <div class="score"><small>Concepts used per moment</small><b id="saeUsed">0</b></div>
+            <div class="score"><small>Readings it fails to rebuild</small><b id="saeErr">–</b></div>
           </div>
           <p class="stat" id="saeStat"></p>
         </div>
@@ -3112,10 +3212,42 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="ctl" style="flex:0 1 220px"><label for="saeK">Dictionary size</label><select id="saeK"><option value="5">5 entries</option><option value="8">8 entries</option></select></div>
       </div>
       <div class="btns" style="margin-top:1rem"><button class="primary" id="saePlay">Pause</button><button id="saeReset">Start from scratch</button><button id="saeReveal" aria-pressed="false">Reveal the true concepts</button></div>
-      <p class="caption">This is a real sparse autoencoder training live in your browser, the same kind of tool the paper used, shrunk to two dimensions. <strong>Try this:</strong> set the rule to "off" and start from scratch. The autoencoder still rebuilds the readings perfectly, but its arrows often land in the wrong places and it uses many concepts at once: a perfect fit that tells the wrong story. The stingy rule is what makes it find the truth. With 8 entries, the spare ones double up or fall silent.</p>
+      <div class="predict"><b>Predict, then press.</b> Set the rule to "Off" and start from scratch. Will the autoencoder rebuild the readings better or worse than with the strict rule? Will it find the concepts?</div>
+      <p class="caption"><strong>Live:</strong> a real sparse autoencoder training in your browser, shrunk to two dimensions. With the rule off it rebuilds the readings almost perfectly (0% missed) yet usually finds only one or two of the five concepts, and uses more of them per moment than the truth (about 0.6). That's a perfect fit telling the wrong story. With the strict rule it finds all five and gives up around 15% of the readings to pay for it: the stingy fee shrinks every strength a little. With 8 entries, the spare ones double up or fall silent.</p>
+    </div>
+    <div class="prose" style="margin-top:1.5rem">
+      <details class="deeper">
+        <summary>Go deeper: the paper's notation, translated <small>Features as a Decomposition · appendix</small></summary>
+        <div class="in">
+          <p>The paper writes the readings at one moment as a list of numbers <b>x</b> and claims they can be rebuilt as a short sum:</p>
+          <p class="eq">x ≈ b + Σ<sub>i</sub> f<sub>i</sub>(x) · d<sub>i</sub></p>
+          <p>In words: the readings are roughly a fixed offset <b>b</b>, plus each feature's arrow <b>d</b><sub>i</sub> scaled by how strongly that feature is on, <b>f</b><sub>i</sub>. The arrows are the roster. The strengths come from an encoder: one layer of weights followed by a ReLU, the same "ignore the whispers" rule from Chapter 3, so most features read exactly zero.</p>
+          <p>The training score is</p>
+          <p class="eq">L = ‖x − x̂‖² + λ‖f‖₁</p>
+          <p>The first term is the "check your work" fee: the squared gap between the real readings and the rebuilt ones, x̂. The second is the "be stingy" fee: the total strength of all active features (the L1 norm), times a dial λ. The slider in the toy is λ.</p>
+          <p>Three details from the appendix, all in the toy above in simplified form: the decoder arrows are kept at length 1, so the model can't dodge the fee by shrinking strengths and lengthening arrows; the encoder and decoder weights are learned separately; and training uses the Adam optimiser. The toy leaves out the paper's input bias and its trick for reviving dead features (you'll meet that in Scene 6).</p>
+        </div>
+      </details>
+      <details class="deeper deepest">
+        <summary>Deeper still: why this should be impossible <small>Using Sparse Autoencoders</small></summary>
+        <div class="in">
+          <p>Recovering 4,096 strengths from 512 readings means solving for more unknowns than you have equations. Normally that has infinitely many answers. It becomes solvable only because the answer is known to be <em>sparse</em>: almost all strengths are zero. This is the field called compressed sensing, and finding the sparsest answer exactly is NP-hard, a class of problems believed to have no efficient general solution.</p>
+          <blockquote>"It's actually kind of miraculous that this is possible at all."<cite>Bricken et al., Using Sparse Autoencoders To Find Good Decompositions</cite></blockquote>
+          <p>Stronger classical algorithms exist. The team chose the simpler autoencoder for two reasons. It scales to enormous data. And it is about as powerful as the model's own thinker layer, which is a similar shape. A cleverer algorithm might "find" features the model itself can't read, which would be a finding about the algorithm, not the model.</p>
+          <dl class="kv">
+            <dt>Training data</dt><dd>MLP readings from 40 million text passages; about 8 billion readings used, never repeated</dd>
+            <dt>Training</dt><dd>1 million steps of 8,192 readings each</dd>
+            <dt>Dictionary sizes</dt><dd>from 512 (1×) to 131,072 (256×); runs A/0 to A/5 grow the dictionary at a fixed λ</dd>
+            <dt>Main run</dt><dd>A/1: 4,096 features (8×)</dd>
+            <dt>Target sparsity</dt><dd>usually fewer than 10 to 20 features on per reading</dd>
+          </dl>
+          <p>The team also admits they had no single number telling them a run had worked. They steered by hand inspection, by how often features fire, by reconstruction quality, and by toy problems like the one above where the right answer is known.</p>
+        </div>
+      </details>
     </div>
   </section>
 
+  <!-- Scene 3 -->
   <section class="scene" aria-labelledby="c4s3">
     <div class="prose">
       <p class="scene-tag">Scene 3</p>
@@ -3125,66 +3257,457 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="toy">
       <div class="toy-head"><h4>Who responds to each concept?</h4><span class="label">Live from the autoencoder above</span></div>
       <div class="resp"><table id="respTable" aria-label="How strongly each neuron and feature responds to each concept"></table></div>
-      <p class="caption">Each neuron responds to several concepts at once: that's the jumble. Once the autoencoder has settled, each feature responds to just one. That's what the paper's title means. <strong>Monosemantic</strong> means "one meaning", the opposite of the polysemantic neurons from Chapter 3.</p>
+      <p class="caption">Each neuron responds to several concepts at once: that's the jumble. Once the autoencoder has settled, each feature responds to just one. That's what the paper's title means. <strong>Monosemantic</strong> means "one meaning", the opposite of the polysemantic neurons from Chapter 3. Turn the rule off above and watch this table go muddy.</p>
     </div>
   </section>
 
+  <!-- Scene 4 -->
   <section class="scene" aria-labelledby="c4s4">
     <div class="prose">
       <p class="scene-tag">Scene 4</p>
-      <h3 id="c4s4">What they found in a real model</h3>
-      <p>The researchers ran this on a small real language model, with one layer and 512 neurons in its thinker layer. They trained dictionaries of many sizes. In the run they studied most closely, the 512 neurons unpacked into about <strong>4,000 features</strong>.</p>
-      <p>Many were strikingly clear. One feature responded to Arabic script, another to DNA sequences, another to base64 (a way of encoding computer data as letters and numbers), another to Hebrew. When people were asked to judge how interpretable features and neurons were, the features won by a wide margin.</p>
-      <p>Three more findings made the result convincing:</p>
-      <p><strong>They're real causes, not just labels.</strong> Artificially switching a feature on changes what the model writes. Turn up the base64 feature, and the model starts producing base64 text.</p>
-      <p><strong>They show up again and again.</strong> Train a second model from scratch, and very similar features appear in it. The researchers called this <span class="term">universality</span>.</p>
-      <p><strong>The features explain most of what the model does.</strong> Swapping the neuron readings for the autoencoder's translation kept most of the model's performance, though not all of it.</p>
-      <div class="aside">
-        <p class="label">The fine print</p>
-        <p>The translation isn't perfect. Some of what the model does slips through the dictionary unexplained, and some features are hard to put into words. And this was a tiny one-layer model. Whether the method would work on a big, modern model was the obvious open question.</p>
+      <h3 id="c4s4">Building a case, element by element</h3>
+      <p>A toy with a known answer is one thing. In the real model nobody knows the true roster. So how do you prove a feature is real and not a pattern the tool imagined?</p>
+      <p>The team treated it like proving a claim in court. For a handful of features they set out five elements and argued each one with separate evidence:</p>
+      <div class="elements">
+        <div class="el"><b>1. Specific</b>When the feature is on, the context is usually present.</div>
+        <div class="el"><b>2. Sensitive</b>When the context is present, the feature is usually on.</div>
+        <div class="el"><b>3. Causal</b>Switching it changes what the model writes, in the expected way.</div>
+        <div class="el"><b>4. Not a neuron</b>No single neuron already does this job.</div>
+        <div class="el"><b>5. Universal</b>A second model, trained from a different random start, has it too.</div>
       </div>
+      <p>For the first two they needed an independent yardstick, the way a court wants an expert whose method doesn't depend on the party's own story. They wrote simple rules called <span class="term">proxies</span>. Arabic script and Hebrew are easy to spot by their Unicode character ranges. DNA is a string of A, T, C and G. Base64, a way of writing computer data as letters, digits, + and /, is a string drawn from those 64 characters.</p>
+      <p>Then they compared the feature with the yardstick, token by token. Where the two disagree, someone has to be wrong. Your turn.</p>
+    </div>
+
+    <div class="toy">
+      <div class="toy-head"><h4>The feature and the yardstick</h4><span class="label" style="color:var(--marigold)">Proxy live · feature sketch</span></div>
+      <div class="seg" id="fvSeg" role="group" aria-label="Choose a feature"></div>
+      <p id="fvTitle" style="margin-top:1rem;font-family:var(--f-display);font-weight:600"></p>
+      <div class="fv-text" id="fvText" aria-label="Text split into tokens"></div>
+      <div class="fv-key"><span><i style="background:color-mix(in srgb, var(--marigold) 70%, var(--card))"></i>feature activation (darker = stronger)</span><span><i style="background:var(--teal);height:4px"></i>the yardstick says yes</span></div>
+      <div class="predict"><b>Find the disagreements.</b> Click every token where the shading and the green line disagree, then read who was right. <span id="fvScore"></span></div>
+      <div class="fv-why" id="fvWhy" aria-live="polite">Click a token.</div>
+      <p class="caption"><strong>What's real here:</strong> the green line is computed live by a simplified version of the paper's proxy rules (character ranges for the scripts; long unbroken runs of the right characters for DNA and base64). <strong>What's a sketch:</strong> we can't run the paper's model in your browser, so the shading is hand-set to match the behaviour the paper reports for each feature. The example texts and token splits are our own.</p>
+    </div>
+
+    <div class="prose" style="margin-top:1.5rem">
+      <details class="deeper">
+        <summary>Go deeper: the evidence file for all four features <small>Detailed Investigations</small></summary>
+        <div class="in">
+          <p>The paper names features like case numbers: <b>A/1/3450</b> means model A, dictionary run 1, feature 3450. Model B is a second copy of the same design, trained from a different random start.</p>
+          <p><strong>Arabic script, A/1/3450.</strong> Arabic script is just 0.13% of the training text but 81% of the tokens where this feature is on, rising to 98% when it is strongly on. Its correlation with the proxy is 0.74 over 40 million tokens. The neuron most correlated with it, A/neurons/489, responds to a mix of non-English languages, a natural thing to put in superposition since languages rarely appear together. In the neuron basis the feature is spread over 27 neurons, and its three biggest coefficients are negative. Model B has a matching feature, B/1/1334, with correlation 0.91.</p>
+          <p><strong>DNA, A/1/2937.</strong> All ten random examples above a strength of 6.0 are DNA. Correlation with the proxy is 0.8, and when they disagree the feature is usually the one that's right. It is the only feature in A/1 devoted to DNA. The tokens it pushes the model to predict are nucleotide chunks like AGT and GCC. Match in model B: B/1/3680, correlation 0.92.</p>
+          <p><strong>Base64, A/1/2357.</strong> Correlation with the proxy is only 0.38, mostly because the proxy is too broad: hexadecimal strings, the 0–9 and a–f alphabet of crypto hashes and addresses, pass the base64 test but belong to a feature of their own, A/1/3817. The closest neuron, A/neurons/470 (correlation 0.18), also fires on code, HTML and pieces of URLs. Match in model B: B/1/2165, correlation 0.85.</p>
+          <p><strong>Hebrew, A/1/416.</strong> Correlation with the proxy is 0.55. Part of the gap is a partner feature, A/1/1016, that handles the first byte of Hebrew characters. The team searched for any neuron with Hebrew in its top examples and found none. This is the clearest case of a feature that is invisible if you only look at neurons. Match in model B: B/1/1901, correlation 0.92.</p>
+          <p><strong>The causal element.</strong> The autoencoder never sees what the model does next; it only sees the thinker layer's readings. So downstream effects are independent evidence. The team checked them three ways: the words each feature pushes up (its "logit weights"); <em>ablation</em>, deleting the feature on real text and watching which predictions get worse; and <em>pinned sampling</em>, holding a feature at a high value while the model writes. Pinning the Arabic feature, starting from the prompt 1,2,3,4,5,6,7,8,9,10, made the model write Arabic. Pinning the base64 feature made it write base64. Chapter 5 turns this into the famous dial.</p>
+          <p>The team flags that these four were picked because they're easy to check. That objection gets its own scene.</p>
+        </div>
+      </details>
     </div>
   </section>
 
+  <!-- Scene 5 -->
   <section class="scene" aria-labelledby="c4s5">
     <div class="prose">
       <p class="scene-tag">Scene 5</p>
-      <h3 id="c4s5">Zooming in and out</h3>
-      <p>One more surprise. The size of the dictionary changes what you find. A small dictionary gives broad concepts. A bigger one splits them into finer ones, like zooming in on a map. The paper called this <span class="term">feature splitting</span>, and saw whole families of related features appear as dictionaries grew.</p>
-      <p>It's a lot like how a body of law gets organised. Here's an invented example to show the shape of the idea. It's an illustration, not a result from the paper.</p>
+      <h3 id="c4s5">"Objection: cherry-picked"</h3>
+      <p>Any sceptic would object that four hand-picked features prove little. A dictionary of 4,096 could contain four nice entries and four thousand muddles. So the team examined the typical feature, three different ways, and ran the same tests on neurons for comparison.</p>
+      <p><strong>A blinded human rater.</strong> One author, not told which was which, scored random features and random neurons on a 0–14 rubric: how confident is the explanation, do the examples fit it, do the predicted words fit it, how specific is it.</p>
+      <p><strong>An AI rater.</strong> Claude was shown examples of where a feature fires and asked to write an explanation. Then, in a fresh conversation, it used only that explanation to predict the feature's activity on text it hadn't seen.</p>
+      <p><strong>A word test.</strong> Using the same explanation, Claude guessed whether a given word is one the feature pushes up. Guessing at random scores 50%.</p>
     </div>
-    <div class="toy" style="max-width:720px">
-      <div class="toy-head"><h4>One concept, three dictionary sizes</h4><span class="label">Illustrative example</span></div>
-      <div class="tree">
-        <div class="lvl l0"><span>legal language</span></div>
-        <div class="down">bigger dictionary ↓</div>
-        <div class="lvl l1"><span>contracts</span><span>court procedure</span><span>legislation</span></div>
-        <div class="down">bigger still ↓</div>
-        <div class="lvl l2"><span>defined terms</span><span>termination clauses</span><span>objections</span><span>witness testimony</span><span>section numbers</span><span>amendments</span></div>
+    <div class="toy" style="max-width:860px">
+      <div class="toy-head"><h4>The verdicts</h4><span class="label">Numbers from the paper</span></div>
+      <div class="scores">
+        <div class="score"><small>Human rubric, median neuron</small><b>0 / 14</b><small>no hypothesis at all</small></div>
+        <div class="score"><small>Human rubric, median feature</small><b>12 / 14</b><small>confident, specific, consistent</small></div>
+        <div class="score"><small>Word test, average neuron</small><b>58%</b><small>chance is 50%</small></div>
+        <div class="score"><small>Word test, average feature</small><b>74%</b><small>chance is 50%</small></div>
       </div>
-      <p class="caption">There isn't one "correct" list of concepts inside a model. How finely you slice depends on how big a dictionary you choose, just as "law" can be divided into ten subjects or ten thousand.</p>
+      <p class="caption">The AI rater's activity predictions told the same story: features were significantly easier to explain and predict than neurons. The human scoring was small (412 samples across 162 features and neurons) because it was slow, careful work.</p>
+    </div>
+    <div class="prose" style="margin-top:1.5rem">
+      <p>Two pieces of method stand out. First, the raters didn't just look at each feature's top examples. They sampled evenly across 11 strength bands, from barely on to fully on.</p>
+      <blockquote>"Many polysemantic neurons appear monosemantic if you only look at top dataset examples."<cite>Bricken et al., Manual Human Analysis</cite></blockquote>
+      <p>Second, a control. The team shuffled the weights of the trained model, destroying what it had learned while keeping the same numbers, and ran dictionary learning on that. They got many features that fire on one single token and some that fire on arbitrary mixtures, and could not make sense of the rest. So the rich features come from what the model learned, not just from patterns in the text.</p>
+      <details class="deeper">
+        <summary>Go deeper: the honest accounting <small>Global Analysis · appendix</small></summary>
+        <div class="in">
+          <p><strong>Not every entry counts.</strong> Of A/1's 4,096 features, 168 are <em>dead</em>: they never fired on 100 million examples. Another 292 sit in an <em>ultralow-density</em> cluster, firing on fewer than 1 in a million examples, and almost none of those are interpretable. The team believes that cluster is an artifact of training and leaves it out of the analysis, which leaves 3,636.</p>
+          <p><strong>How much of the model is explained?</strong> Swap the thinker layer's real readings for the autoencoder's rebuilt ones and the model gets worse. For A/1 the damage is 21% of the damage from deleting the thinker layer entirely, so the features recover 79% of what the layer contributes. The biggest run, A/5 with 131,072 features and a smaller λ, recovers 94.5%.</p>
+          <blockquote>"These numbers should be taken with a significant grain of salt."<cite>Bricken et al., How much of the model does our interpretation explain?</cite></blockquote>
+          <p>Their reasons: a long tail of ever-rarer features means each extra percentage point costs more features; some meaning may hide in weak activations; and deleting the layer is a harsh baseline, so the percentage is probably an overestimate.</p>
+          <p><strong>Weaker activations are murkier.</strong> Many features stay consistent across their whole range. Others are clear in the top 60% and then fade. One possible reason: a learned arrow sitting at a slight angle to the true one would behave exactly like that. Most of a feature's effect on the output comes from its strong activations, which are the clear ones.</p>
+        </div>
+      </details>
     </div>
   </section>
 
+  <!-- Scene 6 -->
   <section class="scene" aria-labelledby="c4s6">
     <div class="prose">
+      <p class="scene-tag">Scene 6</p>
+      <h3 id="c4s6">Zooming in: features split into families</h3>
+      <p>The team trained dictionaries of many sizes on the same model. The size changed what they found. In A/0, with 512 entries, there is one base64 feature. In A/1, with 4,096, it has split into three. In A/2, with 16,384, there are many more. The paper calls this <span class="term">feature splitting</span>.</p>
+      <p>It works like a body of law. A general practitioner's filing cabinet has a drawer for "contracts". A specialist's has separate drawers for formation, breach and termination, and each of those is still mostly about contracts. Neither cabinet is wrong. They're the same law at different resolutions.</p>
+      <p>Below, three dictionaries of different sizes train side by side on the same readings. The readings come from six hidden concepts in three close-knit families. The legal names are invented labels for our toy data, not results from the paper.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>One office, three dictionary sizes</h4><span class="label" id="spStatus">Live</span></div>
+      <div class="seg" id="spSeg" role="group" aria-label="Choose how many levels of the family tree to show"></div>
+      <div class="fams" id="spTree"></div>
+      <p class="dead-row" id="spDead"></p>
+      <div class="controls">
+        <div class="checks"><label><input type="checkbox" id="spResample" checked> Revive silent entries during training (the paper's "resampling")</label></div>
+      </div>
+      <div class="btns" style="margin-top:.8rem"><button class="primary" id="spTrain">Train again</button></div>
+      <div class="predict"><b>Predict, then press.</b> Untick "revive silent entries" and train again a few times. What goes wrong in the 6-entry dictionary?</div>
+      <p class="caption"><strong>Live:</strong> three real sparse autoencoders (3, 6 and 12 entries) train on the same six-dimensional readings. Each entry's label is computed by switching on each hidden concept alone and seeing what the entry responds to. Each finer entry is drawn under the coarser entry whose arrow points most nearly the same way. With 3 entries you get the three families; with 6, each family splits in two; with 12 there are more entries than concepts, so the spares fall silent or duplicate. In our tests, without reviving, the 6-entry dictionary often lets an entry die and leaves one family unsplit.</p>
+    </div>
+    <div class="prose" style="margin-top:1.5rem">
+      <details class="deeper">
+        <summary>Go deeper: what the base64 family actually split into <small>Feature Splitting</small></summary>
+        <div class="in">
+          <p>When the single base64 feature of A/0 split three ways in A/1, two of the pieces were easy to read. A/1/2357 fires on letters inside base64 strings. A/1/2364 fires on single digits, and it predicts almost the same next tokens, with one difference: it doesn't predict digits. That's a quirk of how text is cut into tokens. Two digits in a row would have been cut as one token, so after a single-digit token the next token can't start with a digit.</p>
+          <p>The third piece, A/1/1544, had no obvious rule. It turned out to fire on base64 strings that encode ordinary readable text. The clue was a token, <code>ICAgICAg</code>, that decodes to six spaces. Try it yourself: <button id="b64Btn" style="font-size:.85rem;padding:.25rem .8rem">Decode Zm9yIHRoZSBjb3VydA==</button> <span id="b64Out" class="stat"></span></p>
+          <blockquote>"Who would have known that models not only have a base64 feature, but that they distinguish between distinct kinds of base64 strings?"<cite>Bricken et al., Feature Splitting</cite></blockquote>
+          <p><strong>Not quite a tree.</strong> In a maths-and-physics family, features at one level both split and merge into the next, so the real picture is a tangled web. Finer features also predict more specific words: a general "the in mathematical writing" feature pushes up words like <em>denominator</em> and <em>theorem</em>, while finer splits push up <em>dataset</em> and <em>classifier</em> in machine learning, or <em>gauge</em> and <em>Lagrangian</em> in physics.</p>
+          <p><strong>Two "bugs" explained.</strong> Small dictionaries showed odd features that fire on every instance of one token, such as " P". With more entries, these split into many features for P in different contexts. Large dictionaries showed several features for one context. Both look like the same thing seen at different resolutions. In A/4 there are over a hundred features that mainly respond to the word "the" in different contexts.</p>
+        </div>
+      </details>
+      <details class="deeper deepest">
+        <summary>Deeper still: what splitting says about superposition <small>Discussion · appendix</small></summary>
+        <div class="in">
+          <p>Chapter 3 pictured features as arrows that push each other apart evenly, like magnets on a ring. This paper says that picture was missing something. Real features come in tight clumps. The team's favoured explanation is that features which <em>do</em> similar things to the output end up with similar arrows. The base64 letter and digit features predict nearly the same tokens, so their arrows sit close together.</p>
+          <p>Their conjecture: with an unlimited dictionary you'd recover some idealised set of features; with a limited one, each entry covers a patch of territory at lower resolution. If so, there may be no single "correct" dictionary size. The authors leave open whether a true number of features even exists.</p>
+          <p><strong>Reviving the dead.</strong> During training some entries stop firing for good. At four checkpoints, the team found entries that hadn't fired for 12,500 steps and re-seeded each one with an input the autoencoder was currently rebuilding badly: arrow pointing at that input, encoder weights scaled down to 0.2 of the typical size, bias zero, optimiser memory wiped. The toy uses the same recipe, scaled down.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Scene 7 -->
+  <section class="scene" aria-labelledby="c4s7">
+    <div class="prose">
+      <p class="scene-tag">Scene 7</p>
+      <h3 id="c4s7">Two models, one roster</h3>
+      <p>If features were artefacts of the tool, two separately trained models should give unrelated rosters. The team trained a second model, B, identical except for its random starting point, and matched each A/1 feature with its closest B/1 feature by firing pattern.</p>
+    </div>
+    <div class="toy" style="max-width:760px">
+      <div class="toy-head"><h4>How well does model A's roster match model B's?</h4><span class="label">Numbers from the paper</span></div>
+      <div class="scores">
+        <div class="score"><small>Median best-match correlation, features</small><b>0.72</b></div>
+        <div class="score"><small>Median best-match correlation, neurons</small><b>0.46</b></div>
+      </div>
+      <p class="caption">Features agree across models much more than neurons do. Some are famous repeat offenders: the base64 feature had already shown up as a neuron in an earlier Anthropic model, and the team came to treat its presence as a quick check that a run had worked.</p>
+    </div>
+    <div class="prose" style="margin-top:1.5rem">
+      <details class="deeper">
+        <summary>Go deeper: the citation that broke the metric <small>Universality</small></summary>
+        <div class="in">
+          <p>Two features, A/1/3949 and B/1/3321, fire on almost exactly the same tokens: correlation 0.98. Yet the words they push up are <em>negatively</em> correlated. How can the same feature do opposite things?</p>
+          <p>Both fire on <code>pone</code>, the journal PLOS ONE's abbreviation in citations like <code>@pone.0082392</code>, and both predict the full stop that follows. That one token is the only one with a high weight in both. Every other weight is background noise on words that were never going to come next, so the model doesn't care what the feature does to them. The team switched to a measure that weights each prediction by whether that token actually comes next, and the two kinds of similarity lined up.</p>
+          <p>The same feature shows how features can audit a dataset: it fires on 0.02% of tokens, so at least 1 in 10,000 tokens of the Pile is a PLOS journal abbreviation in a citation. Remember the jumbled neuron's taste for academic citations.</p>
+          <p>Beyond model B, many features echo ones found elsewhere: hexadecimal and all-caps detectors seen before as neurons, a German detector, a French feature, and region features for Australia, Canada and Africa reminiscent of region neurons found earlier in multimodal models that link images and text.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Scene 8 -->
+  <section class="scene" aria-labelledby="c4s8">
+    <div class="prose">
+      <p class="scene-tag">Scene 8</p>
+      <h3 id="c4s8">Features that pass notes through the text</h3>
+      <p>One last surprise. Some features work in relays, using the text itself as the channel. A feature fires and pushes up certain next words. When one of those words is written, it switches on a different feature, which pushes up different words, and so on. The paper calls these <span class="term">"finite state automata"</span>-like systems, after the simple machines in computer science that hop between a fixed set of states.</p>
+      <p>Its cleanest example writes HTML, the code behind web pages. Four features in A/0 form a loop. Step through it.</p>
+    </div>
+    <div class="toy">
+      <div class="toy-head"><h4>The HTML relay</h4><span class="label" style="color:var(--marigold)">Sketch of the paper's loop</span></div>
+      <div class="fsa" id="fsaNodes"></div>
+      <div class="tape" id="fsaTape" aria-live="polite"></div>
+      <div class="btns" style="margin-top:1rem"><button class="primary" id="fsaStep">Write the next token</button><button id="fsaReset">Clear</button></div>
+      <p class="caption"><strong>Sketch:</strong> a hand-built simulation of the four-feature loop the paper describes (feature names are the paper's; the choice of each next token is ours). In the real model each feature only shifts probabilities; here we simply pick one of the tokens it favours.</p>
+    </div>
+    <div class="prose" style="margin-top:1.5rem">
+      <details class="deeper">
+        <summary>Go deeper: loops, pairs, and a memorised warranty disclaimer <small>"Finite State Automata"</small></summary>
+        <div class="in">
+          <p>The simplest relay is a loop of one: a base64 feature pushes up base64 tokens, which switch the same feature back on. Two-feature relays are common in scripts where one character is cut into two tokens, such as Tamil: one feature handles the first half, the other the second, and they alternate. All-caps snake case like <code>ARRAY_MAX_VALUE</code> has one feature for the capitals and one for the underscores. A separate family of features writes IRC chat logs.</p>
+          <p>These relays are not circuits in the usual sense. The model never learned these features to work together; they interact through the token stream because of patterns in real text. And A/0's HTML loop is simple because A/0 is coarse. It has nothing for what happens after a tag name like <code>href</code>. Bigger dictionaries show far more complicated machines.</p>
+          <p>A lawyer's favourite: in the large run A/4, a chain of features seems to have memorised part of the phrase <code>MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE</code>. That's the warranty disclaimer at the top of popular open-source licences, so the model saw it many times. It's surprising that such a narrow, specific mechanism fits in a model with 512 neurons.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Scene 9 -->
+  <section class="scene" aria-labelledby="c4s9">
+    <div class="prose">
+      <p class="scene-tag">Scene 9</p>
+      <h3 id="c4s9">Cross-examination</h3>
+      <p>Four questions the paper had to answer. Pick an answer to see the reasoning.</p>
+    </div>
+    <div class="quiz" id="c4Quiz"></div>
+  </section>
+
+  <section class="scene" aria-labelledby="c4s10">
+    <div class="prose">
       <p class="scene-tag">The end of the chapter</p>
-      <h3 id="c4s6">What we know, and what we don't</h3>
+      <h3 id="c4s10">What we know, and what we don't</h3>
     </div>
     <div class="learned">
-      <div class="card k"><h4>Known: the jumble can be untangled</h4><p>A sparse autoencoder can unpack polysemantic neurons into many features that each mean one thing.</p></div>
-      <div class="card k"><h4>Known: features are real and recurring</h4><p>Switching a feature on changes the model's behaviour, and similar features appear in separately trained models.</p></div>
-      <div class="card k"><h4>Known: the zoom level is a choice</h4><p>Bigger dictionaries split broad features into finer ones, in families.</p></div>
-      <div class="card u"><h4>Unknown: does it work on big models?</h4><p>This was a one-layer model with 512 neurons. Modern models are thousands of times larger.</p></div>
-      <div class="card u"><h4>Unknown: what slips through?</h4><p>Part of the model's behaviour isn't captured by the features. Nobody yet knew how much that leftover mattered.</p></div>
-      <div class="card u"><h4>Unknown: how do features connect?</h4><p>Finding the concepts is step one. Seeing how they combine into reasoning is a separate, harder step.</p></div>
+      <div class="card k"><h4>Known: the jumble can be untangled</h4><p>In a one-layer model, a sparse autoencoder unpacks 512 polysemantic neurons into thousands of features that humans and an AI rater both find far easier to explain.</p></div>
+      <div class="card k"><h4>Known: features are causes</h4><p>Deleting or pinning a feature changes the model's predictions the way its explanation says it should, and the autoencoder never saw those effects.</p></div>
+      <div class="card k"><h4>Known: features recur</h4><p>A second model trained from scratch has a closely matching roster, much closer than its neurons.</p></div>
+      <div class="card k"><h4>Known: resolution is a choice</h4><p>Bigger dictionaries split broad features into families of finer ones, and keep finding new, rarer features as they grow.</p></div>
+      <div class="card u"><h4>Unknown: will it scale?</h4><p>An autoencoder for one large layer could need billions of parameters and a big share of the original training data. Nobody yet knew if it would work.</p></div>
+      <div class="card u"><h4>Unknown: what's left over?</h4><p>A/1 recovers 79% of the layer's contribution. The rest, and how to measure it fairly, was open.</p></div>
+      <div class="card u"><h4>Unknown: what is a feature, really?</h4><p>The authors stay agnostic on whether models are built from features or features are just a useful description, and on whether there's a true number of them.</p></div>
+      <div class="card u"><h4>Unknown: attention and connections</h4><p>This decomposed one thinker layer. Messenger layers, and how features combine into reasoning across layers, were still ahead.</p></div>
     </div>
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 5: The Golden Gate Bridge</h4>
-      <p>In 2024, the team ran dictionary learning on Claude 3 Sonnet, a large production model, and found millions of features. One of them was the Golden Gate Bridge, and turning it up had memorable results. <a href="#golden-gate">Read Chapter 5 ↓</a></p>
+      <p>In 2024 the team scaled dictionary learning up to Claude 3 Sonnet, a large production model, and found millions of features. One of them was the Golden Gate Bridge, and pinning it high had memorable results. <a href="#golden-gate">Read Chapter 5 ↓</a></p>
     </div>
+    <p class="caption" style="max-width:66ch;margin:1.5rem auto 0">Source: Trenton Bricken, Adly Templeton, Joshua Batson, Brian Chen, Adam Jermyn and colleagues, <a href="https://transformer-circuits.pub/2023/monosemantic-features/index.html" target="_blank" rel="noopener">Towards Monosemanticity: Decomposing Language Models With Dictionary Learning</a>, Transformer Circuits Thread, 2023. The paper's interactive feature browser lets you explore all 4,096 A/1 features yourself. Our toys, example texts and wording are original.</p>
   </section>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const LL = window.LL, root = document.getElementById('untangling');
+    const $ = id => document.getElementById(id);
+
+    /* --- Scene 1: the lone neuron (exact cross-entropy) --- */
+    {
+      const on = new Set(['A']), box = $('nlChips');
+      const xl = n => n > 0 ? n * Math.log(n) : 0;
+      ['A', 'B', 'C', 'D'].forEach(s => {
+        const b = document.createElement('button'); b.className = 'chip'; b.textContent = 'situation ' + s; b.dataset.s = s;
+        b.addEventListener('click', () => { on.has(s) ? on.delete(s) : on.add(s); render(); });
+        box.appendChild(b);
+      });
+      const render = () => {
+        const s = on.size, loss = (xl(s) + xl(4 - s)) / 4;
+        box.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', on.has(b.dataset.s)));
+        $('nlLoss').textContent = loss.toFixed(3);
+        $('nlBar').style.width = (loss / Math.log(4) * 100).toFixed(0) + '%';
+        $('nlKind').textContent = s === 0 ? 'never fires' : s === 4 ? 'always fires' : s === 1 ? 'monosemantic' : 'polysemantic';
+        $('nlVerdict').innerHTML = s === 2 ? '<strong>The best possible score.</strong> A neuron that means two unrelated things beats one that means one thing cleanly: 0.693 against 0.824.'
+          : s === 1 || s === 3 ? 'A respectable score, but not the best. Try other combinations.'
+          : 'The neuron carries no information, so the model is guessing among all four words: the worst score.';
+        root.dataset.nlLoss = loss.toFixed(3);
+      };
+      render();
+    }
+
+    /* --- Scene 4: feature viewer (live proxies, hand-set activations) --- */
+    {
+      const inRange = (c, lo, hi) => { const p = c.codePointAt(0); return p >= lo && p <= hi; };
+      const charProxy = {
+        arabic: ch => [...ch].map(c => inRange(c, 0x600, 0x6FF) || inRange(c, 0x750, 0x77F)),
+        hebrew: ch => [...ch].map(c => inRange(c, 0x590, 0x5FF)),
+        dna: txt => runFlags(txt, /[ATCG]/, () => true),
+        base64: txt => runFlags(txt, /[A-Za-z0-9+/=]/, run => /\d/.test(run) || /[a-z][A-Z]|[A-Z][a-z][A-Z]/.test(run)),
+      };
+      // flag characters that belong to an unbroken run of allowed characters at least 6 long
+      function runFlags(txt, re, extra) {
+        const cs = [...txt], f = cs.map(() => false); let i = 0;
+        while (i < cs.length) { if (!re.test(cs[i])) { i++; continue; } let j = i; while (j < cs.length && re.test(cs[j])) j++;
+          const run = cs.slice(i, j).join(''); if (j - i >= 6 && extra(run)) for (let k = i; k < j; k++) f[k] = true; i = j; }
+        return f;
+      }
+      const F = {
+        arabic: {name: 'Arabic script', id: 'A/1/3450', mode: 'char', toks: [
+          ['The', 0], [' judge', 0], [' wrote:', 0], [' قال', .75], [' ال', 0, 'The yardstick says Arabic, and it is: "ال" is the prefix al-, meaning "the". This feature skips it. In exactly these places a sister feature, A/1/3134, fires instead. Gaps like this are why one feature can look less sensitive than it is.'],
+          ['قاضي', .9], [' إن', .85], ['⏎', .6, 'A line break. It isn\'t an Arabic character, so the yardstick says no, but the feature stays on because the text around it is Arabic. The paper notes this exact kind of false negative in its proxy.'],
+          ['ال', 0, 'The al- prefix again: the yardstick says yes, this feature says no, and its sister feature A/1/3134 covers it.'], ['عقد', .9], [' باطل', .95], ['.', .15]],
+          gloss: 'Our sentence: "The judge wrote: the judge said that the contract is void." Tokens are shown in the order the model reads them, left to right.'},
+        dna: {name: 'DNA', id: 'A/1/2937', mode: 'run', toks: [
+          ['Primer', 0], [' sequence', 0], [':', 0], [' 5', 0], ["'-", .5, 'The yardstick says no: "\'-" isn\'t DNA. The feature fires anyway, because what follows 5\'- in a lab write-up should be DNA. The paper found this exact case, and deleting the feature hurt the predictions that followed. Point to the feature.'],
+          ['TCT', .2, 'The yardstick says yes and the feature hasn\'t switched on yet. The paper saw this too: the DNA feature can miss the first few tokens of a sequence, then switches on and stays on. Point to the yardstick, narrowly.'],
+          ['GGA', .7], ['ACGT', .9], [' TGG', .9, 'The space breaks the yardstick\'s strict "only A, T, C and G" rule, so it says no. The feature keeps firing on these spaced triplets, and it\'s right. The paper reports that most disagreements went the feature\'s way.'],
+          [' AGT', .9, 'Same story: a space-separated triplet. The yardstick misses it; the feature doesn\'t.'], ["-3'", .1], [' of', 0], [' the', 0], [' CAT', 0, 'No disagreement here. "CAT" could be DNA but is usually a word, which is why the paper\'s proxy only judges groups of tokens. Ours needs six letters in a row.'], [' gene', 0]],
+          gloss: 'An invented lab note. The proxy here marks unbroken runs of at least six A/T/C/G letters.'},
+        base64: {name: 'base64', id: 'A/1/2357', mode: 'run', toks: [
+          ['key', 0], [':', 0], [' Bq', .8], ['8', 0, 'A single digit inside a base64 string. The yardstick says yes. This feature stays off because a sibling, A/1/2364, handles single digits. Both are base64; they split the work.'],
+          ['mp', .85], ['Xz', .9], ['4', 0, 'Another single digit, covered by the digit sibling A/1/2364 rather than this feature.'], ['Lr', .9], ['Tk', .9],
+          [' and', 0], [' hash', 0], [' 0x', 0, 'The yardstick is too broad here. A hexadecimal string uses only characters that are also legal in base64, so the proxy fires. The model has a separate hexadecimal feature, A/1/3817, and this base64 feature stays quiet. The paper blames this for the proxy\'s low correlation of 0.38.'],
+          ['3f9a', 0, 'More hexadecimal: the yardstick says base64, the base64 feature says no, and the feature is right.'], ['0c7e', 0, 'Still hexadecimal. Point to the feature.']],
+          gloss: 'An invented config line. The proxy here marks unbroken runs of at least six base64 characters that contain a digit or mixed capitals.'},
+        hebrew: {name: 'Hebrew', id: 'A/1/416', mode: 'char', toks: [
+          ['The', 0], [' sign', 0], [' read', 0], [':', 0], [' בית', .9], [' המשפט', .95], [' העליון', .9],
+          [',', .6, 'A comma is punctuation shared by every script, so the yardstick says no. The feature stays on inside the Hebrew text. The paper traces much of the yardstick\'s disagreement to punctuation and spaces like this.'],
+          [' ירושלים', .9], [' (', 0], ['суд', .2, 'Cyrillic: Russian for "court". The paper says this feature weakly activates on other non-Latin scripts. Here it stays below the "on" line, so there\'s no disagreement.'], [')', 0]],
+          gloss: 'Our sign reads "Supreme Court, Jerusalem" in Hebrew, then "court" in Russian.'},
+      };
+      const keys = Object.keys(F); let cur = 'arabic';
+      const found = {}; keys.forEach(k => found[k] = new Set());
+      const proxyFor = k => {
+        const f = F[k], txt = f.toks.map(t => t[0]).join('');
+        const flags = charProxy[k](txt); let pos = 0;
+        return f.toks.map(([t]) => { const n = [...t].length, fl = flags.slice(pos, pos + n), cs = [...t]; pos += n;
+          const vis = cs.map((c, i) => [c, fl[i]]).filter(([c]) => c.trim() && c !== '⏎');
+          return vis.length > 0 && vis.every(([, x]) => x); });
+      };
+      const seg = $('fvSeg');
+      keys.forEach(k => { const b = document.createElement('button'); b.textContent = F[k].name; b.dataset.k = k; b.addEventListener('click', () => { cur = k; render(); $('fvWhy').textContent = 'Click a token.'; }); seg.appendChild(b); });
+      const render = () => {
+        const f = F[cur], px = proxyFor(cur), box = $('fvText');
+        seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.k === cur));
+        $('fvTitle').textContent = `Feature ${f.id}: ${f.name}`;
+        box.innerHTML = '';
+        let total = 0;
+        f.toks.forEach(([t, a, why], i) => {
+          const b = document.createElement('button'); b.className = 'tok' + (px[i] ? ' px' : '');
+          const dis = (a >= .3) !== px[i]; if (dis) total++;
+          b.dataset.dis = dis ? '1' : '0';
+          b.textContent = t; b.setAttribute('dir', 'auto');
+          b.style.background = a > 0 ? `color-mix(in srgb, var(--marigold) ${Math.round(a * 75)}%, var(--card))` : 'var(--wash)';
+          b.setAttribute('aria-label', `${t.trim() || 'space'}: feature ${a >= .3 ? 'on' : 'off'}, yardstick ${px[i] ? 'yes' : 'no'}`);
+          if (found[cur].has(i)) b.classList.add('found');
+          b.addEventListener('click', () => {
+            box.querySelectorAll('.tok').forEach(x => x.classList.remove('sel')); b.classList.add('sel');
+            if (dis) { found[cur].add(i); b.classList.add('found'); }
+            $('fvWhy').innerHTML = dis ? `<strong>Disagreement.</strong> ${why}` : `<strong>They agree</strong>: feature ${a >= .3 ? 'on' : 'off'}, yardstick ${px[i] ? 'yes' : 'no'}.${why ? ' ' + why : ''}`;
+            score();
+          });
+          box.appendChild(b);
+        });
+        box.dataset.total = total;
+        const g = document.createElement('p'); g.className = 'stat'; g.style.flexBasis = '100%'; g.style.marginTop = '.5rem'; g.textContent = f.gloss; box.appendChild(g);
+        score();
+      };
+      const score = () => { const t = +$('fvText').dataset.total, n = found[cur].size; $('fvScore').textContent = n >= t ? `All ${t} found. The yardstick was wrong more often than the feature.` : `Found ${n} of ${t}.`; };
+      render();
+      LL.shared.c4proxy = proxyFor; LL.shared.c4F = F;
+    }
+
+    /* --- Scene 6: feature splitting, three live dictionaries --- */
+    {
+      const D = 6, COS = .93, SIN = Math.sqrt(1 - COS * COS), P_ON = .05, LO = .6, LAM = .1, LR = .01, B = 64, STEPS = 6000, RS = 500, RS_END = 3600;
+      const fams = [{n: 'Contracts', c: '--sky', kids: ['termination clauses', 'defined terms']}, {n: 'Court procedure', c: '--teal', kids: ['objections', 'witness testimony']}, {n: 'Legislation', c: '--pink', kids: ['section numbers', 'amendments']}];
+      const TRUE = []; fams.forEach((f, fi) => [1, -1].forEach(sg => { const v = new Array(D).fill(0); v[fi] = COS; v[3 + fi] = sg * SIN; TRUE.push(v); }));
+      const NAMES = fams.flatMap(f => f.kids);
+      const sample = () => { const h = new Array(D).fill(0); for (let i = 0; i < TRUE.length; i++) if (Math.random() < P_ON) { const x = LO + (1 - LO) * Math.random(); for (let d = 0; d < D; d++) h[d] += x * TRUE[i][d]; } return h; };
+      const make = k => {
+        const W = [], Wd = [], be = new Float64Array(k), m = new Float64Array(k * (2 * D + 1)), v = new Float64Array(k * (2 * D + 1)), last = new Array(k).fill(0);
+        for (let j = 0; j < k; j++) { let u = [...Array(D)].map(() => Math.random() - .5); const nn = Math.hypot(...u); u = u.map(x => x / nn); Wd.push(u); W.push(u.slice()); }
+        const S = {k, W, Wd, be, t: 0};
+        S.enc = h => W.map((w, j) => { let z = be[j]; for (let d = 0; d < D; d++) z += w[d] * h[d]; return z > 0 ? z : 0; });
+        S.step = () => {
+          const gE = W.map(() => new Float64Array(D)), gD = W.map(() => new Float64Array(D)), gb = new Float64Array(k);
+          for (let b = 0; b < B; b++) { const h = sample(), f = S.enc(h); const r = h.map(x => -x);
+            for (let j = 0; j < k; j++) if (f[j]) { last[j] = S.t; for (let d = 0; d < D; d++) r[d] += Wd[j][d] * f[j]; }
+            for (let j = 0; j < k; j++) { if (!f[j]) continue; let dot = 0; for (let d = 0; d < D; d++) { gD[j][d] += 2 * r[d] * f[j] / B; dot += 2 * r[d] * Wd[j][d]; }
+              const df = (dot + LAM) / B; for (let d = 0; d < D; d++) gE[j][d] += df * h[d]; gb[j] += df; } }
+          S.t++; let i = 0; const t = S.t;
+          const up = (arr, idx, g) => { m[i] = .9 * m[i] + .1 * g; v[i] = .999 * v[i] + .001 * g * g; arr[idx] -= LR * (m[i] / (1 - .9 ** t)) / (Math.sqrt(v[i] / (1 - .999 ** t)) + 1e-8); i++; };
+          for (let j = 0; j < k; j++) { for (let d = 0; d < D; d++) up(W[j], d, gE[j][d]); for (let d = 0; d < D; d++) up(Wd[j], d, gD[j][d]); up(be, j, gb[j]); const nn = Math.hypot(...Wd[j]) || 1; for (let d = 0; d < D; d++) Wd[j][d] /= nn; }
+        };
+        S.resample = win => {
+          const dead = [...Array(k).keys()].filter(j => S.t - last[j] > win); if (!dead.length) return;
+          const alive = [...Array(k).keys()].filter(j => !dead.includes(j));
+          const eN = alive.length ? alive.reduce((a, j) => a + Math.hypot(...W[j]), 0) / alive.length : 1;
+          const pool = [...Array(512)].map(() => { const h = sample(), f = S.enc(h), r = h.slice(); for (let j = 0; j < k; j++) for (let d = 0; d < D; d++) r[d] -= Wd[j][d] * f[j]; return {h, l: r.reduce((a, x) => a + x * x, 0)}; });
+          const tot = pool.reduce((a, p) => a + p.l, 0); if (tot < 1e-9) return;
+          for (const j of dead) { let u = Math.random() * tot, p = pool[0]; for (const q of pool) { u -= q.l; if (u <= 0) { p = q; break; } }
+            const nn = Math.hypot(...p.h) || 1; for (let d = 0; d < D; d++) { Wd[j][d] = p.h[d] / nn; W[j][d] = p.h[d] / nn * eN * .2; } be[j] = 0; last[j] = S.t;
+            const base = j * (2 * D + 1); for (let q = base; q < base + 2 * D + 1; q++) { m[q] = 0; v[q] = 0; } }
+        };
+        S.describe = () => Wd.map((_, j) => { const r = TRUE.map(T => S.enc(T)[j]), mx = Math.max(...r); if (mx < .05) return null; return NAMES.map((_, i) => i).filter(i => r[i] > .3 * mx && r[i] > .05); });
+        return S;
+      };
+      let dicts, playing = false, levels = 3;
+      const label = set => { if (!set) return 'silent';
+        const fi = fams.findIndex((f, i) => set.length === 2 && set.includes(2 * i) && set.includes(2 * i + 1));
+        return fi >= 0 ? fams[fi].n.toLowerCase() : set.map(i => NAMES[i]).join(' + '); };
+      const famOf = set => { const fs = [...new Set(set.map(i => i >> 1))]; return fs.length === 1 ? fs[0] : -1; };
+      const cos = (a, b) => a.reduce((s, x, i) => s + x * b[i], 0);
+      const seg = $('spSeg');
+      [[1, '3 entries'], [2, '+ 6 entries'], [3, '+ 12 entries']].forEach(([n, t]) => { const b = document.createElement('button'); b.textContent = t; b.dataset.n = n; b.addEventListener('click', () => { levels = n; render(); }); seg.appendChild(b); });
+      const chip = (S, j, set) => { const fi = set ? famOf(set) : -1;
+        return `<div class="ent" style="border-left-color:${fi >= 0 ? `var(${fams[fi].c})` : 'var(--line)'}">${label(set)}<small>${S.k}-entry dictionary · entry ${j + 1}</small></div>`; };
+      const render = () => {
+        seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.n === levels));
+        const desc = dicts.map(S => S.describe());
+        // parent of each finer live entry: coarser live entry with the most similar arrow
+        const parent = (li, j) => { const up = dicts[li - 1]; let best = -1, bv = -2; up.Wd.forEach((w, q) => { if (!desc[li - 1][q]) return; const c = cos(w, dicts[li].Wd[j]); if (c > bv) { bv = c; best = q; } }); return best; };
+        const kidsOf = (li, q) => li >= levels ? [] : dicts[li].Wd.map((_, j) => j).filter(j => desc[li][j] && parent(li, j) === q);
+        const sub = (li, q) => { const ks = kidsOf(li, q); if (!ks.length) return ''; return `<div class="kids">${ks.map(j => chip(dicts[li], j, desc[li][j]) + sub(li + 1, j)).join('')}</div>`; };
+        const tops = dicts[0].Wd.map((_, q) => q).filter(q => desc[0][q]);
+        // group the top level by family so columns read consistently
+        const cols = [0, 1, 2].map(fi => tops.filter(q => famOf(desc[0][q]) === fi));
+        const other = tops.filter(q => famOf(desc[0][q]) < 0);
+        $('spTree').innerHTML = cols.map((qs, fi) => `<div class="fam">${qs.length ? qs.map(q => chip(dicts[0], q, desc[0][q]) + sub(1, q)).join('') : `<div class="ent" style="opacity:.6">no entry for ${fams[fi].n.toLowerCase()} yet</div>`}</div>`).join('') + (other.length ? `<div class="fam">${other.map(q => chip(dicts[0], q, desc[0][q]) + sub(1, q)).join('')}</div>` : '');
+        const dead = dicts.slice(0, levels).map(S => `${S.k} entries: ${S.describe().filter(x => !x).length} silent`).join(' · ');
+        $('spDead').textContent = 'Silent entries (never switch on): ' + dead;
+        $('spStatus').textContent = playing ? `Training… step ${dicts[0].t.toLocaleString()} of ${STEPS.toLocaleString()}` : `Trained · ${STEPS.toLocaleString()} steps`;
+        root.dataset.spDesc = JSON.stringify(desc.map(d => d.map(x => x ? x.join('+') : 'dead')));
+      };
+      const start = () => { dicts = [3, 6, 12].map(make); playing = true; render(); };
+      const tick = n => { const rs = $('spResample').checked; for (let s = 0; s < n && dicts[0].t < STEPS; s++) dicts.forEach(S => { S.step(); if (rs && S.t % RS === 0 && S.t <= RS_END) S.resample(RS / 2); }); if (dicts[0].t >= STEPS) playing = false; };
+      let visible = false, frame = 0;
+      new IntersectionObserver(es => { visible = es.some(e => e.isIntersecting); }).observe($('spTree'));
+      const loop = () => { if (playing && visible) { tick(40); if (++frame % 6 === 0 || !playing) render(); } requestAnimationFrame(loop); };
+      $('spTrain').addEventListener('click', () => { start(); if (LL.reduce) { tick(STEPS); render(); } });
+      start(); requestAnimationFrame(loop);
+      LL.shared.c4split = {finish: () => { tick(STEPS); render(); }, start};
+      $('b64Btn').addEventListener('click', () => { $('b64Out').textContent = '→ "' + atob('Zm9yIHRoZSBjb3VydA==') + '"'; });
+    }
+
+    /* --- Scene 8: the HTML relay --- */
+    {
+      const N = [
+        {id: 'A/0/20', fires: 'open tags <code>&lt;</code>', pushes: 'tag names', out: ['div', 'span', 'p', 'li', 'td']},
+        {id: 'A/0/0', fires: 'tag names', pushes: 'tag closes', out: ['>']},
+        {id: 'A/0/30', fires: 'tag closes <code>&gt;</code>', pushes: 'whitespace', out: ['\n\t\t', '\n\t', '\n']},
+        {id: 'A/0/494', fires: 'whitespace', pushes: 'new open tags', out: ['<']},
+      ];
+      const nodes = $('fsaNodes'); nodes.innerHTML = N.map((n, i) => `<div class="node" data-i="${i}"><b>${n.id}</b>fires on ${n.fires}<br>→ pushes up ${n.pushes}</div>`).join('');
+      let st = 3, tape = [], k = 0;
+      const show = (s) => s.replace(/\n/g, '⏎\n').replace(/\t/g, '  ');
+      const render = () => {
+        nodes.querySelectorAll('.node').forEach((d, i) => d.classList.toggle('on', i === st));
+        $('fsaTape').innerHTML = tape.length ? tape.map((t, i) => `<span class="${i === tape.length - 1 ? 'last' : ''}">${show(t).replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`).join('') : '<span style="color:var(--ink-soft)">Press the button. The active feature (outlined) picks the next token, and that token wakes the next feature.</span>';
+      };
+      $('fsaStep').addEventListener('click', () => { const o = N[st].out; tape.push(o[(k++ * 3 + tape.length) % o.length]); st = (st + 1) % 4; render(); });
+      $('fsaReset').addEventListener('click', () => { st = 3; tape = []; render(); });
+      render();
+    }
+
+    /* --- Scene 9: cross-examination --- */
+    {
+      const Q = [
+        {q: 'The autoencoder is trained only on the thinker layer\'s readings. Why is it such strong evidence that deleting a feature changes the model\'s next-word predictions?',
+          o: ['Because the autoencoder was trained to predict next words too.', 'Because the downstream effects played no part in training, so they are independent evidence the feature belongs to the model and not just to patterns in the text.', 'It isn\'t strong evidence; any random direction would do the same.'], a: 1,
+          r: 'Right. The paper stresses that downstream effects are "not inputs to the dictionary learning process". A pattern that only reflected the text would have no reason to make the model\'s predictions sensible when removed.'},
+        {q: 'A neuron\'s 20 strongest examples are all Korean text. Can you call it a Korean neuron?',
+          o: ['Yes, the strongest examples define it.', 'Not yet. Polysemantic neurons often look clean at the very top; you have to check weaker activations too.', 'Only if it never fires on English.'], a: 1,
+          r: 'That\'s why the raters sampled evenly across 11 strength bands. The jumbled neuron from Chapter 3 is exactly the kind that can look tidy at the top and turn out to be a mixture lower down.'},
+        {q: 'Dictionary learning on a model with shuffled, meaningless weights still produced features. What did they look like?',
+          o: ['Just as rich as the real ones, which would undermine the whole paper.', 'Mostly features that fire on a single token, plus some arbitrary mixtures that made no sense.', 'Nothing at all: every entry died.'], a: 1,
+          r: 'The team concluded that a trained model creates "a richer structure in its activations than the distribution of tokens in the dataset alone." Single-token features are the kind of thing the raw text can produce on its own.'},
+        {q: 'Features A/1/3949 and B/1/3321 fire on nearly identical tokens (correlation 0.98), but the words they push up are negatively correlated. What\'s going on?',
+          o: ['They are different features that happen to coincide.', 'The models learned opposite meanings for the same citation.', 'Only one word matters, the full stop after "pone" in PLOS ONE citations, and both push it up. The rest of their weights are noise on words that were never going to come next.'], a: 2,
+          r: 'Exactly. Correlating every weight over the whole vocabulary drowns the one that matters. The team switched to a measure weighted by what actually comes next in real text, and the features matched.'},
+      ];
+      const box = $('c4Quiz');
+      Q.forEach((q, qi) => {
+        const d = document.createElement('div'); d.className = 'q';
+        d.innerHTML = `<h4>${qi + 1}. ${q.q}</h4><div class="opts">${q.o.map((o, i) => `<button data-i="${i}">${o}</button>`).join('')}</div><p class="ans" hidden></p>`;
+        const ans = d.querySelector('.ans');
+        d.querySelectorAll('.opts button').forEach(b => b.addEventListener('click', () => {
+          const i = +b.dataset.i; d.querySelectorAll('.opts button').forEach(x => x.classList.remove('right', 'wrong'));
+          b.classList.add(i === q.a ? 'right' : 'wrong'); if (i !== q.a) d.querySelectorAll('.opts button')[q.a].classList.add('right');
+          ans.hidden = false; ans.innerHTML = (i === q.a ? '' : '<strong>Not quite.</strong> ') + q.r;
+        }));
+        box.appendChild(d);
+      });
+    }
+  });
+  </script>
 </article>
 
 <article id="golden-gate">
@@ -4106,6 +4629,11 @@ the jury heard the evidence`.split('\n');
       const found = TRUE.filter(T => Wd.some((d, j) => al[j] && d[0] * T[0] + d[1] * T[1] > .97)).length;
       document.getElementById('saeFound').textContent = `${found} of 5`;
       document.getElementById('saeUsed').textContent = usedAvg.toFixed(1);
+      let eNum = 0, eDen = 0;
+      dots.forEach(h => { const f = encode(h); let r0 = -h[0], r1 = -h[1]; for (let j = 0; j < k; j++) { r0 += Wd[j][0] * f[j]; r1 += Wd[j][1] * f[j]; } eNum += r0 * r0 + r1 * r1; eDen += h[0] * h[0] + h[1] * h[1]; });
+      const errPct = 100 * eNum / (eDen || 1);
+      document.getElementById('saeErr').textContent = `${errPct < 1 ? errPct.toFixed(1) : Math.round(errPct)}%`;
+      cv.dataset.found = found; cv.dataset.err = errPct.toFixed(2); cv.dataset.used = usedAvg.toFixed(2);
       document.getElementById('saeVerdict').innerHTML = found === 5 ? 'All five hidden concepts <span>found</span>, using only the desk readings.' : found ? `The autoencoder has pinned down <span>${found}</span> so far.` : 'The arrows are still searching.';
       document.getElementById('saeStat').textContent = `Training steps: ${steps.toLocaleString()} · the true answer is about 0.6 concepts per moment · grey arrows never switch on`;
       document.getElementById('saeStatus').textContent = playing ? 'Training…' : 'Paused';
