@@ -133,6 +133,13 @@ button.primary:hover{opacity:.88}
 .canvas-box canvas{width:100%;display:block}
 .model-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:1.5rem;align-items:center}
 .model-grid canvas{width:100%;max-width:440px;aspect-ratio:1;margin:0 auto}
+/* 3D stages: a WebGL canvas takes over from the 2D one when three.js loads */
+.gl-host{position:relative;width:100%;max-width:440px;aspect-ratio:1;margin:0 auto}
+.gl-host > canvas:not(.gl){width:100%;height:auto;display:block}
+.gl-host.gl-ready > canvas:not(.gl){visibility:hidden}
+.gl-host > canvas.gl{position:absolute;inset:0;width:100%!important;height:100%!important;max-width:none!important;aspect-ratio:auto!important;cursor:grab;border-radius:16px}
+.gl-host > canvas.gl:active{cursor:grabbing}
+.gl-badge{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);text-align:center;margin-top:.4rem}
 @media (max-width:720px){.model-grid{grid-template-columns:1fr}}
 .legend{display:grid;gap:8px}
 .leg{display:grid;grid-template-columns:18px minmax(0,1fr) 92px;gap:10px;align-items:center;font-size:.92rem}
@@ -1616,6 +1623,17 @@ html{scroll-padding-top:16px}
   <style>
     #copycat details.deeper{border-left:4px solid var(--pink);background:color-mix(in srgb, var(--pink) 6%, var(--card));border-radius:0 var(--r) var(--r) 0;padding:.2rem 1.1rem}
     #copycat details.deeper[open]{padding-bottom:1rem}
+    #copycat .c2r-lede{font-size:.98rem;color:var(--ink-soft);margin-bottom:1rem}
+    #copycat .c2r-stage{border-radius:18px;background:var(--wash);overflow:hidden}
+    #copycat .c2r-host{max-width:none;aspect-ratio:16/9;min-height:300px}
+    @media (max-width:560px){#copycat .c2r-host{aspect-ratio:4/5}}
+    #copycat .c2r-none{padding:1.2rem;color:var(--ink-soft)}
+    #copycat .c2r-bar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-top:1rem}
+    #copycat .c2r-bar .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+    #copycat .c2r-steps{margin:1rem 0 0;padding-left:1.4rem;display:grid;gap:.5rem;font-size:.95rem;line-height:1.45}
+    #copycat .c2r-steps li{color:var(--ink-soft);transition:color .3s}
+    #copycat .c2r-steps li.on{color:var(--ink)}
+    #copycat .c2r-steps li.on::marker{color:var(--plum);font-weight:700}
     #copycat details.deeper > summary{cursor:pointer;font-family:var(--f-display);font-weight:600;padding:.7rem 0;list-style-position:outside}
     #copycat details.deeper > summary .label{color:var(--pink);margin-right:.5rem}
     #copycat details.deeper > div{display:grid;gap:.9rem}
@@ -1808,6 +1826,23 @@ html{scroll-padding-top:16px}
       </div>
       <p class="verdict" id="c2Verdict"></p>
       <p class="caption">Both settings also use the one-word guesser from Chapter 1, learned from the 25-sentence courtroom story. When nothing earlier matches, the induction team looks at the "start" position, which copies nothing. <strong>Try this:</strong> switch clerks on Example 1. Then try Example 3, where two different people were called "ms". The copycat rule only knows what followed "ms" before, and now there are two answers, so it splits its vote between them, and the old habit "reyes" edges back into first place. The paper saw the same thing in real models: after two "Mrs Dursley"s in the first paragraph of <em>Harry Potter</em>, the first "Mrs Potter" became <em>harder</em> to predict once induction heads had formed.</p>
+    </div>
+    <div class="toy" id="c2ride">
+      <div class="toy-head"><h4>Ride along: the same sentence, inside the two clerks</h4><span class="label">Real calculation · 3D</span></div>
+      <p class="c2r-lede">Every word above gets its own case file, standing on the floor. Each file rises like a column through the two rows of clerks. Clerk 1 works on the lower row, Clerk 2 on the upper one. Press play, or drag the slider, to watch the trick happen in order, then ride along with the last file.</p>
+      <div class="c2r-stage"><div class="gl-host c2r-host" id="c2rHost"></div><p class="c2r-none" id="c2rNone" hidden>This 3D view needs WebGL, which isn't available here. The toy above computes the same thing.</p></div>
+      <div class="c2r-bar">
+        <button class="primary" id="c2rPlay">Play</button>
+        <div class="ctl" style="flex:1 1 220px"><label for="c2rT" class="sr">Step through</label><input type="range" id="c2rT" min="0" max="300" value="0" aria-label="Step through the calculation"></div>
+        <div class="seg" id="c2rCam" role="group" aria-label="Camera"><button data-c="over" aria-pressed="true">Watch from outside</button><button data-c="ride" aria-pressed="false">Ride with the last file</button></div>
+      </div>
+      <ol class="c2r-steps" id="c2rSteps">
+        <li data-k="0"><b>Clerk 1 writes a note in every file:</b> "the word before me was…", drawn as a pink ← and that word. Each pink arc is one look, one step back.</li>
+        <li data-k="1"><b>Clerk 2 works on the last file.</b> Its question is "which file's note says <em>← <span class="c2r-last"></span></em>?" Every earlier file answers. Thicker beams mean more attention.</li>
+        <li data-k="2"><b>It copies the word from the file that matched</b> and adds it to the last file's notes, which push the next-word guess.</li>
+      </ol>
+      <p class="verdict" id="c2rVerdict"></p>
+      <p class="caption">This is the toy above, drawn in space. The attention weights, the notes and the final guess are all computed from the sentence you typed, with the same hand-set clerks and the same one-word guesser. The beams' thickness is the real attention share. Only the last 14 words are drawn. Riding along puts you beside Clerk 2 as it reads the last file, looking back at the file it chose.</p>
     </div>
     <div class="prose" style="margin-top:1.4rem">
       <details class="deeper">
@@ -2237,6 +2272,126 @@ html{scroll-padding-top:16px}
     }
   });
   </script>
+  <script>
+  /* chapter 2: ride along with the induction team, in 3D. Same clerks and guesser as "Chapter 1's mix-up, fixed". */
+  document.addEventListener('DOMContentLoaded', () => {
+    const LL = window.LL, $ = id => document.getElementById(id), court = LL.shared.court;
+    const MAXW = 14, GAP = .62, Y1 = 1, Y2 = 2.05, STRENGTH = 8;
+    const txt = $('c2Text'), tS = $('c2rT'), play = $('c2rPlay'), camSeg = $('c2rCam'), host = $('c2rHost');
+    // the calculation: Clerk 1 looks one word back; Clerk 2 (on the last file) looks where the note "before me" matches
+    const compute = () => {
+      const all = txt.value.toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean).slice(-30);
+      if (!all.length) return null;
+      const last = all[all.length - 1], earlier = all.slice(0, -1);
+      const scores = [2, ...earlier.map((t, j) => (j > 0 && earlier[j - 1] === last) ? 6 : 0)];
+      const mx = Math.max(...scores), ex = scores.map(x => Math.exp(x - mx)), Z = ex.reduce((a, b) => a + b, 0), att = ex.map(e => e / Z);
+      const cand = new Set([...court.V, ...all]), logit = court.bigramLogits(last, cand);
+      earlier.forEach((t, j) => logit[t] += STRENGTH * att[j + 1]);
+      const top = court.softmaxTop(logit, 3);
+      // keep the last MAXW words for drawing; the start file stays at the far left
+      const cut = Math.max(0, all.length - MAXW), words = all.slice(cut);
+      const attShown = [att[0], ...words.slice(0, -1).map((_, j) => att[cut + j + 1])];
+      let best = 0; attShown.forEach((a, i) => { if (a > attShown[best]) best = i; });
+      return {words, last, att: attShown, best, top, cut, prev: words.map((_, i) => i === 0 ? (cut ? all[cut - 1] : 'start') : words[i - 1])};
+    };
+    let R = compute(), T = 0, playing = false, cam = 'over';
+    const steps = [...$('c2rSteps').children];
+    const say = () => {
+      if (!R) { $('c2rVerdict').textContent = 'Type a few words in the toy above.'; return; }
+      document.querySelectorAll('#c2ride .c2r-last').forEach(e => e.textContent = R.last);
+      const k = T < 100 ? 0 : T < 200 ? 1 : 2; steps.forEach((li, i) => li.classList.toggle('on', i === k));
+      const w = R.best ? R.words[R.best - 1] : null, pc = Math.round(R.att[R.best] * 100);
+      $('c2rVerdict').innerHTML = T < 100 ? 'Every file now knows the word before it.'
+        : T < 200 ? (w ? `Clerk 2 is drawn to the file for <span>${w}</span> (${pc}% of its attention), whose note reads "before me: ${R.last}".` : `No note says "before me: ${R.last}", so Clerk 2 rests on the start file (${pc}%), which copies nothing.`)
+        : `Next-word guess: <span>${R.top[0][0]}</span> (${Math.round(R.top[0][1] * 100)}%)${R.top[1] ? `, then ${R.top[1][0]} (${Math.round(R.top[1][1] * 100)}%)` : ''}.`;
+      $('c2ride').dataset.best = w || 'start'; $('c2ride').dataset.guess = R.top[0][0];
+    };
+    say();
+    let st = null, rebuild = () => {}, flyCam = () => {};
+    const setT = v => { T = Math.max(0, Math.min(300, v)); tS.value = Math.round(T); say(); if (st) st.dirty = true; };
+    tS.addEventListener('input', () => { playing = false; play.textContent = 'Play'; setT(+tS.value); });
+    play.addEventListener('click', () => { if (playing) { playing = false; play.textContent = 'Play'; return; } if (T >= 300) setT(0); if (LL.reduce) { setT(300); return; } playing = true; play.textContent = 'Pause'; });
+    camSeg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; cam = b.dataset.c; camSeg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); if (cam === 'ride' && T < 100) setT(100); flyCam(); });
+    const refresh = () => { R = compute(); say(); rebuild(); };
+    txt.addEventListener('input', refresh);
+    $('c2Presets').addEventListener('click', () => setTimeout(refresh, 0));
+    LL.shared.c2ride = {get R() { return R; }, setT, setCam: c => camSeg.querySelector(`[data-c="${c}"]`).click()};
+
+    LL.stage(host, {fov: 38, yaw: .32, pitch: .42, dist: 9, target: [0, 1.1, 0], spin: 0, minPitch: -.2, maxPitch: 1.35,
+      label: 'A row of case files, one per word, rising through two rows of clerks, with attention drawn as beams between them. Drag or use the arrow keys to turn.'}).then(s => {
+      if (!s) { host.hidden = true; $('c2rNone').hidden = false; return; }
+      st = s; const THREE = s.THREE;
+      const world = new THREE.Group(); s.scene.add(world);
+      let parts = null;
+      const X = i => (i - (R.words.length) / 2) * GAP;   // file i (0 = start) sits at X(i)
+      const tube = (pts, r, c, op = 1) => {
+        const curve = new THREE.CatmullRomCurve3(pts), g = new THREE.TubeGeometry(curve, 48, r, 8, false);
+        const m = new THREE.Mesh(g, s.toon(c, {transparent: op < 1, opacity: op})); m.userData.count = g.index.count; m.geometry.setDrawRange(0, 0); return m;
+      };
+      const arc = (xa, xb, y, lift, z) => { const pts = []; for (let q = 0; q <= 16; q++) { const u = q / 16, b = Math.sin(Math.PI * u); pts.push(new THREE.Vector3(xa + (xb - xa) * u, y + lift * b, z * b)); } return pts; };
+      rebuild = () => {
+        world.clear(); if (!R) { parts = null; s.dirty = true; return; }
+        const N = R.words.length + 1, half = N * GAP / 2 + .25;
+        // the two rows of clerks: thin glass shelves
+        const shelf = (y, c, name) => {
+          const m = new THREE.Mesh(new THREE.BoxGeometry(half * 2, .03, 1.5), s.toon(c, {transparent: true, opacity: .18, depthWrite: false})); m.position.set(0, y, 0); world.add(m);
+          const l = s.label(name, c, .19); l.position.set(-half + l.scale.x / 2 + .05, y + .2, -.8); world.add(l);
+        };
+        shelf(Y1, '--pink', 'Clerk 1 · previous-word head'); shelf(Y2, '--plum', 'Clerk 2 · induction head');
+        const files = [], cols = [], notes = [], words = ['start', ...R.words];
+        words.forEach((w, i) => {
+          const isLast = i === N - 1, isStart = i === 0;
+          const f = new THREE.Mesh(new THREE.BoxGeometry(GAP * .78, .08, .62), s.toon(isLast ? '--marigold' : isStart ? '--line' : '--card')); f.position.set(X(i), 0, 0); world.add(f);
+          const edge = new THREE.LineSegments(new THREE.EdgesGeometry(f.geometry), new THREE.LineBasicMaterial({color: s.col('--ink-soft')})); edge.position.copy(f.position); world.add(edge);
+          const lab = s.label(isStart ? 'start' : w, isStart ? '--ink-soft' : '--ink', .2, isLast ? 800 : 600); lab.position.set(X(i), .26, .25); world.add(lab); files.push(f);
+          // the file's column: what travels upward through the clerks
+          const c = new THREE.Mesh(new THREE.CylinderGeometry(.035, .035, 1, 10), s.toon(isLast ? '--marigold' : '--ink-soft', {transparent: true, opacity: isLast ? .9 : .35}));
+          c.position.set(X(i), 0, 0); world.add(c); cols.push(c);
+          if (i > 0) { const n = s.label(`← ${R.prev[i - 1]}`, i === R.best ? '--plum' : '--pink', i === R.best ? .2 : .15, i === R.best ? 800 : 600); n.position.set(X(i), Y1 + .32, 0); n.material.opacity = 0; world.add(n); notes.push(n); } else notes.push(null);
+        });
+        // Clerk 1's looks: one short arc per file, back to the previous file
+        const a1 = []; for (let i = 1; i < N; i++) { const m = tube(arc(X(i), X(i - 1), Y1 + .02, .22, .3), .022, '--pink'); world.add(m); a1.push(m); }
+        // Clerk 2's beams: from the last file to every earlier file, as thick as the attention it pays
+        const xL = X(N - 1), a2 = R.att.map((a, j) => { const span = Math.abs(xL - X(j)); const m = tube(arc(xL, X(j), Y2, .35 + span * .08, .25 + span * .12).map((p, q, A) => q === A.length - 1 ? new THREE.Vector3(X(j), Y1 + .32, 0) : p), .008 + .07 * Math.sqrt(a), j === R.best ? '--plum' : '--ink-soft', j === R.best ? 1 : .55); world.add(m); return m; });
+        // the copied word travelling back to the last file, and the guess on top
+        const packet = s.label(R.best ? R.words[R.best - 1] : '(nothing)', '--plum', .22, 800); packet.visible = false; world.add(packet);
+        const guess = s.label(`next: ${R.top[0][0]}`, '--ink', .26, 800); guess.position.set(xL - guess.scale.x / 2 - .05, Y2 + .85, 0); guess.material.opacity = 0; world.add(guess);
+        const bestCurve = new THREE.CatmullRomCurve3(arc(X(R.best), xL, Y2 + .05, .5 + Math.abs(xL - X(R.best)) * .08, .25 + Math.abs(xL - X(R.best)) * .12));
+        parts = {N, cols, notes, a1, a2, packet, guess, bestCurve, files};
+        flyCam(true);
+        s.dirty = true;
+      };
+      flyCam = instant => {
+        if (!parts) return;
+        if (cam === 'over') {
+          // wide screens see the row face on; tall phone screens look along it, so the row recedes into depth
+          const half = parts.N * GAP / 2 + .5, tall = s.camera.aspect < 1, fit = Math.tan(s.camera.fov * Math.PI / 360) * s.camera.aspect;
+          s.fly(tall ? {yaw: 1.05, pitch: .5, dist: Math.max(4.5, half * .55 / fit + 1.5), target: [0, 1.05, 0]} : {yaw: .3, pitch: .4, dist: Math.max(4.5, half / fit * .92 + 1), target: [0, 1.05, 0]}, instant ? 0 : 1300); return;
+        }
+        // sit beside Clerk 2, just behind the last file's column, looking back at the file that matched
+        const xL = X(parts.N - 1), tgt = [X(R.best), Y1 + .3, 0], eye = [xL + 2.1, Y2 + 1.25, 1.5];
+        const d = eye.map((v, q) => v - tgt[q]), dist = Math.hypot(...d);
+        s.fly({target: tgt, dist, yaw: Math.atan2(d[0], d[2]), pitch: Math.asin(d[1] / dist)}, instant ? 0 : 1600);
+      };
+      const k01 = (v, a, b) => Math.max(0, Math.min(1, (v - a) / (b - a)));
+      s.frame(dt => {
+        if (playing) { setT(T + dt * 45); if (T >= 300) { playing = false; play.textContent = 'Play again'; } }
+        if (!parts) return false;
+        const {N, cols, notes, a1, a2, packet, guess, bestCurve} = parts;
+        // columns rise as each stage is reached
+        const h = 1 + Math.min(1, T / 100) * (Y2 - 1) + k01(T, 200, 300) * .5;
+        cols.forEach((c, i) => { const hh = i === N - 1 ? h : Math.min(h, Y2); c.scale.y = hh; c.position.y = hh / 2; });
+        a1.forEach((m, q) => { const u = k01(T, q / (N - 1) * 80, q / (N - 1) * 80 + 25); m.geometry.setDrawRange(0, Math.floor(m.userData.count * u / 3) * 3); if (notes[q + 1]) notes[q + 1].material.opacity = k01(T, q / (N - 1) * 80 + 15, q / (N - 1) * 80 + 30); });
+        a2.forEach(m => { const u = k01(T, 110, 185); m.geometry.setDrawRange(0, Math.floor(m.userData.count * u / 3) * 3); });
+        const u = k01(T, 205, 270); packet.visible = u > 0 && u < 1; if (packet.visible) packet.position.copy(bestCurve.getPoint(u)).add(new THREE.Vector3(0, .12, 0));
+        guess.material.opacity = k01(T, 265, 295);
+        return playing || s.busy ? undefined : false;
+      });
+      s.theme(rebuild);
+      rebuild();
+    });
+  });
+  </script>
 </article>
 
 <article id="crowded-office">
@@ -2267,6 +2422,9 @@ html{scroll-padding-top:16px}
 #crowded-office .quiz.done .reveal{display:block}
 #crowded-office .kind{display:inline-block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding:.15rem .5rem;border-radius:6px;background:color-mix(in srgb, var(--teal) 18%, var(--card));color:var(--teal);margin-right:.3rem}
 #crowded-office .kind.sk{background:color-mix(in srgb, var(--marigold) 24%, var(--card));color:var(--ink)}
+#crowded-office .c3cmp{background:var(--wash);border-radius:14px;padding:12px 14px;font-size:.95rem;line-height:1.5;margin:0}
+#crowded-office .c3cmp .ok{color:var(--good)}
+#crowded-office .c3cmp .no{color:var(--tomato)}
 #crowded-office .dchips{display:flex;flex-wrap:wrap;gap:6px}
 #crowded-office .dchips span{font-family:var(--f-mono);font-size:.8rem;padding:.2rem .5rem;border-radius:8px;background:var(--wash);display:inline-flex;gap:.35rem;align-items:center}
 #crowded-office .dchips i{width:10px;height:10px;border-radius:50%;display:inline-block}
@@ -2600,7 +2758,7 @@ html{scroll-padding-top:16px}
       <p class="scene-tag">Scene 6</p>
       <h3 id="s6">The shapes nobody asked for</h3>
       <p>Back to many concepts. When all of them are equally important and equally rare, the toy model is solving a puzzle with a long history. In 1904 the physicist J. J. Thomson asked how electrons would arrange themselves on a sphere if they all pushed each other away. The paper shows that the toy model is solving a cousin of that puzzle: each stored concept is a point on a sphere, and interference is the push.</p>
-      <p>Below, a real model packs concepts into <strong>3 directions</strong>, so its arrows live in ordinary 3D space. Lines join concepts whose arrows aren't perpendicular: those are the concepts that interfere. Drag to turn it.</p>
+      <p>Below, a real model packs concepts into <strong>3 directions</strong>, so its arrows live in ordinary 3D space. The shaded solid is the shape their tips make. Faint lines join concepts whose arrows are neither perpendicular nor exactly opposite: those pairs interfere. Drag to turn it, then put the model side by side with Thomson's electrons, solved live in your browser, and see where the two puzzles agree.</p>
       <div class="quiz" data-quiz>
         <p class="label">Predict before you press</p>
         <p>Six rare, equally important concepts share three desks. What shape do you expect?</p>
@@ -2611,18 +2769,20 @@ html{scroll-padding-top:16px}
     <div class="toy">
       <div class="toy-head"><h4>The shape finder: n concepts, 3 directions</h4><span class="label" id="c3yStatus">Real training</span></div>
       <div class="grid2">
-        <canvas id="c3Poly" width="840" height="840" aria-label="Three-dimensional arrangement of concept arrows learned by the model" role="img"></canvas>
+        <div><div class="gl-host" id="c3PolyHost"><canvas id="c3Poly" width="840" height="840" aria-label="Three-dimensional arrangement of concept arrows learned by the model" role="img"></canvas></div><p class="gl-badge">Drag to turn it</p></div>
         <div style="display:grid;gap:.8rem">
+          <div class="seg" id="c3yShow" role="group" aria-label="What to show" hidden><button aria-pressed="true" data-s="model">The model</button><button aria-pressed="false" data-s="elec">Thomson's electrons</button><button aria-pressed="false" data-s="both">Side by side</button></div>
           <p class="verdict" id="c3yVerdict" style="margin:0"></p>
           <div class="dchips" id="c3yChips"></div>
           <p class="stat" id="c3yStat"></p>
+          <p id="c3yCompare" class="c3cmp" aria-live="polite"></p>
         </div>
       </div>
       <div class="controls">
         <div class="ctl" style="flex:0 1 260px"><label for="c3yN">How many concepts?</label><select id="c3yN"><option>4</option><option>5</option><option selected>6</option><option>7</option><option>8</option></select></div>
         <div class="btns"><button id="c3yAgain">Train again</button></div>
       </div>
-      <p class="caption">Four models train side by side from random starts (each concept shows up 3% of the time, all equally important) and we show the one with the lowest error, as the paper did. What we saw in our runs: <strong>6</strong> gives the octahedron. <strong>8</strong> gives eight equal shares of 3/8 and no see-saws at all: a <strong>square antiprism</strong>, a shape mostly known from chemistry because it solves Thomson's puzzle for eight electrons. <strong>4</strong> is a surprise: rather than a tetrahedron, our small model usually prefers two private desks plus one see-saw. <strong>5</strong>: one private desk and two see-saws. 7 has no tidy answer.</p>
+      <p class="caption">Four models train side by side from random starts (each concept shows up 3% of the time, all equally important) and we show the one with the lowest error, as the paper did. What we saw in our runs: <strong>6</strong> gives the octahedron. <strong>8</strong> gives eight equal shares of 3/8 and no see-saws at all: a <strong>square antiprism</strong>, a shape mostly known from chemistry because it solves Thomson's puzzle for eight electrons. <strong>4</strong> is a surprise: rather than a tetrahedron, our small model usually prefers two private desks plus one see-saw. <strong>5</strong>: one private desk and two see-saws. 7 has no tidy answer. <strong>The electrons</strong> are a separate real calculation: six random starts, each nudged downhill on Thomson's energy (the sum of 1/distance over every pair), keeping the lowest. They agree with the model at 6 and 8 and part ways at 4, 5 and 7.</p>
     </div>
     <div class="prose" style="margin-top:1.6rem">
       <details class="deeper">
@@ -2928,12 +3088,52 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* shape finder: n concepts in 3 dims, uniform importance, rare; best of 4 runs */
+  /* shape finder: n concepts in 3 dims, uniform importance, rare; best of 4 runs. Drawn in WebGL when available,
+     beside Thomson's electrons (n charges on a sphere, solved live by gradient descent on the 1/r energy). */
   {
-    const cv = $('c3Poly'), ctx = cv.getContext('2d'), nS = $('c3yN');
+    const cv = $('c3Poly'), ctx = cv.getContext('2d'), nS = $('c3yN'), host = $('c3PolyHost'), showSeg = $('c3yShow');
     const S = .97, TOTAL = 4000, PER = 25;
-    let models = [], yaw = .6, pitch = .35, drag = null, done = false, best = null;
-    const start = () => { const n = +nS.value; models = [...Array(4)].map(() => new Toy(n, 3, Array(n).fill(1), indepSampler(n, S))); done = false; best = null; };
+    let models = [], yaw = .6, pitch = .35, drag = null, done = false, best = null, gl = null, show = 'model', elec = null;
+    const an = w => /^[aeiou]/.test(w) ? 'an' : 'a';
+    const shapeNames = {4: 'tetrahedron', 5: 'triangular bipyramid', 6: 'octahedron', 7: 'pentagonal bipyramid', 8: 'square antiprism'};
+    // Thomson's problem: put n equal charges on a sphere so the total 1/r push is as small as possible
+    const thomson = n => {
+      let bestP = null, bestE = Infinity;
+      for (let run = 0; run < 6; run++) {
+        let P = [...Array(n)].map(() => { const v = [0, 0, 0].map(() => Math.random() * 2 - 1), L = Math.hypot(...v) || 1; return v.map(x => x / L); });
+        for (let it = 0; it < 2500; it++) {
+          const F = P.map(() => [0, 0, 0]);
+          for (let i = 0; i < n; i++) for (let k = i + 1; k < n; k++) { const d = [0, 1, 2].map(j => P[i][j] - P[k][j]), r = Math.hypot(...d) + 1e-9, f = 1 / (r * r * r); for (let j = 0; j < 3; j++) { F[i][j] += d[j] * f; F[k][j] -= d[j] * f; } }
+          P = P.map((p, i) => { const q = p.map((x, j) => x + .02 * F[i][j]), L = Math.hypot(...q); return q.map(x => x / L); });
+        }
+        let E = 0; for (let i = 0; i < n; i++) for (let k = i + 1; k < n; k++) E += 1 / Math.hypot(P[i][0] - P[k][0], P[i][1] - P[k][1], P[i][2] - P[k][2]);
+        if (E < bestE) { bestE = E; bestP = P; }
+      }
+      return {P: bestP, E: bestE};
+    };
+    // the faces of the convex hull (n ≤ 8, so every triple can simply be tested), merging coplanar ones into polygons
+    const hull = P => {
+      const n = P.length, faces = new Map(), sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+      const crs = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]], dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+      for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) for (let k = j + 1; k < n; k++) {
+        let N = crs(sub(P[j], P[i]), sub(P[k], P[i])); const L = Math.hypot(...N); if (L < 1e-6) continue; N = N.map(x => x / L);
+        const d = dot(N, P[i]); let pos = 0, neg = 0;
+        for (let q = 0; q < n; q++) { const s = dot(N, P[q]) - d; if (s > 1e-4) pos++; else if (s < -1e-4) neg++; }
+        if (pos && neg) continue;
+        if (pos) { N = N.map(x => -x); }
+        const key = N.map(x => Math.round(x * 50)).join(',') + '|' + Math.round(dot(N, P[i]) * 50);
+        const f = faces.get(key) || {N, set: new Set()}; [i, j, k].forEach(x => f.set.add(x)); faces.set(key, f);
+      }
+      return [...faces.values()].map(({N, set}) => {
+        const ids = [...set], c = [0, 1, 2].map(j => ids.reduce((a, i) => a + P[i][j], 0) / ids.length);
+        const u0 = sub(P[ids[0]], c), u = u0.map(x => x / (Math.hypot(...u0) || 1)), w = crs(N, u);
+        ids.sort((a, b) => Math.atan2(dot(sub(P[a], c), w), dot(sub(P[a], c), u)) - Math.atan2(dot(sub(P[b], c), w), dot(sub(P[b], c), u)));
+        return ids;
+      });
+    };
+    const pairCos = V => { const out = []; for (let i = 0; i < V.length; i++) for (let k = i + 1; k < V.length; k++) out.push(V[i][0] * V[k][0] + V[i][1] * V[k][1] + V[i][2] * V[k][2]); return out.sort((a, b) => a - b); };
+    const unit = v => { const L = Math.hypot(...v) || 1; return v.map(x => x / L); };
+    const start = () => { const n = +nS.value; models = [...Array(4)].map(() => new Toy(n, 3, Array(n).fill(1), indepSampler(n, S))); done = false; best = null; elec = thomson(n); if (gl) gl.rebuild(); };
     const describe = M => {
       const n = M.n, D = M.dims(), pairs = [];
       for (let i = 0; i < n; i++) for (let k = i + 1; k < n; k++) if (M.cos(i, k) < -.95) pairs.push([i, k]);
@@ -2946,8 +3146,16 @@ document.addEventListener('DOMContentLoaded', () => {
       else shape = `<span>${n} concepts in an uneven arrangement</span>`;
       return {D, pairs, own, sum, shape};
     };
-    const draw = () => {
-      const W = cv.width, c = W / 2, R = W * .36, M = best || models[0];
+    // compare the model's arrangement with the electrons': same shape if the sorted angles between every pair match
+    const compare = M => {
+      if (!M || !elec) return null;
+      const V = [...Array(M.n)].map((_, i) => M.col(i)).filter(v => Math.hypot(...v) > .3).map(unit);
+      if (V.length !== M.n) return {same: false, gap: 1};
+      const a = pairCos(V), b = pairCos(elec.P), gap = a.reduce((s, x, i) => s + Math.abs(x - b[i]), 0) / a.length;
+      return {same: gap < .06, gap};
+    };
+    const draw2d = M => {
+      const W = cv.width, c = W / 2, R = W * .36;
       ctx.clearRect(0, 0, W, W);
       ctx.strokeStyle = LL.C.line; ctx.lineWidth = 3; ctx.setLineDash([10, 14]); ctx.beginPath(); ctx.arc(c, c, R, 0, 7); ctx.stroke(); ctx.setLineDash([]);
       if (!M) return;
@@ -2958,23 +3166,36 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.globalAlpha = 1;
       [...Array(n).keys()].sort((a, b) => P[a][2] - P[b][2]).forEach(i => { ctx.globalAlpha = .45 + .55 * (P[i][2] / 1.3 + .5); arrow(ctx, c, c, P[i][0], P[i][1], featCol(i), 12); });
       ctx.globalAlpha = 1; ctx.fillStyle = LL.C.ink; ctx.beginPath(); ctx.arc(c, c, 10, 0, 7); ctx.fill();
+    };
+    const draw = () => {
+      const M = best || models[0];
+      if (!gl) draw2d(M);
+      if (!M) return;
       const d = describe(M);
       $('c3yVerdict').innerHTML = done ? `It found ${d.shape}.` : 'Training…';
       $('c3yChips').innerHTML = d.D.map((v, i) => `<span><i style="background:var(${cssFeat[i]})"></i>${frac(v)}</span>`).join('');
       $('c3yStat').textContent = `Shares of a desk add up to ${d.sum.toFixed(2)} (3 directions) · steps ${M.t.toLocaleString()} · error ${M.loss.toFixed(5)}`;
+      const cmp = done ? compare(M) : null, el = $('c3yCompare'), nm = shapeNames[M.n];
+      el.innerHTML = !done ? `The electrons settle at once: ${an(nm)} <b>${nm}</b>. Will the model agree?`
+        : cmp.same ? `<b class="ok">Same shape.</b> The model and Thomson's electrons both make ${an(nm)} <b>${nm}</b>.`
+        : `<b class="no">Different shapes.</b> The electrons make ${an(nm)} <b>${nm}</b>, but the model chose ${d.shape}. The two puzzles are cousins, not twins: an electron is pushed by every other electron, while the model's filter shrugs off most interference that points the <em>opposite</em> way, which makes exact see-saws cheap.`;
+      el.dataset.same = cmp ? cmp.same : '';
     };
-    LL.shared.c3poly = {get best() { return best; }, get done() { return done; }, describe};
+    LL.shared.c3poly = {get best() { return best; }, get done() { return done; }, describe, compare, get elec() { return elec; }, get gl() { return !!gl; }, setShow: m => setShow(m)};
+    const setShow = m => { show = m; showSeg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === m)); if (gl) gl.layout(); draw(); };
+    showSeg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) setShow(b.dataset.s); });
+    let visible = false;
     const loop = () => {
       if (!done && visible) {
         for (const M of models) for (let s = 0; s < PER; s++) M.step(128);
         best = models.reduce((a, b) => a.loss < b.loss ? a : b);
         if (models[0].t >= TOTAL) { done = true; $('c3yStatus').textContent = 'Real training · best of 4'; }
       }
-      if (!reduce && !drag && visible) yaw += .004;
+      if (!gl && !reduce && !drag && visible) yaw += .004;
       if (visible) draw();
       requestAnimationFrame(loop);
     };
-    let visible = false; new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(cv);
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(host);
     cv.addEventListener('pointerdown', e => { drag = [e.clientX, e.clientY]; cv.setPointerCapture(e.pointerId); });
     cv.addEventListener('pointermove', e => { if (!drag) return; yaw += (e.clientX - drag[0]) * .01; pitch += (e.clientY - drag[1]) * .01; drag = [e.clientX, e.clientY]; draw(); });
     cv.addEventListener('pointerup', () => { drag = null; });
@@ -2982,6 +3203,78 @@ document.addEventListener('DOMContentLoaded', () => {
     $('c3yAgain').addEventListener('click', () => { start(); $('c3yStatus').textContent = 'Training…'; });
     LL.redrawers.push(draw);
     start(); requestAnimationFrame(loop);
+
+    // the WebGL version: lit arrows inside a glass sphere, the hull of their tips as a solid, electrons beside them
+    LL.stage(host, {orbit: false, dist: 4.3, fov: 34, yaw: -.6, pitch: .35, spin: .003, minPitch: -1.3, maxPitch: 1.3,
+      label: 'The model\'s concept arrows in three dimensions, and the arrangement of electrons on a sphere. Drag or use the arrow keys to turn.'}).then(st => {
+      if (!st) return;
+      const T = st.THREE;
+      const mkSphere = () => {
+        const g = new T.Group();
+        g.add(new T.Mesh(new T.SphereGeometry(1, 40, 28), new T.MeshBasicMaterial({color: st.col('--ink-soft'), transparent: true, opacity: .06, depthWrite: false})));
+        const ring = new T.BufferGeometry().setFromPoints([...Array(97)].map((_, i) => new T.Vector3(Math.cos(i / 96 * Math.PI * 2), 0, Math.sin(i / 96 * Math.PI * 2))));
+        const lm = new T.LineBasicMaterial({color: st.col('--line'), transparent: true, opacity: .9});
+        [[0, 0, 0], [Math.PI / 2, 0, 0], [0, 0, Math.PI / 2]].forEach(r => { const l = new T.Line(ring, lm); l.rotation.set(...r); g.add(l); });
+        return g;
+      };
+      const solid = (group, P, colVar) => {
+        const pos = [], F = hull(P);
+        F.forEach(ids => { for (let q = 1; q + 1 < ids.length; q++) [ids[0], ids[q], ids[q + 1]].forEach(i => pos.push(...P[i])); });
+        const geo = new T.BufferGeometry(); geo.setAttribute('position', new T.Float32BufferAttribute(pos, 3)); geo.computeVertexNormals();
+        const face = new T.Mesh(geo, st.toon(colVar, {transparent: true, opacity: .15, side: T.DoubleSide, depthWrite: false}));
+        const ep = []; F.forEach(ids => ids.forEach((a, q) => { const b = ids[(q + 1) % ids.length]; ep.push(...P[a], ...P[b]); }));
+        const eg = new T.BufferGeometry(); eg.setAttribute('position', new T.Float32BufferAttribute(ep, 3));
+        const edges = new T.LineSegments(eg, new T.LineBasicMaterial({color: st.col(colVar), transparent: true, opacity: .85}));
+        group.add(face, edges); return [face, edges];
+      };
+      const pivM = new T.Group(), pivE = new T.Group(); st.scene.add(pivM, pivE);
+      let tagM, tagE;
+      const mkTags = () => { if (tagM) st.scene.remove(tagM, tagE); tagM = st.label('the model', '--ink', .17); tagE = st.label('the electrons', '--ink', .17); st.scene.add(tagM, tagE); };
+      mkTags();
+      let arrows = [], hullM = [], hullKey = '', dots = [], elecParts = [], interf = [];
+      const clear = (g, arr) => { arr.forEach(o => { g.remove(o); o.geometry && o.geometry.dispose(); }); return []; };
+      const rebuild = () => {
+        pivM.clear(); pivE.clear(); hullM = []; hullKey = ''; interf = [];
+        pivM.add(mkSphere()); pivE.add(mkSphere());
+        const n = +nS.value;
+        arrows = [...Array(n)].map((_, i) => { const a = st.arrow(cssFeat[i], .03); pivM.add(a); return a; });
+        dots = [...Array(n)].map((_, i) => { const m = new T.Mesh(new T.SphereGeometry(.075, 20, 14), st.toon(cssFeat[i])); pivE.add(m); return m; });
+        const hub = () => new T.Mesh(new T.SphereGeometry(.05, 16, 12), st.toon('--ink'));
+        pivM.add(hub()); pivE.add(hub());
+        if (elec) { elec.P.forEach((p, i) => dots[i].position.set(...p)); elecParts = solid(pivE, elec.P, '--teal'); }
+        st.dirty = true;
+      };
+      const layout = () => {
+        const both = show === 'both';
+        pivM.visible = show !== 'elec'; pivE.visible = show !== 'model';
+        const sc = both ? .85 : 1;
+        pivM.scale.setScalar(sc); pivE.scale.setScalar(sc);
+        pivM.position.x = both ? -1.02 : 0; pivE.position.x = both ? 1.02 : 0;
+        tagM.visible = both; tagE.visible = both;
+        tagM.position.set(-1.02, -1.12, 0); tagE.position.set(1.02, -1.12, 0);
+        st.view.dist = both ? 6.6 : 4.3; st.dirty = true;
+      };
+      gl = {rebuild, layout};
+      host.classList.add('gl-ready'); showSeg.hidden = false;
+      rebuild(); layout();
+      const e = new T.Euler(0, 0, 0, 'XYZ');
+      st.frame(() => {
+        e.set(st.view.pitch, -st.view.yaw, 0); pivM.quaternion.setFromEuler(e); pivE.quaternion.setFromEuler(e);
+        const M = best || models[0]; if (!M || !arrows.length || M.n !== arrows.length) return;
+        for (let i = 0; i < M.n; i++) st.aim(arrows[i], M.col(i));
+        // interference: thin lines between concepts whose arrows aren't perpendicular
+        interf = clear(pivM, interf);
+        const ip = [], ic = [], cI = st.col('--ink-soft');
+        for (let i = 0; i < M.n; i++) for (let k = i + 1; k < M.n; k++) { const cs = Math.abs(M.cos(i, k)); if (cs > .1 && M.norm(i) > .3 && M.norm(k) > .3 && cs < .95) { ip.push(...M.col(i), ...M.col(k)); } }
+        if (ip.length) { const g = new T.BufferGeometry(); g.setAttribute('position', new T.Float32BufferAttribute(ip, 3)); const l = new T.LineSegments(g, new T.LineBasicMaterial({color: cI, transparent: true, opacity: .35})); pivM.add(l); interf = [l]; }
+        // the solid: rebuild only when training is done or the shape has moved noticeably
+        const P = [...Array(M.n)].map((_, i) => M.col(i)).filter(v => Math.hypot(...v) > .3);
+        const key = P.map(v => v.map(x => Math.round(x * 12)).join(',')).join(';') + done;
+        if (key !== hullKey && P.length >= 4) { hullM = clear(pivM, hullM); hullM = solid(pivM, P, '--plum'); hullKey = key; }
+      });
+      st.theme(() => { mkTags(); rebuild(); layout(); });
+      draw();
+    });
   }
 
   /* who sits with whom: 2 pairs, 2 dims; correlated / anticorrelated / independent */
@@ -3069,6 +3362,14 @@ document.addEventListener('DOMContentLoaded', () => {
 <article id="untangling">
   <style>
     #untangling details.deeper{background:var(--wash);border-radius:var(--r);padding:0;font-size:1rem}
+    #untangling .c4c-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:1.5rem;align-items:center}
+    @media (max-width:720px){#untangling .c4c-grid{grid-template-columns:1fr}}
+    #untangling .c4c-resp:empty{display:none}
+    #untangling .c4c-resp{background:var(--wash);border-radius:14px;padding:12px 14px;display:grid;gap:.4rem}
+    #untangling .c4c-resp .dotrow{display:flex;flex-wrap:wrap;gap:6px}
+    #untangling .c4c-resp .dotrow i{width:22px;height:22px;border-radius:50%;display:inline-block}
+    #untangling .c4c-check{display:flex;gap:.5rem;align-items:flex-start;font-size:.92rem;line-height:1.4}
+    #untangling .c4c-check input{margin-top:.25rem;accent-color:var(--plum)}
     #untangling details.deeper > summary{cursor:pointer;list-style:none;padding:14px 18px;font-family:var(--f-display);font-weight:600;display:flex;gap:.6rem;align-items:baseline}
     #untangling details.deeper > summary::-webkit-details-marker{display:none}
     #untangling details.deeper > summary::before{content:"+";font-family:var(--f-mono);color:var(--plum);font-weight:600;width:1ch}
@@ -3258,6 +3559,32 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="toy-head"><h4>Who responds to each concept?</h4><span class="label">Live from the autoencoder above</span></div>
       <div class="resp"><table id="respTable" aria-label="How strongly each neuron and feature responds to each concept"></table></div>
       <p class="caption">Each neuron responds to several concepts at once: that's the jumble. Once the autoencoder has settled, each feature responds to just one. That's what the paper's title means. <strong>Monosemantic</strong> means "one meaning", the opposite of the polysemantic neurons from Chapter 3. Turn the rule off above and watch this table go muddy.</p>
+    </div>
+    <div class="prose" style="margin-top:2rem">
+      <p>Two desks make a flat picture. A real thinker layer has hundreds of desks, which no one can picture. Three is the most we can still see, so here is the office with one more desk and more people crowded in: <strong>eight concepts sharing three desks</strong>. Every dot is one moment's desk readings. Most moments have one concept on, so the dots line up into eight spikes, one per concept, plus a haze of moments where two overlap.</p>
+      <p>Now try reading it the way a researcher reading neurons would. "Look through" a neuron and the whole cloud collapses onto that neuron's single axis, because one neuron's reading is all it knows. Then look through one of the autoencoder's features.</p>
+    </div>
+    <div class="toy" id="c4cube">
+      <div class="toy-head"><h4>Eight concepts, three desks, in 3D</h4><span class="label" id="c4cStatus">Waiting to train…</span></div>
+      <div class="c4c-grid">
+        <div><div class="gl-host" id="c4cHost"><canvas id="c4cFallback" width="880" height="880" aria-label="Desk readings in three dimensions, with the autoencoder's learned arrows" role="img"></canvas></div><p class="gl-badge" id="c4cHint">Drag to turn it</p></div>
+        <div style="display:grid;gap:.9rem;align-content:start">
+          <div class="ctl" style="flex:none"><label for="c4cLens">Look through</label><select id="c4cLens"></select></div>
+          <p class="verdict" id="c4cVerdict" style="margin:0"></p>
+          <div class="c4c-resp" id="c4cResp" aria-live="polite"></div>
+          <label class="c4c-check"><input type="checkbox" id="c4cTruth"> Colour the dots by the hidden concept (the autoencoder never sees this)</label>
+          <div class="scores" style="margin:0">
+            <div class="score"><small>Concepts found</small><b id="c4cFound">0 of 8</b></div>
+            <div class="score"><small>Readings it fails to rebuild</small><b id="c4cErr">–</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="ctl"><label for="c4cLam">How strict is the "as few as possible" rule?</label><input type="range" id="c4cLam" min="0" max="2" step="1" value="2"><output id="c4cLamOut" for="c4cLam"></output></div>
+        <div class="btns"><button class="primary" id="c4cPlay">Pause</button><button id="c4cReset">Start from scratch</button></div>
+      </div>
+      <div class="predict"><b>Predict before you look.</b> Each neuron's axis cuts through the cloud at some angle. How many of the eight concepts do you expect one neuron to respond to? And one feature?</div>
+      <p class="caption"><strong>Live:</strong> a real sparse autoencoder, the same recipe as the toy above, with 12 dictionary entries for 8 hidden concepts, training in your browser on fresh random moments. Each concept is on 6% of the time with a random strength; the eight true directions are spread evenly round the sphere and tilted so none lines up with a desk. A neuron's view places each dot at that neuron's reading. A feature's view places each dot at that feature's strength, so every moment the feature ignores lands on zero. In our runs the strict rule found all eight concepts within a few thousand steps, leaving the four spare entries silent or doubled up; with the rule off, it rebuilt the readings perfectly and found three at most.</p>
     </div>
   </section>
 
@@ -3706,6 +4033,178 @@ document.addEventListener('DOMContentLoaded', () => {
         box.appendChild(d);
       });
     }
+  });
+  </script>
+  <script>
+  /* chapter 4: eight concepts in three desks, a live sparse autoencoder, and "look through" a neuron or a feature */
+  document.addEventListener('DOMContentLoaded', () => {
+    const LL = window.LL, $ = id => document.getElementById(id), css = LL.css;
+    const n = 8, K = 12, P_ON = .06, LR = .01, B = 96, NDOT = 1400;
+    const cols = ['--tomato', '--sky', '--teal', '--marigold', '--pink', '--plum', '--ink', '--bad'];
+    const lams = [{v: 0, l: 'Off'}, {v: .1, l: 'Gentle'}, {v: .3, l: 'Strict'}];
+    // eight directions spread evenly over the sphere (a Fibonacci spiral), tilted away from the desks
+    const TRUE = [...Array(n)].map((_, i) => { const y = 1 - 2 * (i + .5) / n, r = Math.sqrt(1 - y * y), a = i * Math.PI * (3 - Math.sqrt(5)); return [Math.cos(a) * r, y, Math.sin(a) * r]; })
+      .map(([x, y, z]) => { const c = Math.cos(.7), s = Math.sin(.7), y2 = c * y - s * z, z2 = s * y + c * z, c2 = Math.cos(.4), s2 = Math.sin(.4); return [c2 * x + s2 * z2, y2, -s2 * x + c2 * z2]; });
+    const sample = () => { const h = [0, 0, 0], x = []; for (let i = 0; i < n; i++) { x[i] = Math.random() < P_ON ? .2 + .8 * Math.random() : 0; for (let d = 0; d < 3; d++) h[d] += x[i] * TRUE[i][d]; } return {h, x}; };
+    const dots = []; while (dots.length < NDOT) { const s = sample(); if (s.x.some(v => v)) dots.push(s); }
+    dots.forEach(s => { s.j = (Math.random() - .5) * .32; }); // a little spread so dots on one axis don't pile up
+    dots.forEach(s => { let best = -1, bv = 0, on = 0; s.x.forEach((v, i) => { if (v) on++; if (v > bv) { bv = v; best = i; } }); s.top = best; s.mix = on > 1; });
+    const lamS = $('c4cLam'), lens = $('c4cLens'), truth = $('c4cTruth');
+    let We, be, Wd, m, v, t, playing = true, started = false, lensK = 'free';
+    const init = () => {
+      We = []; Wd = []; be = new Float64Array(K);
+      for (let j = 0; j < K; j++) { const r = [0, 0, 0].map(() => Math.random() * 2 - 1), L = Math.hypot(...r); Wd.push(r.map(x => x / L)); We.push(Wd[j].slice()); }
+      m = new Float64Array(7 * K); v = new Float64Array(7 * K); t = 0;
+    };
+    const enc = h => We.map((w, j) => Math.max(0, w[0] * h[0] + w[1] * h[1] + w[2] * h[2] + be[j]));
+    const step = () => {
+      const lam = lams[+lamS.value].v, g = new Float64Array(7 * K);
+      for (let b = 0; b < B; b++) {
+        const {h} = sample(), a = We.map((w, j) => w[0] * h[0] + w[1] * h[1] + w[2] * h[2] + be[j]), f = a.map(x => x > 0 ? x : 0);
+        const r = [-h[0], -h[1], -h[2]]; for (let j = 0; j < K; j++) for (let d = 0; d < 3; d++) r[d] += Wd[j][d] * f[j];
+        for (let j = 0; j < K; j++) {
+          for (let d = 0; d < 3; d++) g[4 * K + 3 * j + d] += 2 * r[d] * f[j] / B;
+          if (a[j] > 0) { const df = (2 * (r[0] * Wd[j][0] + r[1] * Wd[j][1] + r[2] * Wd[j][2]) + lam) / B; for (let d = 0; d < 3; d++) g[3 * j + d] += df * h[d]; g[3 * K + j] += df; }
+        }
+      }
+      t++;
+      const P = [...We.flat(), ...be, ...Wd.flat()];
+      for (let i = 0; i < 7 * K; i++) { m[i] = .9 * m[i] + .1 * g[i]; v[i] = .999 * v[i] + .001 * g[i] * g[i]; P[i] -= LR * (m[i] / (1 - .9 ** t)) / (Math.sqrt(v[i] / (1 - .999 ** t)) + 1e-8); }
+      for (let j = 0; j < K; j++) { We[j] = P.slice(3 * j, 3 * j + 3); be[j] = P[3 * K + j]; const d = P.slice(4 * K + 3 * j, 4 * K + 3 * j + 3), L = Math.hypot(...d) || 1; Wd[j] = d.map(x => x / L); }
+    };
+    // which true concept (if any) each dictionary entry has settled on
+    const roster = () => Wd.map((d, j) => {
+      const resp = TRUE.map(T => enc(T)[j]); if (!resp.some(r => r > .05)) return {dead: true, match: -1, resp};
+      let match = -1; TRUE.forEach((T, i) => { if (d[0] * T[0] + d[1] * T[1] + d[2] * T[2] > .95) match = i; });
+      return {dead: false, match, resp};
+    });
+    const letter = j => String.fromCharCode(65 + j);
+    const dotsHTML = list => list.length ? list.map(i => `<i style="background:var(${cols[i]})" title="concept ${i + 1}"></i>`).join('') : '<em>none</em>';
+    let R = [];
+    const fillLens = () => {
+      const keep = lens.value || 'free';
+      const opts = [['free', 'Free view: all three desks'], ...[0, 1, 2].map(d => [`n${d}`, `Neuron ${d + 1} (desk ${d + 1})`]),
+        ...R.map((r, j) => r.dead ? null : [`d${j}`, `Feature ${letter(j)}`]).filter(Boolean)];
+      const sig = opts.map(o => o[0]).join();
+      if (lens.dataset.sig !== sig) { lens.innerHTML = opts.map(([k, l]) => `<option value="${k}">${l}</option>`).join(''); lens.dataset.sig = sig; lens.value = opts.some(o => o[0] === keep) ? keep : 'free'; if (lens.value !== keep) setLens(lens.value); }
+    };
+    const respFor = k => {
+      if (k[0] === 'n') { const d = +k[1]; return TRUE.map((T, i) => [i, Math.abs(T[d])]).filter(x => x[1] > .3).map(x => x[0]); }
+      if (k[0] === 'd') { const r = R[+k.slice(1)]; return r ? r.resp.map((x, i) => [i, x]).filter(x => x[1] > .05).map(x => x[0]) : []; }
+      return [];
+    };
+    const text = () => {
+      R = roster(); fillLens();
+      const found = TRUE.filter((_, i) => R.some(r => !r.dead && r.match === i)).length;
+      $('c4cFound').textContent = `${found} of 8`;
+      let eN = 0, eD = 0; for (let q = 0; q < 300; q++) { const {h} = dots[q], f = enc(h); for (let d = 0; d < 3; d++) { let r = -h[d]; for (let j = 0; j < K; j++) r += Wd[j][d] * f[j]; eN += r * r; eD += h[d] * h[d]; } }
+      const err = 100 * eN / (eD || 1); $('c4cErr').textContent = `${err < 1 ? err.toFixed(1) : Math.round(err)}%`;
+      const box = $('c4cube'); box.dataset.found = found; box.dataset.err = err.toFixed(2); box.dataset.steps = t;
+      $('c4cStatus').textContent = !started ? 'Waiting to train…' : playing ? `Training · step ${t.toLocaleString()}` : `Paused · step ${t.toLocaleString()}`;
+      const resp = respFor(lensK);
+      if (lensK === 'free') { $('c4cVerdict').innerHTML = found === 8 ? 'All eight hidden concepts <span>found</span> from the readings alone.' : `The autoencoder has pinned down <span>${found}</span> of the eight so far.`; $('c4cResp').innerHTML = ''; }
+      else if (lensK[0] === 'n') { $('c4cVerdict').innerHTML = `Neuron ${+lensK[1] + 1} responds to <span>${resp.length} of the 8</span> concepts.`; $('c4cResp').innerHTML = `<p class="label">Concepts this neuron reads strongly</p><div class="dotrow">${dotsHTML(resp)}</div><p class="stat">Its single number can't say which of them is on. Polysemantic.</p>`; }
+      else { const j = +lensK.slice(1), r = R[j]; $('c4cVerdict').innerHTML = resp.length === 1 ? `Feature ${letter(j)} responds to <span>one concept</span>.` : `Feature ${letter(j)} responds to <span>${resp.length} concepts</span>.`; $('c4cResp').innerHTML = `<p class="label">Concepts this feature switches on for</p><div class="dotrow">${dotsHTML(resp)}</div><p class="stat">${resp.length === 1 ? 'Every other moment lands on zero. Monosemantic.' : r && r.match < 0 ? 'It hasn\'t settled on one concept yet. Try the strict rule.' : 'Still sharing. Give it time, or a stricter rule.'}</p>`; }
+    };
+    const lensDir = k => k[0] === 'n' ? [0, 1, 2].map(d => d === +k[1] ? 1 : 0) : k[0] === 'd' ? Wd[+k.slice(1)] : null;
+    // where each dot sits under the current lens
+    const posFor = (s, k) => {
+      if (k === 'free') return s.h;
+      const u = lensDir(k), b = band(u), r = k[0] === 'n' ? s.h[+k[1]] : enc(s.h)[+k.slice(1)];
+      return u.map((x, q) => x * r + b[q] * s.j);
+    };
+    // the direction across the screen, perpendicular to a lens line, used to spread its dots into a band
+    const sideOf = u => { const up = Math.abs(u[1]) > .9 ? [1, 0, 0] : [0, 1, 0]; const w = [u[1] * up[2] - u[2] * up[1], u[2] * up[0] - u[0] * up[2], u[0] * up[1] - u[1] * up[0]], L = Math.hypot(...w); return w.map(x => x / L); };
+    const band = u => { const w = sideOf(u); return [w[1] * u[2] - w[2] * u[1], w[2] * u[0] - w[0] * u[2], w[0] * u[1] - w[1] * u[0]]; };
+    let st = null, fb = null;
+    const setLens = k => {
+      lensK = k; lens.value = k; if (st) st.view.spin = k === 'free' ? .0025 : 0;
+      if (st && k !== 'free') {
+        const w = sideOf(lensDir(k));
+        st.fly({yaw: Math.atan2(w[0], w[2]), pitch: Math.asin(Math.max(-1, Math.min(1, w[1]))), dist: 4.6}, 1100);
+      }
+      text();
+    };
+    lens.addEventListener('change', () => setLens(lens.value));
+    lamS.addEventListener('input', () => { $('c4cLamOut').textContent = lams[+lamS.value].l; });
+    $('c4cLamOut').textContent = lams[+lamS.value].l;
+    $('c4cPlay').addEventListener('click', () => { playing = !playing; $('c4cPlay').textContent = playing ? 'Pause' : 'Train'; text(); });
+    $('c4cReset').addEventListener('click', () => { init(); setLens('free'); });
+    LL.shared.c4cube = {setLens, get t() { return t; }, roster: () => R, respFor, set playing(p) { playing = p; }};
+    init(); fillLens(); text();
+    // training runs while the toy is on screen
+    let visible = false, tick = 0;
+    new IntersectionObserver(es => { visible = es.some(e => e.isIntersecting); if (visible) started = true; }).observe($('c4cHost'));
+    const train = () => { requestAnimationFrame(train); if (!visible || !playing) return; for (let i = 0; i < 8; i++) step(); if (++tick % 6 === 0) text(); if (!st && fb) fb(); };
+    requestAnimationFrame(train);
+
+    LL.stage($('c4cHost'), {dist: 4.6, fov: 34, yaw: .7, pitch: .35, spin: .0025, label: 'Desk readings as a cloud of dots in three dimensions, with the autoencoder\'s learned arrows. Drag or use the arrow keys to turn.'}).then(s => {
+      if (!s) { fallback(); return; }
+      st = s; const T = s.THREE;
+      $('c4cHost').classList.add('gl-ready');
+      // round dots
+      const k = document.createElement('canvas'); k.width = k.height = 64; const x = k.getContext('2d'); x.beginPath(); x.arc(32, 32, 28, 0, 7); x.fillStyle = '#fff'; x.fill();
+      const sprite = new T.CanvasTexture(k);
+      const geo = new T.BufferGeometry(), pos = new Float32Array(NDOT * 3), colA = new Float32Array(NDOT * 3);
+      dots.forEach((d, i) => pos.set(d.h, i * 3));
+      geo.setAttribute('position', new T.BufferAttribute(pos, 3)); geo.setAttribute('color', new T.BufferAttribute(colA, 3));
+      const pts = new T.Points(geo, new T.PointsMaterial({size: .075, map: sprite, vertexColors: true, transparent: true, alphaTest: .4, depthWrite: true}));
+      s.scene.add(pts);
+      const paint = () => {
+        const grey = s.col('--ink-soft'), C = cols.map(c => s.col(c)), on = truth.checked;
+        dots.forEach((d, i) => { const c = on ? C[d.top].clone().lerp(grey, d.mix ? .55 : 0) : grey; colA.set([c.r, c.g, c.b], i * 3); });
+        geo.attributes.color.needsUpdate = true; s.dirty = true;
+      };
+      truth.addEventListener('change', paint);
+      // the three desks as axes
+      const axes = new T.Group(); s.scene.add(axes);
+      const mkAxes = () => {
+        axes.clear();
+        [0, 1, 2].forEach(d => {
+          const a = s.arrow('--line', .008), u = [0, 1, 2].map(q => q === d ? 1.35 : 0); s.aim(a, u.map(x => x * 2), u.map(x => -x)); axes.add(a);
+          const l = s.label(`neuron ${d + 1}`, '--ink-soft', .11, 600); l.position.set(...u.map(x => x * 1.05)); axes.add(l);
+        });
+      };
+      // the dictionary: one arrow per entry, coloured by the concept it found (grey while searching)
+      let arrows = [];
+      const mkArrows = () => { arrows.forEach(a => s.scene.remove(a)); arrows = [...Array(K)].map(() => { const a = s.arrow('--ink', .022); s.scene.add(a); return a; }); };
+      const lineM = new T.LineBasicMaterial({color: s.col('--ink'), transparent: true, opacity: .5});
+      const lensLine = new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(), new T.Vector3()]), lineM); s.scene.add(lensLine);
+      mkAxes(); mkArrows(); paint();
+      s.theme(() => { mkAxes(); mkArrows(); paint(); lineM.color = s.col('--ink'); });
+      const cur = Float32Array.from(pos);
+      s.frame(dt => {
+        let moving = false;
+        const a = Math.min(1, dt * 5);
+        for (let i = 0; i < NDOT; i++) { const p = posFor(dots[i], lensK); for (let d = 0; d < 3; d++) { const q = i * 3 + d, diff = p[d] - cur[q]; if (Math.abs(diff) > 1e-4) { cur[q] += diff * a; moving = true; } } }
+        if (moving) { pos.set(cur); geo.attributes.position.needsUpdate = true; }
+        const Rr = R.length ? R : roster(), C = cols.map(c => s.col(c)), g = s.col('--line');
+        arrows.forEach((ar, j) => {
+          const r = Rr[j], show = lensK === 'free' || lensK === 'd' + j;
+          ar.visible = show && !r.dead; if (!ar.visible) return;
+          s.aim(ar, Wd[j]); ar.userData.m.color.copy(r.match >= 0 ? C[r.match] : g);
+        });
+        const u = lensDir(lensK); lensLine.visible = !!u;
+        if (u) { lensLine.geometry.setFromPoints([new T.Vector3(...u.map(x => -x * 1.4)), new T.Vector3(...u.map(x => x * 1.4))]); }
+        axes.visible = lensK === 'free' || lensK[0] === 'n';
+        axes.children.forEach((o, q) => { o.visible = lensK === 'free' || lensK === 'n' + (q >> 1); });
+      });
+    });
+    // without WebGL: a plain 2D projection that slowly turns
+    const fallback = () => {
+      const cv = $('c4cFallback'), ctx = cv.getContext('2d'); let yaw = .7;
+      $('c4cHint').textContent = 'A flat view (3D unavailable)';
+      fb = () => {
+        const S = cv.width, c = S / 2, R0 = S * .3, cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(.35), sp = Math.sin(.35);
+        const pr = p => { const x1 = cy * p[0] + sy * p[2], z1 = -sy * p[0] + cy * p[2]; return [c + x1 * R0, c - (cp * p[1] - sp * z1) * R0]; };
+        ctx.clearRect(0, 0, S, S);
+        dots.forEach(d => { const p = pr(posFor(d, lensK)); ctx.fillStyle = truth.checked ? css(cols[d.top]) : LL.C.soft; ctx.globalAlpha = .55; ctx.beginPath(); ctx.arc(p[0], p[1], 5, 0, 7); ctx.fill(); });
+        ctx.globalAlpha = 1;
+        R.forEach((r, j) => { if (r.dead || !(lensK === 'free' || lensK === 'd' + j)) return; const p = pr(Wd[j]); LL.arrow(ctx, c, c, p[0], p[1], r.match >= 0 ? css(cols[r.match]) : LL.C.line, 9); });
+        if (!LL.reduce) yaw += .004;
+      };
+      LL.redrawers.push(fb); fb();
+    };
   });
   </script>
 </article>
@@ -5376,6 +5875,128 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.lineTo(x1 - hl * Math.cos(a - .45), y1 - hl * Math.sin(a - .45));
     ctx.lineTo(x1 - hl * Math.cos(a + .45), y1 - hl * Math.sin(a + .45));
     ctx.closePath(); ctx.fill();
+  }
+
+  /* ---------- shared: 3D stage (three.js, loaded only when a 3D toy scrolls near) ---------- */
+  {
+    // LL.stage(host, opts) resolves to a small 3D scene inside `host`, or to null when WebGL or the
+    // library is unavailable, so every 3D toy keeps a 2D fallback. Drag (or arrow keys) turns the view;
+    // on touch screens a vertical swipe still scrolls the page.
+    const URL3 = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js';
+    let threeP = null;
+    const hasGL = () => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } };
+    const loadThree = () => threeP || (threeP = hasGL() && !/[?&]no3d\b/.test(location.search) ? import(URL3).catch(() => null) : Promise.resolve(null));
+    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const make = (THREE, host, o) => {
+      let renderer;
+      try { renderer = new THREE.WebGLRenderer({antialias: true, alpha: true}); } catch (e) { return null; }
+      renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+      renderer.setClearColor(0x000000, 0);
+      const cv = renderer.domElement;
+      cv.className = 'gl'; cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', o.label || 'A 3D view. Drag or use the arrow keys to turn it.');
+      cv.tabIndex = 0; cv.style.touchAction = o.touch || 'pan-y';
+      host.appendChild(cv); host.classList.add('gl-on');
+      const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(o.fov || 35, 1, .05, 200);
+      const view = {yaw: o.yaw ?? .6, pitch: o.pitch ?? .3, dist: o.dist ?? 4.2, target: new THREE.Vector3(...(o.target || [0, 0, 0])), spin: o.spin ?? .0025};
+      const hemi = new THREE.HemisphereLight(0xffffff, 0x8877aa, 1.6), sun = new THREE.DirectionalLight(0xffffff, 1.8);
+      sun.position.set(3, 5, 4); scene.add(hemi, sun);
+      // a three-step toon ramp: flat storybook shading rather than glossy plastic
+      const ramp = new THREE.DataTexture(new Uint8Array([90, 90, 90, 255, 175, 175, 175, 255, 255, 255, 255, 255]), 3, 1, THREE.RGBAFormat);
+      ramp.minFilter = ramp.magFilter = THREE.NearestFilter; ramp.needsUpdate = true;
+      const col = c => new THREE.Color(c.startsWith('--') ? css(c) : c);
+      const toon = (c, extra = {}) => new THREE.MeshToonMaterial({color: col(c), gradientMap: ramp, ...extra});
+      // arrows of unit direction; set(arrow, vector) re-aims and re-sizes one, keeping the head size fixed
+      const shaftG = new THREE.CylinderGeometry(1, 1, 1, 14), headG = new THREE.ConeGeometry(1, 1, 18);
+      const up = new THREE.Vector3(0, 1, 0), tmp = new THREE.Vector3();
+      const arrow = (c, r = .035) => {
+        const g = new THREE.Group(), m = toon(c);
+        const shaft = new THREE.Mesh(shaftG, m), head = new THREE.Mesh(headG, m);
+        g.add(shaft, head); g.userData = {shaft, head, r, m}; return g;
+      };
+      const aim = (g, v, from) => {
+        const L = Math.hypot(v[0], v[1], v[2]), {shaft, head, r} = g.userData, hl = Math.min(r * 4.5, L * .45);
+        g.visible = L > 1e-3; if (!g.visible) return;
+        if (from) g.position.set(...from);
+        tmp.set(v[0] / L, v[1] / L, v[2] / L); g.quaternion.setFromUnitVectors(up, tmp);
+        shaft.scale.set(r, Math.max(1e-4, L - hl), r); shaft.position.y = (L - hl) / 2;
+        head.scale.set(r * 2.3, hl, r * 2.3); head.position.y = L - hl / 2;
+      };
+      // text that always faces the camera
+      const label = (text, c, size = .16, weight = 700) => {
+        const k = document.createElement('canvas'), x = k.getContext('2d'), fs = 64, font = `${weight} ${fs}px "Bricolage Grotesque", system-ui, sans-serif`;
+        x.font = font; const w = Math.ceil(x.measureText(text).width) + 24; k.width = w; k.height = fs + 24;
+        x.font = font; x.textBaseline = 'middle'; x.fillStyle = c.startsWith('--') ? css(c) : c; x.fillText(text, 12, k.height / 2 + 2);
+        const tex = new THREE.CanvasTexture(k); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+        const s = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, depthWrite: false, transparent: true}));
+        s.scale.set(size * w / k.height, size, 1); s.userData.text = text; return s;
+      };
+      // drag / keys turn the view (by moving the camera, or by handing yaw/pitch to the toy if orbit:false)
+      let drag = null, vy = 0, vp = 0, idle = 0;
+      const lim = p => Math.max(o.minPitch ?? -1.45, Math.min(o.maxPitch ?? 1.45, p));
+      cv.addEventListener('pointerdown', e => { drag = [e.clientX, e.clientY, e.pointerType]; vy = vp = 0; cv.setPointerCapture(e.pointerId); });
+      cv.addEventListener('pointermove', e => {
+        if (!drag) return; const dx = (e.clientX - drag[0]) * .009, dy = (e.clientY - drag[1]) * .009;
+        view.yaw -= dx; vy = -dx; if (drag[2] === 'mouse' || o.touch === 'none') { view.pitch = lim(view.pitch + dy); vp = dy; }
+        drag[0] = e.clientX; drag[1] = e.clientY; idle = 0; s.dirty = true;
+      });
+      const end = () => { drag = null; }; cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+      cv.addEventListener('keydown', e => {
+        const k = {ArrowLeft: [.12, 0], ArrowRight: [-.12, 0], ArrowUp: [0, -.1], ArrowDown: [0, .1]}[e.key];
+        if (!k) return; e.preventDefault(); view.yaw += k[0]; view.pitch = lim(view.pitch + k[1]); idle = 0; s.dirty = true;
+      });
+      // smooth camera moves, e.g. "ride along" with a file
+      let flight = null;
+      const fly = (to, ms = 1200) => new Promise(done => {
+        const from = {yaw: view.yaw, pitch: view.pitch, dist: view.dist, target: view.target.clone()};
+        const tgt = to.target ? new THREE.Vector3(...to.target) : from.target;
+        if (to.yaw !== undefined) { const d = ((to.yaw - from.yaw) % (2 * Math.PI) + 3 * Math.PI) % (2 * Math.PI) - Math.PI; to = {...to, yaw: from.yaw + d}; }
+        if (reduce || ms <= 0) { Object.assign(view, {yaw: to.yaw ?? view.yaw, pitch: to.pitch ?? view.pitch, dist: to.dist ?? view.dist}); view.target.copy(tgt); s.dirty = true; flight = null; done(); return; }
+        flight = {t0: performance.now(), ms, from, to, tgt, done};
+      });
+      let visible = false, W = 0, H = 0;
+      const frames = [];
+      const resize = () => { const r = host.getBoundingClientRect(); W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height)); renderer.setSize(W, H, false); camera.aspect = W / H; camera.updateProjectionMatrix(); s.dirty = true; };
+      new ResizeObserver(resize).observe(host);
+      new IntersectionObserver(es => { visible = es.some(e => e.isIntersecting); }).observe(host);
+      const place = () => {
+        if (o.orbit === false) { camera.position.set(0, 0, view.dist).add(view.target); camera.lookAt(view.target); return; }
+        const cp = Math.cos(view.pitch);
+        camera.position.set(Math.sin(view.yaw) * cp * view.dist, Math.sin(view.pitch) * view.dist, Math.cos(view.yaw) * cp * view.dist).add(view.target);
+        camera.lookAt(view.target);
+      };
+      let last = performance.now();
+      const loop = now => {
+        requestAnimationFrame(loop);
+        const dt = Math.min(.05, (now - last) / 1000); last = now;
+        if (!visible || document.hidden) return;
+        if (flight) {
+          const u = Math.min(1, (now - flight.t0) / flight.ms), e = ease(u), f = flight.from, t = flight.to;
+          ['yaw', 'pitch', 'dist'].forEach(k => { if (t[k] !== undefined) view[k] = f[k] + (t[k] - f[k]) * e; });
+          view.target.lerpVectors(f.target, flight.tgt, e); s.dirty = true;
+          if (u >= 1) { const d = flight.done; flight = null; d(); }
+        } else if (!drag) {
+          if (Math.abs(vy) + Math.abs(vp) > 1e-4) { view.yaw += vy; view.pitch = lim(view.pitch + vp); vy *= .9; vp *= .9; s.dirty = true; }
+          else if (!reduce && view.spin && (idle += dt) > 2.5) { view.yaw += view.spin * dt * 60; s.dirty = true; }
+        }
+        for (const f of frames) if (f(dt, now) !== false) s.dirty = true;
+        if (!s.dirty) return; s.dirty = false;
+        place(); renderer.render(scene, camera);
+      };
+      const s = {THREE, scene, camera, renderer, view, canvas: cv, col, toon, arrow, aim, label, fly, dirty: true,
+        frame: f => frames.push(f), get busy() { return !!flight || !!drag; },
+        theme: f => redrawers.push(() => { f(); s.dirty = true; })};
+      resize(); requestAnimationFrame(loop);
+      return s;
+    };
+    window.LL.stage = (host, o) => new Promise(resolve => {
+      let started = false;
+      const io = new IntersectionObserver(es => {
+        if (started || !es.some(e => e.isIntersecting)) return; started = true; io.disconnect();
+        loadThree().then(T => resolve(T ? make(T, host, o || {}) : null));
+      }, {rootMargin: '600px'});
+      io.observe(host);
+    });
+    window.LL.loadThree = loadThree;
   }
 
   /* ---------- hero ---------- */
