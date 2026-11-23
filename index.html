@@ -303,39 +303,88 @@ select{font-family:var(--f-display);font-weight:600;font-size:.95rem;color:var(-
 .circuit .whole{grid-column:1/-1;background:color-mix(in srgb, var(--teal) 14%, var(--card));border-radius:14px;padding:12px}
 .circuit .arrows{grid-column:1/-1;font-family:var(--f-mono);color:var(--ink-soft);font-size:.8rem}
 footer{margin-top:4rem;border-top:2px solid var(--line);padding-top:1.5rem;font-size:.9rem;color:var(--ink-soft);display:grid;gap:.6rem}
-/* reading progress + jump navigation */
-html{scroll-padding-top:16px}
+/* navigation: one chapter per page (hash-routed), a sticky chapter bar, and a scene-by-scene progress strip */
+html{scroll-padding-top:calc(var(--ll-bar-h, 0px) + 14px)}
 @media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
-.ll-progress{position:fixed;inset:0 0 auto 0;height:5px;z-index:50;background:color-mix(in srgb, var(--line) 60%, transparent);pointer-events:none}
-.ll-progress i{display:block;height:100%;width:100%;background:var(--plum);transform-origin:0 50%;transform:scaleX(0)}
-.ll-nav{position:fixed;right:max(16px, env(safe-area-inset-right, 0px));bottom:max(16px, env(safe-area-inset-bottom, 0px));z-index:50;display:flex;gap:6px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:5px;box-shadow:0 6px 24px rgba(0,0,0,.18)}
-.ll-nav button{border:0;padding:.4rem .75rem;font-size:.9rem;background:transparent}
-.ll-nav button:hover{background:var(--wash)}
-.ll-nav .ll-where{display:flex;gap:.5rem;align-items:baseline;max-width:min(52vw, 320px)}
-.ll-nav .ll-where span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--f-mono);font-weight:400;font-size:.78rem;color:var(--ink-soft)}
-.ll-nav .ll-where b{white-space:nowrap}
-.ll-panel{position:fixed;right:max(16px, env(safe-area-inset-right, 0px));bottom:calc(max(16px, env(safe-area-inset-bottom, 0px)) + 58px);z-index:51;width:min(380px, calc(100vw - 32px));max-height:min(70vh, 640px);overflow:auto;background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:10px;box-shadow:0 10px 40px rgba(0,0,0,.25);font-family:var(--f-display)}
-.ll-panel ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
-.ll-panel a{display:block;text-decoration:none;color:var(--ink);border-radius:10px;padding:.35rem .6rem;line-height:1.3}
+.ll-routed article[hidden],.ll-routed .ll-homeonly[hidden]{display:none!important}
+.ll-routed body{padding-top:var(--ll-bar-h, 0px)}
+.ll-bar{position:fixed;inset:0 0 auto 0;z-index:50;background:color-mix(in srgb, var(--paper) 92%, transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:2px solid var(--line);font-family:var(--f-display);padding-top:env(safe-area-inset-top, 0px)}
+.ll-bar[hidden]{display:none}
+.ll-bar-in{max-width:1180px;margin:0 auto;padding:8px max(16px, env(safe-area-inset-right, 0px)) 6px max(16px, env(safe-area-inset-left, 0px));display:flex;align-items:center;gap:12px}
+.ll-home{font-weight:800;font-size:1.05rem;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;display:flex;align-items:center;gap:.45rem}
+.ll-home span{color:var(--plum)}
+.ll-home svg{width:22px;height:22px;flex:none}
+.ll-chaps{display:flex;gap:4px;flex:1;min-width:0;justify-content:flex-end}
+.ll-chaps a{display:grid;text-decoration:none;color:var(--ink-soft);font-weight:600;font-size:.86rem;line-height:1.15;padding:.3rem .55rem .35rem;border-radius:10px;border-bottom:3px solid transparent;white-space:nowrap}
+.ll-chaps a small{font-family:var(--f-mono);font-weight:400;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase}
+.ll-chaps a:hover{background:var(--wash);color:var(--ink)}
+.ll-chaps a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--chap, var(--plum));background:color-mix(in srgb, var(--chap, var(--plum)) 10%, transparent)}
+.ll-chaps a .ll-tick{color:var(--good);margin-left:.2rem}
+.ll-menu{display:none;margin-left:auto;border-width:2px;padding:.35rem .8rem;font-size:.88rem;max-width:62vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:1060px){.ll-chaps{display:none}.ll-menu{display:block}}
+/* the scene strip: one segment per scene, sized by its length, filled as you read */
+.ll-scn{max-width:1180px;margin:0 auto;padding:0 max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px));display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:center}
+.ll-scn[hidden]{display:none}
+.ll-where{border:0;background:none;padding:.15rem .1rem;font-size:.84rem;font-weight:600;display:flex;gap:.5rem;align-items:baseline;min-width:0;max-width:min(46vw, 420px);border-radius:8px}
+.ll-where:hover{background:var(--wash)}
+.ll-where b{font-family:var(--f-mono);font-weight:600;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--chap, var(--plum));white-space:nowrap}
+.ll-where span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink)}
+.ll-where i{font-style:normal;color:var(--ink-soft);white-space:nowrap}
+.ll-inchap footer p + p{display:none}
+.ll-segs{display:flex;gap:3px;height:10px;align-items:stretch}
+.ll-segs a{flex:1 1 0;min-width:6px;border-radius:99px;background:color-mix(in srgb, var(--line) 80%, transparent);position:relative;overflow:hidden;display:block}
+.ll-segs a i{position:absolute;inset:0;background:var(--chap, var(--plum));transform-origin:0 50%;transform:scaleX(0)}
+.ll-segs a:hover{outline:2px solid var(--chap, var(--plum));outline-offset:1px}
+.ll-segs a[aria-current="step"]{box-shadow:0 0 0 2px var(--paper), 0 0 0 4px var(--chap, var(--plum))}
+@media (max-width:560px){.ll-scn{grid-template-columns:1fr}.ll-where{max-width:none}.ll-segs{height:8px}}
+/* the scene rail, on screens wide enough to have room beside the column */
+.ll-rail{display:none}
+@media (min-width:1440px){
+  .ll-rail{display:block;position:fixed;left:max(16px, calc((100vw - 1040px) / 2 - 250px));top:calc(var(--ll-bar-h, 0px) + 28px);width:min(220px, calc((100vw - 1040px) / 2 - 40px));max-height:calc(100vh - var(--ll-bar-h, 0px) - 60px);overflow:auto;font-family:var(--f-display);z-index:20}
+  .ll-rail[hidden]{display:none}
+}
+.ll-rail p{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 .5rem .2rem}
+.ll-rail ol{list-style:none;margin:0;padding:0;display:grid;gap:1px;border-left:2px solid var(--line)}
+.ll-rail a{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.5rem;text-decoration:none;color:var(--ink-soft);font-size:.84rem;line-height:1.3;padding:.32rem .5rem .32rem .7rem;margin-left:-2px;border-left:2px solid transparent}
+.ll-rail a small{font-family:var(--f-mono);font-size:.66rem;padding-top:.15rem;min-width:1.4em}
+.ll-rail a:hover{color:var(--ink)}
+.ll-rail a.done{color:var(--ink)}
+.ll-rail a[aria-current="step"]{color:var(--ink);font-weight:600;border-left-color:var(--chap, var(--plum));background:color-mix(in srgb, var(--chap, var(--plum)) 9%, transparent);border-radius:0 8px 8px 0}
+/* the drop-down: chapters, and the scenes of the current chapter */
+.ll-panel{position:fixed;z-index:51;top:calc(var(--ll-bar-h, 0px) + 6px);right:max(16px, env(safe-area-inset-right, 0px));width:min(420px, calc(100vw - 32px));max-height:calc(100vh - var(--ll-bar-h, 0px) - 24px);overflow:auto;background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:12px;box-shadow:0 12px 40px rgba(0,0,0,.25);font-family:var(--f-display)}
+.ll-panel[hidden]{display:none}
+.ll-panel h5{font-family:var(--f-mono);font-weight:400;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin:.4rem .5rem .3rem}
+.ll-panel ol{list-style:none;margin:0 0 .4rem;padding:0;display:grid;gap:2px}
+.ll-panel a{display:grid;grid-template-columns:5.2em minmax(0,1fr) auto;gap:.5rem;align-items:baseline;text-decoration:none;color:var(--ink);border-radius:10px;padding:.4rem .6rem;line-height:1.3;font-size:.95rem}
+.ll-panel a small{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
 .ll-panel a:hover{background:var(--wash)}
-.ll-panel .ch > a{font-weight:600;font-size:1rem;margin-top:4px}
-.ll-panel .ch > a small{display:block;font-family:var(--f-mono);font-weight:400;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
-.ll-panel .ch ol{padding-left:.6rem;border-left:2px solid var(--line);margin:2px 0 6px .8rem}
-.ll-panel .ch ol a{font-size:.88rem;color:var(--ink-soft)}
-.ll-panel .ends{display:flex;gap:8px;padding:4px 4px 8px;border-bottom:2px solid var(--line);margin-bottom:4px}
-.ll-panel .ends a{flex:1;text-align:center;border:2px solid var(--line);border-radius:999px;font-size:.88rem}
-.ll-panel a[aria-current]{background:color-mix(in srgb, var(--plum) 18%, var(--card));color:var(--ink)}
-.ll-nav[hidden],.ll-panel[hidden]{display:none}
+.ll-panel a[aria-current]{background:color-mix(in srgb, var(--chap, var(--plum)) 16%, var(--card))}
+.ll-panel .ll-scl a{grid-template-columns:2.2em minmax(0,1fr);font-size:.9rem}
+.ll-panel .ll-tick{color:var(--good);font-size:.85rem}
+/* end of chapter: previous / next */
+.ll-pager{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:960px;margin:3rem auto 0}
+.ll-pager a{display:grid;gap:.2rem;text-decoration:none;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:16px 18px;font-family:var(--f-display);font-weight:600;font-size:1.05rem;line-height:1.25}
+.ll-pager a small{font-family:var(--f-mono);font-weight:400;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.ll-pager a:hover{border-color:var(--chap, var(--plum))}
+.ll-pager .nx{text-align:right;grid-column:2}
+@media (max-width:560px){.ll-pager{grid-template-columns:1fr}.ll-pager .nx{grid-column:1}}
+/* home: carry on where you left off */
+.ll-resume{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 1.2rem}
+.ll-resume[hidden]{display:none}
+.ll-resume a{font-family:var(--f-display);font-weight:600;text-decoration:none;background:var(--ink);color:var(--paper);border-radius:999px;padding:.5rem 1.1rem}
+.ll-resume span{color:var(--ink-soft);font-size:.95rem}
+.chap.seen .status{color:var(--good)}
+.ll-routed .strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));overflow:visible;scroll-snap-type:none;padding:8px 6px 18px 4px}
+.ll-routed .strip .chap{flex:none}
 .noscript-note{max-width:66ch;margin:1rem auto;padding:12px 16px;border:2px solid var(--marigold);border-radius:var(--r);background:var(--card);font-size:1rem}
-@media (max-width:560px){.ll-nav{left:max(16px, env(safe-area-inset-left, 0px));justify-content:space-between}.ll-nav .ll-where{max-width:none;flex:1;min-width:0;justify-content:center}.ll-panel{left:16px;right:16px;width:auto}}
-@media print{.ll-nav,.ll-panel,.ll-progress{display:none}}
+@media print{.ll-bar,.ll-panel,.ll-rail,.ll-pager{display:none!important}.ll-routed article[hidden]{display:block!important}.ll-routed body{padding-top:0}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
 
 <div class="wrap">
 <noscript><p class="noscript-note"><strong>JavaScript is switched off.</strong> The words are all here, but the pictures and toys need JavaScript to draw. Open this page in a normal browser tab to see them.</p></noscript>
 
-<header class="hero">
+<header class="hero ll-homeonly">
   <div>
     <p class="label">A storybook about the inside of AI</p>
     <h1><span>Latent</span><span class="l2">Learning</span></h1>
@@ -345,18 +394,19 @@ html{scroll-padding-top:16px}
   <canvas id="heroCanvas" width="880" height="880" aria-label="Colourful arrows radiating from a centre point, each one a concept inside a model" role="img"></canvas>
 </header>
 
-<section class="toc" aria-labelledby="toc-h">
+<section class="toc ll-homeonly" aria-labelledby="toc-h">
   <h2 id="toc-h">The story so far</h2>
-  <p class="hint">Ten years of discoveries, in order. Start with the Prologue and read straight through, or jump to any chapter.</p>
+  <p class="hint">Ten years of discoveries, in order. Each chapter is its own page: start with the Prologue and follow the story, or jump to any chapter from the menu at the top.</p>
+  <div class="ll-resume" hidden></div>
   <nav class="strip" aria-label="Chapters">
-    <a class="chap open" href="#prologue"><span class="yr">2013 – 2020</span><h3>Prologue: Words Become Arrows</h3><p>Meaning turns out to live in directions. Then, bigger models get predictably better.</p><span class="status">Read now ↓</span></a>
-    <a class="chap open" href="#clerks"><span class="yr">2021</span><h3>1. The Clerks and the Case File</h3><p>What actually happens inside a model, layer by layer.</p><span class="status">Read now ↓</span></a>
-    <a class="chap open" href="#copycat"><span class="yr">2022</span><h3>2. The Copycat Trick</h3><p>How a model learns new things in the middle of a conversation.</p><span class="status">Read now ↓</span></a>
-    <a class="chap open" href="#crowded-office"><span class="yr">2022</span><h3>3. The Crowded Office</h3><p>How a model fits millions of ideas into a few thousand directions.</p><span class="status">Read now ↓</span></a>
-    <a class="chap open" href="#untangling"><span class="yr">2023</span><h3>4. Untangling the Desks</h3><p>A tool for pulling the squeezed ideas back apart.</p><span class="status">Read now ↓</span></a>
-    <a class="chap open" href="#golden-gate"><span class="yr">2024</span><h3>5. The Golden Gate Bridge</h3><p>Finding real concepts inside a real, large model, and turning one up.</p><span class="status">Read now ↓</span></a>
-    <a class="chap open" href="#watching"><span class="yr">2025</span><h3>6. Watching It Think</h3><p>Rhymes planned ahead, and maths done differently than the model claims.</p><span class="status">Read now ↓</span></a>
-    <a class="chap open" href="#epilogue"><span class="yr">Today</span><h3>Epilogue: The Blank Spaces on the Map</h3><p>What nobody knows yet.</p><span class="status">Read now ↓</span></a>
+    <a class="chap open" href="#prologue"><span class="yr">2013 – 2020</span><h3>Prologue: Words Become Arrows</h3><p>Meaning turns out to live in directions. Then, bigger models get predictably better.</p><span class="status">Read now →</span></a>
+    <a class="chap open" href="#clerks"><span class="yr">2021</span><h3>1. The Clerks and the Case File</h3><p>What actually happens inside a model, layer by layer.</p><span class="status">Read now →</span></a>
+    <a class="chap open" href="#copycat"><span class="yr">2022</span><h3>2. The Copycat Trick</h3><p>How a model learns new things in the middle of a conversation.</p><span class="status">Read now →</span></a>
+    <a class="chap open" href="#crowded-office"><span class="yr">2022</span><h3>3. The Crowded Office</h3><p>How a model fits millions of ideas into a few thousand directions.</p><span class="status">Read now →</span></a>
+    <a class="chap open" href="#untangling"><span class="yr">2023</span><h3>4. Untangling the Desks</h3><p>A tool for pulling the squeezed ideas back apart.</p><span class="status">Read now →</span></a>
+    <a class="chap open" href="#golden-gate"><span class="yr">2024</span><h3>5. The Golden Gate Bridge</h3><p>Finding real concepts inside a real, large model, and turning one up.</p><span class="status">Read now →</span></a>
+    <a class="chap open" href="#watching"><span class="yr">2025</span><h3>6. Watching It Think</h3><p>Rhymes planned ahead, and maths done differently than the model claims.</p><span class="status">Read now →</span></a>
+    <a class="chap open" href="#epilogue"><span class="yr">Today</span><h3>Epilogue: The Blank Spaces on the Map</h3><p>What nobody knows yet.</p><span class="status">Read now →</span></a>
   </nav>
 </section>
 
@@ -847,7 +897,7 @@ html{scroll-padding-top:16px}
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 1: The Clerks and the Case File</h4>
-      <p>What happens inside a transformer, layer by layer: the case file, the clerks, and the notes they add. <a href="#clerks">Read Chapter 1 ↓</a></p>
+      <p>What happens inside a transformer, layer by layer: the case file, the clerks, and the notes they add. <a href="#clerks">Read Chapter 1 →</a></p>
       <p class="stat">Sources: <a href="https://arxiv.org/abs/1301.3781" target="_blank" rel="noopener">Mikolov, Chen, Corrado &amp; Dean, 2013, <em>Efficient Estimation of Word Representations in Vector Space</em> (word2vec)</a> · <a href="https://aclanthology.org/N13-1090/" target="_blank" rel="noopener">Mikolov, Yih &amp; Zweig, 2013, <em>Linguistic Regularities in Continuous Space Word Representations</em></a> · <a href="https://arxiv.org/abs/1607.06520" target="_blank" rel="noopener">Bolukbasi, Chang, Zou, Saligrama &amp; Kalai, 2016, <em>Man is to Computer Programmer as Woman is to Homemaker?</em></a> · <a href="https://aclanthology.org/N19-1061/" target="_blank" rel="noopener">Gonen &amp; Goldberg, 2019, <em>Lipstick on a Pig</em></a> · <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Vaswani et al., 2017, <em>Attention Is All You Need</em></a> · <a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">Kaplan, McCandlish et al., 2020, <em>Scaling Laws for Neural Language Models</em></a> · <a href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener">Hoffmann et al., 2022 (Chinchilla)</a> · <a href="https://arxiv.org/abs/2210.13382" target="_blank" rel="noopener">Li et al., 2022, <em>Emergent World Representations</em> (Othello)</a> · <a href="https://arxiv.org/abs/2309.00941" target="_blank" rel="noopener">Nanda, Lee &amp; Wattenberg, 2023 (linear Othello board)</a> · <a href="https://arxiv.org/abs/2310.02207" target="_blank" rel="noopener">Gurnee &amp; Tegmark, 2023, <em>Language Models Represent Space and Time</em></a> · <a href="https://distill.pub/2020/circuits/zoom-in/" target="_blank" rel="noopener">Olah, Cammarata, Schubert, Goh, Petrov &amp; Carter, 2020, <em>Zoom In: An Introduction to Circuits</em></a></p>
     </div>
   </section>
@@ -1425,7 +1475,7 @@ html{scroll-padding-top:16px}
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 2: The Copycat Trick</h4>
-      <p>In 2022, the same team showed that induction heads appear suddenly during training, at the same moment models get much better at learning from the text in front of them. <a href="#copycat">Read Chapter 2 ↓</a></p>
+      <p>In 2022, the same team showed that induction heads appear suddenly during training, at the same moment models get much better at learning from the text in front of them. <a href="#copycat">Read Chapter 2 →</a></p>
       <p class="stat">Source: Nelson Elhage, Neel Nanda, Catherine Olsson, Tom Henighan, Nicholas Joseph, Ben Mann, Amanda Askell and colleagues, with Chris Olah, <a href="https://transformer-circuits.pub/2021/framework/index.html" target="_blank" rel="noopener">A Mathematical Framework for Transformer Circuits</a>, Transformer Circuits Thread, 22 December 2021. Quotes are short excerpts from the paper; the toys and drawings here are our own.</p>
     </div>
   </section>
@@ -2075,7 +2125,7 @@ html{scroll-padding-top:16px}
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 3: The Crowded Office</h4>
-      <p>Why do the thinkers' neurons look so jumbled? Because the model is squeezing far more ideas than it has room for into the same space. <a href="#crowded-office">Read Chapter 3 ↓</a></p>
+      <p>Why do the thinkers' neurons look so jumbled? Because the model is squeezing far more ideas than it has room for into the same space. <a href="#crowded-office">Read Chapter 3 →</a></p>
     </div>
     <p class="caption" style="max-width:66ch;margin:1.5rem auto 0">Source: Catherine Olsson, Nelson Elhage, Neel Nanda and colleagues, <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener">In-context Learning and Induction Heads</a>, Transformer Circuits Thread, 2022. Short quotations are the authors'. All toys, charts and explanations here are our own; where a chart sketches a shape rather than plotting the paper's data, it says so.</p>
   </section>
@@ -2943,7 +2993,7 @@ html{scroll-padding-top:16px}
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 4: Untangling the Desks</h4>
-      <p>A year later, the same group tried the second way out. They built a tool that watches the crowded desks and works out the roster: who is really sitting where. For the first time, they could read thousands of clean, single-meaning concepts out of a real model. <a href="#untangling">Read Chapter 4 ↓</a></p>
+      <p>A year later, the same group tried the second way out. They built a tool that watches the crowded desks and works out the roster: who is really sitting where. For the first time, they could read thousands of clean, single-meaning concepts out of a real model. <a href="#untangling">Read Chapter 4 →</a></p>
     </div>
     <p class="paper" style="max-width:66ch;margin:1.6rem auto 0">Credits: this chapter retells Nelson Elhage, Tristan Hume, Catherine Olsson, Nicholas Schiefer, Tom Henighan, Shauna Kravec, Zac Hatfield-Dodds, Robert Lasenby, Dawn Drain, Carol Chen, Roger Grosse, Sam McCandlish, Jared Kaplan, Dario Amodei, Martin Wattenberg and Christopher Olah, <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank" rel="noopener">Toy Models of Superposition</a>, Transformer Circuits Thread, 2022. Quotes are the authors'; all toys, figures and other words are ours. The toys reproduce the paper's setups at small scale; where our runs differ from or go beyond the paper's figures, the captions say so.</p>
   </section>
@@ -3796,7 +3846,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 5: The Golden Gate Bridge</h4>
-      <p>In 2024 the team scaled dictionary learning up to Claude 3 Sonnet, a large production model, and found millions of features. One of them was the Golden Gate Bridge, and pinning it high had memorable results. <a href="#golden-gate">Read Chapter 5 ↓</a></p>
+      <p>In 2024 the team scaled dictionary learning up to Claude 3 Sonnet, a large production model, and found millions of features. One of them was the Golden Gate Bridge, and pinning it high had memorable results. <a href="#golden-gate">Read Chapter 5 →</a></p>
     </div>
     <p class="caption" style="max-width:66ch;margin:1.5rem auto 0">Source: Trenton Bricken, Adly Templeton, Joshua Batson, Brian Chen, Adam Jermyn and colleagues, <a href="https://transformer-circuits.pub/2023/monosemantic-features/index.html" target="_blank" rel="noopener">Towards Monosemanticity: Decomposing Language Models With Dictionary Learning</a>, Transformer Circuits Thread, 2023. The paper's interactive feature browser lets you explore all 4,096 A/1 features yourself. Our toys, example texts and wording are original.</p>
   </section>
@@ -4643,7 +4693,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Chapter 6: Watching It Think</h4>
-      <p>In 2025, the team began tracing how features connect, step by step and layer by layer, as a model answers. They caught it planning rhymes in advance, and doing arithmetic differently from how it claims to. <a href="#watching">Read Chapter 6 ↓</a></p>
+      <p>In 2025, the team began tracing how features connect, step by step and layer by layer, as a model answers. They caught it planning rhymes in advance, and doing arithmetic differently from how it claims to. <a href="#watching">Read Chapter 6 →</a></p>
     </div>
     <p class="caption" style="max-width:66ch;margin:1.5rem auto 0">Credits: this chapter retells Adly Templeton, Tom Conerly, Jonathan Marcus, Jack Lindsey, Trenton Bricken and colleagues, <a href="https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html" target="_blank" rel="noopener">Scaling Monosemanticity</a> (Transformer Circuits Thread, 2024). The Golden Gate Claude demo is described in Anthropic's <a href="https://www.anthropic.com/news/golden-gate-claude" target="_blank" rel="noopener">announcement</a>. Quotations are short and attributed; every illustration, toy and code snippet here is our own.</p>
   </section>
@@ -5248,7 +5298,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="next">
       <p class="label">Next in the story</p>
       <h4>Epilogue: The Blank Spaces on the Map</h4>
-      <p>Where the story stands now: what ten years have taught us, the biggest open questions, and why they matter for everyone who uses these models. <a href="#epilogue">Read the Epilogue ↓</a></p>
+      <p>Where the story stands now: what ten years have taught us, the biggest open questions, and why they matter for everyone who uses these models. <a href="#epilogue">Read the Epilogue →</a></p>
     </div>
     <p class="credits prose" style="margin-top:2rem">Credits: this chapter retells Jack Lindsey, Wes Gurnee, Emmanuel Ameisen, Brian Chen, Adam Pearce, Nicholas L. Turner, Craig Citro, Joshua Batson and colleagues, <a href="https://transformer-circuits.pub/2025/attribution-graphs/biology.html" target="_blank" rel="noopener">On the Biology of a Large Language Model</a>, and Emmanuel Ameisen, Jack Lindsey, Adam Pearce and colleagues, <a href="https://transformer-circuits.pub/2025/attribution-graphs/methods.html" target="_blank" rel="noopener">Circuit Tracing: Revealing Computational Graphs in Language Models</a>, Transformer Circuits Thread, 2025. The hidden-goal model comes from Marks et al. All diagrams, toys and wording here are our own; short quotes are attributed.</p>
   </section>
@@ -5840,12 +5890,18 @@ document.addEventListener('DOMContentLoaded', () => {
 </footer>
 </div>
 
-<div class="ll-progress" aria-hidden="true"><i></i></div>
-<nav class="ll-nav" aria-label="Jump around the book" hidden>
-  <button type="button" class="ll-top" aria-label="Back to the top" title="Back to the top">↑</button>
-  <button type="button" class="ll-where" aria-expanded="false" aria-controls="llPanel"><b>Contents</b><span></span></button>
-  <button type="button" class="ll-bottom" aria-label="Jump to the end" title="Jump to the end">↓</button>
-</nav>
+<header class="ll-bar" hidden>
+  <div class="ll-bar-in">
+    <a class="ll-home" href="#home" aria-label="Latent Learning: all chapters"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12 L21 6" stroke="var(--tomato)" stroke-width="3" stroke-linecap="round"/><path d="M12 12 L5 4" stroke="var(--sky)" stroke-width="3" stroke-linecap="round"/><path d="M12 12 L15 21" stroke="var(--teal)" stroke-width="3" stroke-linecap="round"/><path d="M12 12 L3 15" stroke="var(--marigold)" stroke-width="3" stroke-linecap="round"/><circle cx="12" cy="12" r="2.6" fill="var(--ink)"/></svg>Latent<span>Learning</span></a>
+    <nav class="ll-chaps" aria-label="Chapters"></nav>
+    <button type="button" class="ll-menu" aria-expanded="false" aria-controls="llPanel">Chapters ▾</button>
+  </div>
+  <div class="ll-scn" hidden>
+    <button type="button" class="ll-where" aria-expanded="false" aria-controls="llPanel" title="Scenes in this chapter"></button>
+    <nav class="ll-segs" aria-label="Scenes in this chapter"></nav>
+  </div>
+</header>
+<nav class="ll-rail" aria-label="Scenes in this chapter" hidden></nav>
 <div class="ll-panel" id="llPanel" hidden></div>
 
 <script>
@@ -7189,16 +7245,19 @@ tourists walk across the bridge in the fog`.split('\n');
 })();
 </script>
 <script>
-/* ---------- reading progress + jump navigation (built from the chapters on the page) ---------- */
+/* ---------- navigation: one chapter per page, chapter bar, scene strip (built from the chapters on the page) ---------- */
 (() => {
-  const bar = document.querySelector('.ll-progress i'), nav = document.querySelector('.ll-nav'), panel = document.getElementById('llPanel');
-  const where = nav.querySelector('.ll-where'), whereText = where.querySelector('span');
-  const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const go = y => scrollTo({top: y, behavior: smooth ? 'smooth' : 'auto'});
-  const esc = t => t.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const root = document.documentElement, bar = document.querySelector('.ll-bar'), panel = document.getElementById('llPanel');
+  const rail = document.querySelector('.ll-rail'), scn = bar.querySelector('.ll-scn'), segs = bar.querySelector('.ll-segs');
+  const where = bar.querySelector('.ll-where'), menu = bar.querySelector('.ll-menu'), tabs = bar.querySelector('.ll-chaps');
+  const home = [...document.querySelectorAll('.ll-homeonly')], resume = document.querySelector('.ll-resume');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const esc = t => t.replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+  const store = {get: k => { try { return JSON.parse(localStorage.getItem('ll:' + k)); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem('ll:' + k, JSON.stringify(v)); } catch (e) {} }};
+  const SHORT = {prologue: 'Arrows', clerks: 'Clerks', copycat: 'Copycat', 'crowded-office': 'Office', untangling: 'Untangling', 'golden-gate': 'Golden Gate', watching: 'Watching', epilogue: 'The Map'};
 
-  // Table of contents: every <article> with a .chapter-head, and every scene heading inside it.
-  const chapters = [...document.querySelectorAll('article[id]')].map(a => {
+  // every <article> with a .chapter-head is a chapter; every section.scene with an h3 is a scene
+  const chapters = [...document.querySelectorAll('article[id]')].filter(a => a.querySelector('.chapter-head')).map((a, k) => {
     const num = a.querySelector('.chapter-head .num'), h = a.querySelector('.chapter-head h2');
     const scenes = [...a.querySelectorAll('section.scene')].map(sec => {
       const h3 = sec.querySelector('h3'); if (!h3) return null;
@@ -7206,45 +7265,130 @@ tourists walk across the bridge in the fog`.split('\n');
       const tag = sec.querySelector('.scene-tag');
       return {el: sec, id: h3.id, title: h3.textContent.trim(), tag: tag ? tag.textContent.trim() : ''};
     }).filter(Boolean);
-    return {el: a, id: a.id, num: num ? num.textContent.trim() : '', title: h ? h.textContent.trim() : a.id, scenes};
+    const numText = num ? num.textContent.trim() : '';
+    return {el: a, id: a.id, k, num: numText, short: numText.replace(/^Chapter\s*/, ''), name: SHORT[a.id] || (h ? h.textContent.trim() : a.id), title: h ? h.textContent.trim() : a.id, colour: num ? getComputedStyle(num).backgroundColor : '', scenes};
   });
-  panel.innerHTML = '<div class="ends"><a href="#" data-top>↑ Top of the book</a><a href="#" data-bottom>End ↓</a></div><ol>' +
-    chapters.map(c => `<li class="ch"><a href="#${c.id}"><small>${esc(c.num)}</small>${esc(c.title)}</a><ol>` +
-      c.scenes.map(s => `<li><a href="#${s.id}">${esc(s.title)}</a></li>`).join('') + '</ol></li>').join('') + '</ol>';
-  nav.hidden = false;
+  if (!chapters.length) return;
+  root.classList.add('ll-routed'); bar.hidden = false;
 
-  const open = v => { panel.hidden = !v; where.setAttribute('aria-expanded', v); if (v) { const cur = panel.querySelector('[aria-current]'); if (cur) cur.scrollIntoView({block: 'nearest'}); } };
-  where.addEventListener('click', e => { e.stopPropagation(); open(panel.hidden); });
-  nav.querySelector('.ll-top').addEventListener('click', () => go(0));
-  nav.querySelector('.ll-bottom').addEventListener('click', () => go(document.documentElement.scrollHeight));
-  panel.addEventListener('click', e => {
-    const a = e.target.closest('a'); if (!a) return;
-    if (a.hasAttribute('data-top')) { e.preventDefault(); go(0); }
-    else if (a.hasAttribute('data-bottom')) { e.preventDefault(); go(document.documentElement.scrollHeight); }
-    open(false);
+  // the chapter tabs, and a previous / next pager at the end of each chapter
+  tabs.innerHTML = chapters.map(c => `<a href="#${c.id}" data-ch="${c.id}" style="--chap:${c.colour}"><small>${esc(c.short)}</small>${esc(c.name)}</a>`).join('');
+  chapters.forEach((c, k) => {
+    const p = chapters[k - 1], n = chapters[k + 1], nav = document.createElement('nav');
+    nav.className = 'll-pager'; nav.setAttribute('aria-label', 'Previous and next chapter');
+    nav.innerHTML = (p ? `<a class="pv" href="#${p.id}"><small>← ${esc(p.num)}</small>${esc(p.title)}</a>` : `<a class="pv" href="#home"><small>← The book</small>All chapters</a>`) +
+      (n ? `<a class="nx" href="#${n.id}"><small>${esc(n.num)} →</small>${esc(n.title)}</a>` : `<a class="nx" href="#home"><small>The end →</small>Back to all chapters</a>`);
+    c.el.appendChild(nav);
   });
-  document.addEventListener('click', e => { if (!panel.hidden && !panel.contains(e.target)) open(false); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) { open(false); where.focus(); } });
 
-  // Progress bar and "you are here".
-  let ticking = false, lastKey = '';
+  // which chapter is showing; switching re-measures the toys that were drawn while hidden
+  let cur = null, curScene = -1;
+  const seen = new Set(store.get('seen') || []);
+  const show = ch => {
+    const changed = ch !== cur; cur = ch;
+    chapters.forEach(c => { c.el.hidden = c !== ch; });
+    root.classList.toggle('ll-inchap', !!ch);
+    home.forEach(el => { el.hidden = !!ch; });
+    scn.hidden = !ch; if (rail) rail.hidden = !ch;
+    tabs.querySelectorAll('a').forEach(a => { if (ch && a.dataset.ch === ch.id) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    bar.style.setProperty('--chap', ch ? ch.colour : '');
+    if (rail) rail.style.setProperty('--chap', ch ? ch.colour : '');
+    menu.innerHTML = ch ? `${esc(ch.num)} · ${esc(ch.name)} ▾` : 'Chapters ▾';
+    document.title = ch ? `${ch.title} · Latent Learning` : 'Latent Learning';
+    if (ch) {
+      segs.innerHTML = ch.scenes.map((s, i) => `<a href="#${s.id}" title="${esc((s.tag ? s.tag + ': ' : '') + s.title)}" aria-label="${esc((s.tag ? s.tag + ': ' : '') + s.title)}"><i></i></a>`).join('');
+      if (rail) rail.innerHTML = `<p>${esc(ch.num)} · ${ch.scenes.length} scenes</p><ol>` + ch.scenes.map((s, i) => `<li><a href="#${s.id}"><small>${/^Scene\s+(\d+)/.test(s.tag) ? RegExp.$1 : '★'}</small><span>${esc(s.title)}</span></a></li>`).join('') + '</ol>';
+      seen.add(ch.id); store.set('seen', [...seen]);
+    }
+    markHome();
+    curScene = -1;
+    if (changed) requestAnimationFrame(() => { (window.LL && LL.redrawers || []).forEach(f => { try { f(); } catch (e) {} }); dispatchEvent(new Event('resize')); });
+    measure(); update();
+  };
+  const markHome = () => {
+    document.querySelectorAll('.strip a.chap').forEach(a => {
+      const id = a.getAttribute('href').slice(1), st = a.querySelector('.status'), done = seen.has(id);
+      a.classList.toggle('seen', done); if (st) st.textContent = done ? 'Visited · read again →' : 'Read now →';
+    });
+    const last = store.get('last'), c = last && chapters.find(x => x.id === last.ch);
+    if (resume) {
+      resume.hidden = !c;
+      if (c) { const s = c.scenes.find(x => x.id === last.scene); resume.innerHTML = `<a href="#${s ? s.id : c.id}">Carry on reading →</a><span>${esc(c.num)}: ${esc(c.title)}${s ? ` · ${esc(s.tag || '')}${s.tag ? ', ' : ''}${esc(s.title)}` : ''}</span>`; }
+    }
+  };
+
+  // the bar's height feeds the page's top padding and the scroll offset for jumps
+  const measure = () => root.style.setProperty('--ll-bar-h', bar.getBoundingClientRect().height + 'px');
+  new ResizeObserver(measure).observe(bar);
+
+  // routing: #home, #chapter-id, or the id of anything inside a chapter (a scene heading, a toy)
+  const go = (hash, push) => {
+    const id = decodeURIComponent((hash || '').replace(/^#/, ''));
+    let ch = chapters.find(c => c.id === id) || null, target = null;
+    if (!ch && id && id !== 'home') { const el = document.getElementById(id), art = el && el.closest('article[id]'); ch = chapters.find(c => c.el === art) || null; if (ch) target = el; }
+    if (push) { try { history.pushState(null, '', '#' + (id || 'home')); } catch (e) {} }
+    show(ch); closePanel();
+    requestAnimationFrame(() => {
+      if (target) { const det = target.closest('details:not([open])'); if (det) det.open = true; target.scrollIntoView({behavior: 'instant', block: 'start'}); }
+      else scrollTo({top: 0, behavior: 'instant'});
+      update();
+    });
+  };
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]'); if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    const id = a.getAttribute('href').slice(1);
+    if (id && id !== 'home' && !document.getElementById(id)) return;
+    e.preventDefault();
+    // a jump within the chapter already showing is just a scroll
+    const el = id && document.getElementById(id), art = el && el.closest('article[id]');
+    if (cur && art === cur.el && el !== cur.el) { closePanel(); el.scrollIntoView({behavior: reduce ? 'instant' : 'smooth', block: 'start'}); return; }
+    go('#' + (id || 'home'), true);
+  });
+  addEventListener('popstate', () => go(location.hash, false));
+
+  // the drop-down panel (chapters, plus the scenes of this chapter)
+  const openPanel = () => {
+    panel.innerHTML = `<h5>Chapters</h5><ol>` + `<li><a href="#home"${cur ? '' : ' aria-current="page"'}><small>Start</small><span>The book and its chapters</span></a></li>` +
+      chapters.map(c => `<li><a href="#${c.id}" style="--chap:${c.colour}"${c === cur ? ' aria-current="page"' : ''}><small>${esc(c.short)}</small><span>${esc(c.title)}</span>${seen.has(c.id) && c !== cur ? '<span class="ll-tick" title="visited">✓</span>' : '<span></span>'}</a></li>`).join('') + '</ol>' +
+      (cur ? `<h5>In ${esc(cur.num)}</h5><ol class="ll-scl" style="--chap:${cur.colour}">` + cur.scenes.map((s, i) => `<li><a href="#${s.id}"${i === curScene ? ' aria-current="step"' : ''}><small>${/^Scene\s+(\d+)/.test(s.tag) ? RegExp.$1 : '★'}</small><span>${esc(s.title)}</span></a></li>`).join('') + '</ol>' : '');
+    panel.hidden = false; menu.setAttribute('aria-expanded', 'true'); where.setAttribute('aria-expanded', 'true');
+    const c = panel.querySelector('.ll-scl [aria-current]') || panel.querySelector('[aria-current]'); if (c) c.scrollIntoView({block: 'nearest'});
+  };
+  const closePanel = () => { if (panel.hidden) return; panel.hidden = true; menu.setAttribute('aria-expanded', 'false'); where.setAttribute('aria-expanded', 'false'); };
+  [menu, where].forEach(b => b.addEventListener('click', e => { e.stopPropagation(); panel.hidden ? openPanel() : closePanel(); }));
+  document.addEventListener('click', e => { if (!panel.hidden && !panel.contains(e.target)) closePanel(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) { closePanel(); menu.focus(); } });
+
+  // as you scroll: which scene you're in, how far through it, and how far through the chapter
+  let ticking = false, saveT = 0;
   const update = () => {
     ticking = false;
-    const de = document.documentElement, max = de.scrollHeight - innerHeight;
-    bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
-    const probe = innerHeight * 0.3;
-    let ch = null, sc = null;
-    for (const c of chapters) if (c.el.getBoundingClientRect().top <= probe) ch = c;
-    if (ch) for (const s of ch.scenes) if (s.el.getBoundingClientRect().top <= probe) sc = s;
-    const key = (ch ? ch.id : '') + '|' + (sc ? sc.id : '');
-    if (key === lastKey) return; lastKey = key;
-    whereText.textContent = ch ? (ch.num + (sc && sc.tag ? ' · ' + sc.tag : '')) : '';
-    panel.querySelectorAll('[aria-current]').forEach(a => a.removeAttribute('aria-current'));
-    const cur = sc ? panel.querySelector(`a[href="#${sc.id}"]`) : ch ? panel.querySelector(`a[href="#${ch.id}"]`) : null;
-    if (cur) cur.setAttribute('aria-current', 'location');
+    if (!cur) return;
+    const probe = innerHeight * .3, S = cur.scenes;
+    const tops = S.map(s => s.el.getBoundingClientRect().top), ends = S.map((s, i) => i + 1 < S.length ? tops[i + 1] : cur.el.getBoundingClientRect().bottom);
+    let k = -1; tops.forEach((t, i) => { if (t <= probe) k = i; });
+    const atEnd = innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
+    if (atEnd) k = S.length - 1;
+    [...segs.children].forEach((a, i) => {
+      a.style.flexGrow = Math.max(1, Math.round((ends[i] - tops[i]) / 200));
+      const f = i < k ? 1 : i > k ? 0 : atEnd ? 1 : Math.max(0, Math.min(1, (probe - tops[i]) / Math.max(1, ends[i] - tops[i])));
+      a.firstChild.style.transform = `scaleX(${f})`;
+      if (i === k) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current');
+    });
+    if (rail) [...rail.querySelectorAll('a')].forEach((a, i) => { a.classList.toggle('done', i < k); if (i === k) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current'); });
+    if (k !== curScene) {
+      curScene = k;
+      const s = S[k];
+      where.innerHTML = s ? `<b>${esc(s.tag || 'Scene')}</b><span>${esc(s.title)}</span><i>${k + 1}/${S.length} ▾</i>` : `<b>${esc(cur.num)}</b><span>${esc(cur.title)}</span><i>${S.length} scenes ▾</i>`;
+      if (rail) { const a = rail.querySelector('[aria-current]'); if (a) a.scrollIntoView({block: 'nearest'}); }
+      const ch = cur; clearTimeout(saveT); saveT = setTimeout(() => { if (cur !== ch) return; store.set('last', {ch: ch.id, scene: s ? s.id : null}); try { history.replaceState(null, '', '#' + (s ? s.id : ch.id)); } catch (e) {} }, 400);
+    }
   };
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, {passive: true});
-  addEventListener('resize', update);
-  update();
+  addEventListener('resize', () => { measure(); update(); });
+  document.addEventListener('toggle', () => requestAnimationFrame(update), true);
+  LL.nav = {go: h => go(h, true), get chapter() { return cur && cur.id; }, get scene() { return curScene; }};
+  measure();
+  go(location.hash, false);
 })();
 </script>

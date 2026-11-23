@@ -31,6 +31,7 @@ Story hook (the puzzle researchers faced), scenes with interactive toys, "Known 
 
 ## Tech
 - `index.html` is a single self-contained page: inline CSS/JS, Google Fonts, no build step. The one external library is three.js (0.160.0 from cdnjs), loaded on demand by `LL.stage(host, opts)` when a 3D toy scrolls near. `LL.stage` resolves to `null` without WebGL (or with `?no3d` in the URL), so every 3D toy must keep a 2D fallback or a message. It has no `<!doctype>`/`<html>`/`<head>` tags because it's also published as a claude.ai Artifact, which adds that skeleton.
+- Navigation: each `<article id="…">` with a `.chapter-head` is its own page, routed by the URL hash (`#copycat`, or any id inside a chapter such as a scene heading `#c2s3`). The script at the end of the page builds the top chapter bar, the scene strip (one segment per `section.scene` with an `h3`), the wide-screen scene rail and the previous/next pager from the markup, so new chapters and scenes appear automatically. Hidden chapters are `display:none` until opened; on opening, `LL.redrawers` run and a `resize` fires, so toys that size themselves must redraw on one of those. Internal links are plain `<a href="#id">`. Elements marked `.ll-homeonly` (the hero and chapter list) show only on the home page. Without JavaScript every chapter shows on one long page.
 - Colours are theme tokens with light and dark variants. Respect `prefers-reduced-motion`. Must work at phone width.
 
 ## About the author
