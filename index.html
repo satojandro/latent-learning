@@ -4853,6 +4853,10 @@ document.addEventListener('DOMContentLoaded', () => {
 #watching blockquote{margin:0;border-left:4px solid var(--plum);padding:.2rem 0 .2rem 1rem;font-style:italic}
 #watching blockquote cite{display:block;font-style:normal;font-family:var(--f-mono);font-size:.75rem;color:var(--ink-soft);margin-top:.3rem}
 #watching .ex-grid{display:grid;gap:1.2rem}
+#watching .hop3d{display:grid;gap:.6rem}
+#watching .hop3d[hidden],#watching .graph-box[hidden]{display:none}
+#watching .hop3d-host{max-width:none;aspect-ratio:16/10;min-height:320px;background:var(--wash);border-radius:16px}
+@media (max-width:560px){#watching .hop3d-host{aspect-ratio:4/5}}
 #watching .ex-side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:1.2rem;align-items:start}
 @media (max-width:720px){#watching .ex-side{grid-template-columns:1fr}}
 #watching .inspect{background:var(--wash);border-radius:14px;padding:12px 14px;font-size:.92rem;display:grid;gap:.4rem;min-height:9rem}
@@ -4974,8 +4978,12 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="toy">
       <div class="toy-head"><h4>An attribution graph you can audit</h4><span class="label">Hand-set weights · really computed</span></div>
       <p class="prompt" id="ggPrompt">Fact: the capital of the state containing Dallas is</p>
+      <div class="seg" id="hopView" role="group" aria-label="How to draw the graph" hidden style="margin-top:1rem"><button data-v="flat" aria-pressed="true">Flat graph</button><button data-v="3d" aria-pressed="false">In 3D: watch it flow</button></div>
       <div class="ex-grid" style="margin-top:1rem">
-        <div class="graph-box"><svg id="hopSvg" viewBox="0 -10 900 480" role="group" aria-label="Attribution graph from the prompt's words through Texas and say-a-capital features to candidate answers. Each node can be selected to inspect its inputs."></svg></div>
+        <div class="hop3d" id="hop3dWrap" hidden><div class="gl-host hop3d-host" id="hop3dHost"></div>
+          <div class="btns hop3d-btns"><button id="hop3dRide" class="primary">Ride the strongest path</button><button id="hop3dReset">Back to the overview</button></div>
+          <p class="stat" id="hop3dNote"></p></div>
+        <div class="graph-box" id="hopFlat"><svg id="hopSvg" viewBox="0 -10 900 480" role="group" aria-label="Attribution graph from the prompt's words through Texas and say-a-capital features to candidate answers. Each node can be selected to inspect its inputs."></svg></div>
         <div class="ex-side"><div>
           <p class="label" style="margin-bottom:.5rem">The model's next word</p>
           <div class="probs" id="hopProbs"></div>
@@ -5000,7 +5008,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div><span class="label">Each supernode's activation, as a share of normal (the paper's way of reporting interventions)</span><div class="pct" id="hopPct"></div></div>
       </div>
       <p class="verdict" id="hopVerdict"></p>
-      <p class="caption">Solid purple links push up, dashed red links push down; thickness is the edge's size right now. Faded boxes are features that aren't active, and an attribution graph only contains active features, so in the real tool you would never see them. Our graph has 12 nodes. The real one had hundreds even after pruning, plus error nodes at every layer; here a single error node stands in for all of them.</p>
+      <p class="caption">Solid purple links push up, dashed red links push down; thickness is the edge's size right now. Faded boxes are features that aren't active, and an attribution graph only contains active features, so in the real tool you would never see them. Our graph has 12 nodes. The real one had hundreds even after pruning, plus error nodes at every layer; here a single error node stands in for all of them. <strong>In 3D</strong> it's the same graph, recomputed with every change you make: the prompt's words sit at the bottom, computation rises through the features, and the candidate answers are towers as tall as their probability. Each edge carries a stream of particles, more and faster for bigger edges, red where it pushes down. "Ride the strongest path" starts at the winning answer and steps back along the biggest edge feeding each stop. The positions are our own layout. The paper's real graphs are drawn with word position across and layer up.</p>
     </div>
     <div class="prose" style="margin-top:2rem">
       <details class="predict"><summary>Inhibit "Dallas". Will the say-a-capital features notice?</summary>
@@ -5402,6 +5410,131 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
+  <script>
+  /* chapter 6: the same attribution graph in 3D. It reads the live graph from LL.shared.c6hop (same weights,
+     same interventions, same pruning) and redraws whenever the flat graph does. Computation rises from the
+     prompt's words to the candidate answers; particles travel each edge at a rate set by the edge's size. */
+  document.addEventListener('DOMContentLoaded', () => {
+    const LL = window.LL, $ = id => document.getElementById(id), hop = LL.shared.c6hop;
+    if (!hop) return;
+    const seg = $('hopView'), wrap = $('hop3dWrap'), flat = $('hopFlat'), host = $('hop3dHost'), note = $('hop3dNote');
+    const COLS = {0: 0, 1: 1, 2: 2, 3: 3};
+    // place each node: up = order of computation, across = the flat graph's rows, depth = a little stagger
+    const P = {};
+    Object.entries(hop.N).forEach(([id, n]) => { P[id] = [(n.y - 220) / 92, COLS[n.col] * 1.2 - 1.6, n.k === 'out' ? 0 : n.col === 1 ? .55 : n.col === 2 ? -.45 : 0]; });
+    P.err = [P.err[0], P.err[1], -.7];
+    let st = null, view = 'flat', last = null;
+    const setView = v => {
+      view = v; seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v));
+      wrap.hidden = v !== '3d'; flat.hidden = v === '3d';
+      if (st) st.dirty = true;
+    };
+    seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) setView(b.dataset.v); });
+    // only offer 3D where it can run
+    LL.loadThree().then(T => { if (T) seg.hidden = false; });
+
+    LL.stage(host, {fov: 36, yaw: .55, pitch: .28, dist: 9.2, target: [0, .75, 0], spin: 0, minPitch: -.6, maxPitch: 1.3,
+      label: 'The attribution graph in three dimensions: words from the prompt at the bottom, features in the middle, candidate answers as towers at the top. Drag or use the arrow keys to turn it, and select a node to audit it.'}).then(s => {
+      if (!s) { seg.hidden = true; setView('flat'); return; }
+      st = s; const T = s.THREE, world = new T.Group(); s.scene.add(world);
+      host.classList.add('gl-ready');
+      const sphere = new T.SphereGeometry(1, 28, 20), octa = new T.OctahedronGeometry(1), cyl = new T.CylinderGeometry(1, 1, 1, 24);
+      let nodes = {}, flows = [], pts = null, ptsGeo = null, labels = [], halo = null;
+      const clear = () => { world.children.slice().forEach(o => { world.remove(o); if (o.material && o.material.map) o.material.map.dispose(); if (o.geometry && o.geometry !== sphere && o.geometry !== octa && o.geometry !== cyl) o.geometry.dispose(); }); labels = []; };
+      const curveFor = (a, b, id) => {
+        const A = new T.Vector3(...P[a]), B = new T.Vector3(...P[b]), M = A.clone().lerp(B, .5);
+        if (a === 'dal' && b === 'sa') M.z -= 1.1; else M.z += .25;
+        return new T.QuadraticBezierCurve3(A, M, B);
+      };
+      // draw the graph as it stands after the current interventions
+      const build = (r, E, keep) => {
+        clear(); nodes = {}; flows = [];
+        const shown = id => hop.N[id].k !== 'f' || keep.has(id) || id === 'err';
+        Object.entries(hop.N).forEach(([id, n]) => {
+          const isF = n.k === 'f', act = isF ? r.a[id] : 1, inactive = isF && act === 0, pruned = isF && !inactive && !keep.has(id);
+          let mesh;
+          if (n.k === 'out') {
+            const h = Math.max(.03, r.p[id] * 1.15);
+            mesh = new T.Mesh(cyl, s.toon('--sky', {transparent: true, opacity: .35 + .65 * r.p[id]}));
+            mesh.scale.set(.16, h, .16); mesh.position.set(P[id][0], P[id][1] + h / 2, P[id][2]);
+            const lab = s.label(`"${n.t}" ${Math.round(r.p[id] * 100)}%`, '--ink', .13, 700); lab.position.set(P[id][0], P[id][1] + h + .17 + (Math.round(n.y / 90) % 2 ? .2 : 0), P[id][2]); world.add(lab);
+          } else {
+            const rad = n.k === 'err' ? .13 : .1 + .07 * Math.min(Math.abs(act), 2);
+            mesh = new T.Mesh(n.k === 'err' ? octa : sphere, inactive ? new T.MeshBasicMaterial({color: s.col('--ink-soft'), wireframe: true, transparent: true, opacity: .35})
+              : s.toon(n.k === 'err' ? '--line' : act < 0 ? '--bad' : '--marigold', {transparent: pruned, opacity: pruned ? .3 : 1}));
+            mesh.scale.setScalar(rad); mesh.position.set(...P[id]);
+            const lab = s.label(n.t, inactive || pruned ? '--ink-soft' : '--ink', .14, 700); lab.position.set(P[id][0], P[id][1] - rad - .14, P[id][2]); world.add(lab);
+            if (isF) { const v = s.label(inactive ? 'off' : pruned ? 'pruned' : act.toFixed(2), '--ink-soft', .1, 600); v.position.set(P[id][0], P[id][1] - rad - .3, P[id][2]); world.add(v); }
+          }
+          mesh.userData.id = id; world.add(mesh); nodes[id] = mesh;
+        });
+        // edges as tubes, sized by |activation × weight|; dashed red would be the flat graph's negative edges
+        E.forEach(([a, b, v]) => {
+          if (Math.abs(v) < 1e-6) return;
+          const c = curveFor(a, b), vis = shown(a) && shown(b);
+          const tube = new T.Mesh(new T.TubeGeometry(c, 40, .006 + .016 * Math.min(Math.abs(v), 3), 8, false), s.toon(v > 0 ? '--plum' : '--bad', {transparent: true, opacity: vis ? .55 : .08}));
+          world.add(tube);
+          if (vis) flows.push({c, v, n: Math.min(16, 2 + Math.round(Math.abs(v) * 5)), a, b});
+        });
+        // particles: one stream per edge, more and faster for bigger edges; red ones travel inhibitory edges
+        const count = flows.reduce((t, f) => t + f.n, 0);
+        ptsGeo = new T.BufferGeometry(); ptsGeo.setAttribute('position', new T.BufferAttribute(new Float32Array(count * 3), 3));
+        const colA = new Float32Array(count * 3), cp = s.col('--plum'), cb = s.col('--bad'); let q = 0;
+        flows.forEach(f => { for (let k = 0; k < f.n; k++, q++) { const c = f.v > 0 ? cp : cb; colA.set([c.r, c.g, c.b], q * 3); } });
+        ptsGeo.setAttribute('color', new T.BufferAttribute(colA, 3));
+        const dot = document.createElement('canvas'); dot.width = dot.height = 32; const x = dot.getContext('2d'); x.beginPath(); x.arc(16, 16, 13, 0, 7); x.fillStyle = '#fff'; x.fill();
+        pts = new T.Points(ptsGeo, new T.PointsMaterial({size: .095, map: new T.CanvasTexture(dot), vertexColors: true, transparent: true, alphaTest: .4}));
+        world.add(pts);
+        // the floor labels: what each level is
+        [['from the prompt', -1.6], ['features in the middle', -.1], ['candidate next words', 2.05]].forEach(([t, y]) => { const l = s.label(t, '--ink-soft', .12, 600); l.position.set(-2.7, y, 0); world.add(l); });
+        const sel = nodes[hop.st.sel];
+        if (sel) { halo = new T.Mesh(new T.TorusGeometry(1, .06, 10, 40), s.toon('--ink')); const r0 = sel.userData.id && hop.N[sel.userData.id].k === 'out' ? .28 : sel.scale.x * 1.7; halo.scale.setScalar(r0); halo.position.copy(hop.N[hop.st.sel].k === 'out' ? new T.Vector3(...P[hop.st.sel]) : sel.position); world.add(halo); }
+        s.dirty = true;
+      };
+      hop.listeners.push((r, E, keep) => { last = {r, E, keep}; build(r, E, keep); });
+      const r0 = hop.run(hop.clampFor()), E0 = hop.edgesOf(r0); last = {r: r0, E: E0, keep: hop.keptNodes(r0, E0).keep}; build(last.r, last.E, last.keep);
+      s.theme(() => last && build(last.r, last.E, last.keep));
+      home(0);
+      // animate the particles along their edges
+      let t = 0;
+      s.frame(dt => {
+        if (!pts || view !== '3d') return false;
+        if (!LL.reduce) t += dt;
+        const arr = ptsGeo.attributes.position.array; let q = 0;
+        flows.forEach(f => { const sp = .25 + .12 * Math.min(Math.abs(f.v), 3); for (let k = 0; k < f.n; k++, q++) { const u = ((LL.reduce ? .5 : t * sp) + k / f.n) % 1, p = f.c.getPoint(u); arr[q * 3] = p.x; arr[q * 3 + 1] = p.y; arr[q * 3 + 2] = p.z; } });
+        ptsGeo.attributes.position.needsUpdate = true;
+        if (halo) halo.lookAt(s.camera.position);
+      });
+      // select a node by tapping it, as in the flat graph
+      const ray = new T.Raycaster(), m = new T.Vector2(); let down = null;
+      s.canvas.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
+      s.canvas.addEventListener('pointerup', e => {
+        if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 6) return;
+        const R = s.canvas.getBoundingClientRect(); m.set((e.clientX - R.left) / R.width * 2 - 1, -(e.clientY - R.top) / R.height * 2 + 1);
+        ray.setFromCamera(m, s.camera); const hit = ray.intersectObjects(Object.values(nodes))[0];
+        if (hit) { hop.st.sel = hit.object.userData.id; hop.render(); }
+      });
+      // ride the strongest path: from the winning answer, step back along the biggest incoming edge
+      const strongest = () => {
+        const {r, E} = last, win = Object.keys(hop.O).sort((a, b) => r.p[b] - r.p[a])[0], path = [win];
+        let cur = win;
+        for (let g = 0; g < 6; g++) {
+          const ins = E.filter(([a, b, v]) => b === cur && v > 1e-6 && a !== 'err').sort((x, y) => y[2] - x[2]);
+          if (!ins.length) break; cur = ins[0][0]; path.unshift(cur);
+        }
+        return path;
+      };
+      const home = (ms = 1200) => s.fly({yaw: .55, pitch: .28, dist: s.camera.aspect < 1 ? 12.5 : 9.2, target: [0, .75, 0]}, ms);
+      $('hop3dRide').addEventListener('click', async () => {
+        const path = strongest();
+        note.textContent = 'Riding: ' + path.map(id => hop.N[id].k === 'out' ? `"${hop.N[id].t}"` : hop.N[id].t).join(' → ') + '. At each stop, this is the biggest edge feeding the next node.';
+        for (const id of path) { hop.st.sel = id; hop.render(); const out = hop.N[id].k === 'out', tg = out ? [P[id][0], P[id][1] + .45, P[id][2]] : P[id]; await s.fly({target: tg, dist: out ? 4 : 3, yaw: .35 + P[id][0] * .12, pitch: .25}, 1100); if (!LL.reduce) await new Promise(r => setTimeout(r, 450)); }
+      });
+      $('hop3dReset').addEventListener('click', () => { home(); note.textContent = ''; });
+      note.textContent = '';
+    });
+  });
+  </script>
 </article>
 
 <article id="epilogue">
@@ -6817,13 +6950,14 @@ tourists walk across the bridge in the fog`.split('\n');
       document.getElementById('hopSwapOut').textContent = st.swap ? `${st.swap.toFixed(1)} (Texas clamped to −1×)` : 'off';
       document.getElementById('hopPruneOut').textContent = st.prune >= 1 ? 'keep everything' : `keep the top ${Math.round(st.prune * 100)}% of influence (the paper's default is 80%)`;
       document.querySelectorAll('#hopInhib button').forEach(b => b.setAttribute('aria-pressed', b.dataset.n === st.inhib));
+      if (shared.c6hop) shared.c6hop.listeners.forEach(f => f(r, E, keep));
     };
     svg.addEventListener('click', e => { const g = e.target.closest('g.nd'); if (g) { st.sel = g.dataset.id; render(); } });
     svg.addEventListener('keydown', e => { const g = e.target.closest('g.nd'); if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); st.sel = g.dataset.id; render(); svg.querySelector(`g.nd[data-id="${st.sel}"]`).focus(); } });
     document.getElementById('hopInhib').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; st.inhib = b.dataset.n; if (st.inhib) { st.swap = 0; document.getElementById('hopSwap').value = 0; } render(); });
     document.getElementById('hopSwap').addEventListener('input', e => { st.swap = +e.target.value; if (st.swap) st.inhib = ''; render(); });
     document.getElementById('hopPrune').addEventListener('input', e => { st.prune = +e.target.value; render(); });
-    shared.c6hop = {run, base, st, render, keptNodes, edgesOf};
+    shared.c6hop = {run, base, st, render, keptNodes, edgesOf, N, F, O, clampFor, listeners: []};
     render();
   }
 
