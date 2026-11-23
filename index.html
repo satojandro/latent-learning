@@ -1623,6 +1623,17 @@ html{scroll-padding-top:16px}
   <style>
     #copycat details.deeper{border-left:4px solid var(--pink);background:color-mix(in srgb, var(--pink) 6%, var(--card));border-radius:0 var(--r) var(--r) 0;padding:.2rem 1.1rem}
     #copycat details.deeper[open]{padding-bottom:1rem}
+    #copycat .c2r-lede{font-size:.98rem;color:var(--ink-soft);margin-bottom:1rem}
+    #copycat .c2r-stage{border-radius:18px;background:var(--wash);overflow:hidden}
+    #copycat .c2r-host{max-width:none;aspect-ratio:16/9;min-height:300px}
+    @media (max-width:560px){#copycat .c2r-host{aspect-ratio:4/5}}
+    #copycat .c2r-none{padding:1.2rem;color:var(--ink-soft)}
+    #copycat .c2r-bar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-top:1rem}
+    #copycat .c2r-bar .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+    #copycat .c2r-steps{margin:1rem 0 0;padding-left:1.4rem;display:grid;gap:.5rem;font-size:.95rem;line-height:1.45}
+    #copycat .c2r-steps li{color:var(--ink-soft);transition:color .3s}
+    #copycat .c2r-steps li.on{color:var(--ink)}
+    #copycat .c2r-steps li.on::marker{color:var(--plum);font-weight:700}
     #copycat details.deeper > summary{cursor:pointer;font-family:var(--f-display);font-weight:600;padding:.7rem 0;list-style-position:outside}
     #copycat details.deeper > summary .label{color:var(--pink);margin-right:.5rem}
     #copycat details.deeper > div{display:grid;gap:.9rem}
@@ -1815,6 +1826,23 @@ html{scroll-padding-top:16px}
       </div>
       <p class="verdict" id="c2Verdict"></p>
       <p class="caption">Both settings also use the one-word guesser from Chapter 1, learned from the 25-sentence courtroom story. When nothing earlier matches, the induction team looks at the "start" position, which copies nothing. <strong>Try this:</strong> switch clerks on Example 1. Then try Example 3, where two different people were called "ms". The copycat rule only knows what followed "ms" before, and now there are two answers, so it splits its vote between them, and the old habit "reyes" edges back into first place. The paper saw the same thing in real models: after two "Mrs Dursley"s in the first paragraph of <em>Harry Potter</em>, the first "Mrs Potter" became <em>harder</em> to predict once induction heads had formed.</p>
+    </div>
+    <div class="toy" id="c2ride">
+      <div class="toy-head"><h4>Ride along: the same sentence, inside the two clerks</h4><span class="label">Real calculation · 3D</span></div>
+      <p class="c2r-lede">Every word above gets its own case file, standing on the floor. Each file rises like a column through the two rows of clerks. Clerk 1 works on the lower row, Clerk 2 on the upper one. Press play, or drag the slider, to watch the trick happen in order, then ride along with the last file.</p>
+      <div class="c2r-stage"><div class="gl-host c2r-host" id="c2rHost"></div><p class="c2r-none" id="c2rNone" hidden>This 3D view needs WebGL, which isn't available here. The toy above computes the same thing.</p></div>
+      <div class="c2r-bar">
+        <button class="primary" id="c2rPlay">Play</button>
+        <div class="ctl" style="flex:1 1 220px"><label for="c2rT" class="sr">Step through</label><input type="range" id="c2rT" min="0" max="300" value="0" aria-label="Step through the calculation"></div>
+        <div class="seg" id="c2rCam" role="group" aria-label="Camera"><button data-c="over" aria-pressed="true">Watch from outside</button><button data-c="ride" aria-pressed="false">Ride with the last file</button></div>
+      </div>
+      <ol class="c2r-steps" id="c2rSteps">
+        <li data-k="0"><b>Clerk 1 writes a note in every file:</b> "the word before me was…", drawn as a pink ← and that word. Each pink arc is one look, one step back.</li>
+        <li data-k="1"><b>Clerk 2 works on the last file.</b> Its question is "which file's note says <em>← <span class="c2r-last"></span></em>?" Every earlier file answers. Thicker beams mean more attention.</li>
+        <li data-k="2"><b>It copies the word from the file that matched</b> and adds it to the last file's notes, which push the next-word guess.</li>
+      </ol>
+      <p class="verdict" id="c2rVerdict"></p>
+      <p class="caption">This is the toy above, drawn in space. The attention weights, the notes and the final guess are all computed from the sentence you typed, with the same hand-set clerks and the same one-word guesser. The beams' thickness is the real attention share. Only the last 14 words are drawn. Riding along puts you beside Clerk 2 as it reads the last file, looking back at the file it chose.</p>
     </div>
     <div class="prose" style="margin-top:1.4rem">
       <details class="deeper">
@@ -2242,6 +2270,126 @@ html{scroll-padding-top:16px}
       el.addEventListener('click', e => { const b = e.target.closest('button'); if (b) show(+b.dataset.i); });
       show(0);
     }
+  });
+  </script>
+  <script>
+  /* chapter 2: ride along with the induction team, in 3D. Same clerks and guesser as "Chapter 1's mix-up, fixed". */
+  document.addEventListener('DOMContentLoaded', () => {
+    const LL = window.LL, $ = id => document.getElementById(id), court = LL.shared.court;
+    const MAXW = 14, GAP = .62, Y1 = 1, Y2 = 2.05, STRENGTH = 8;
+    const txt = $('c2Text'), tS = $('c2rT'), play = $('c2rPlay'), camSeg = $('c2rCam'), host = $('c2rHost');
+    // the calculation: Clerk 1 looks one word back; Clerk 2 (on the last file) looks where the note "before me" matches
+    const compute = () => {
+      const all = txt.value.toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean).slice(-30);
+      if (!all.length) return null;
+      const last = all[all.length - 1], earlier = all.slice(0, -1);
+      const scores = [2, ...earlier.map((t, j) => (j > 0 && earlier[j - 1] === last) ? 6 : 0)];
+      const mx = Math.max(...scores), ex = scores.map(x => Math.exp(x - mx)), Z = ex.reduce((a, b) => a + b, 0), att = ex.map(e => e / Z);
+      const cand = new Set([...court.V, ...all]), logit = court.bigramLogits(last, cand);
+      earlier.forEach((t, j) => logit[t] += STRENGTH * att[j + 1]);
+      const top = court.softmaxTop(logit, 3);
+      // keep the last MAXW words for drawing; the start file stays at the far left
+      const cut = Math.max(0, all.length - MAXW), words = all.slice(cut);
+      const attShown = [att[0], ...words.slice(0, -1).map((_, j) => att[cut + j + 1])];
+      let best = 0; attShown.forEach((a, i) => { if (a > attShown[best]) best = i; });
+      return {words, last, att: attShown, best, top, cut, prev: words.map((_, i) => i === 0 ? (cut ? all[cut - 1] : 'start') : words[i - 1])};
+    };
+    let R = compute(), T = 0, playing = false, cam = 'over';
+    const steps = [...$('c2rSteps').children];
+    const say = () => {
+      if (!R) { $('c2rVerdict').textContent = 'Type a few words in the toy above.'; return; }
+      document.querySelectorAll('#c2ride .c2r-last').forEach(e => e.textContent = R.last);
+      const k = T < 100 ? 0 : T < 200 ? 1 : 2; steps.forEach((li, i) => li.classList.toggle('on', i === k));
+      const w = R.best ? R.words[R.best - 1] : null, pc = Math.round(R.att[R.best] * 100);
+      $('c2rVerdict').innerHTML = T < 100 ? 'Every file now knows the word before it.'
+        : T < 200 ? (w ? `Clerk 2 is drawn to the file for <span>${w}</span> (${pc}% of its attention), whose note reads "before me: ${R.last}".` : `No note says "before me: ${R.last}", so Clerk 2 rests on the start file (${pc}%), which copies nothing.`)
+        : `Next-word guess: <span>${R.top[0][0]}</span> (${Math.round(R.top[0][1] * 100)}%)${R.top[1] ? `, then ${R.top[1][0]} (${Math.round(R.top[1][1] * 100)}%)` : ''}.`;
+      $('c2ride').dataset.best = w || 'start'; $('c2ride').dataset.guess = R.top[0][0];
+    };
+    say();
+    let st = null, rebuild = () => {}, flyCam = () => {};
+    const setT = v => { T = Math.max(0, Math.min(300, v)); tS.value = Math.round(T); say(); if (st) st.dirty = true; };
+    tS.addEventListener('input', () => { playing = false; play.textContent = 'Play'; setT(+tS.value); });
+    play.addEventListener('click', () => { if (playing) { playing = false; play.textContent = 'Play'; return; } if (T >= 300) setT(0); if (LL.reduce) { setT(300); return; } playing = true; play.textContent = 'Pause'; });
+    camSeg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; cam = b.dataset.c; camSeg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); if (cam === 'ride' && T < 100) setT(100); flyCam(); });
+    const refresh = () => { R = compute(); say(); rebuild(); };
+    txt.addEventListener('input', refresh);
+    $('c2Presets').addEventListener('click', () => setTimeout(refresh, 0));
+    LL.shared.c2ride = {get R() { return R; }, setT, setCam: c => camSeg.querySelector(`[data-c="${c}"]`).click()};
+
+    LL.stage(host, {fov: 38, yaw: .32, pitch: .42, dist: 9, target: [0, 1.1, 0], spin: 0, minPitch: -.2, maxPitch: 1.35,
+      label: 'A row of case files, one per word, rising through two rows of clerks, with attention drawn as beams between them. Drag or use the arrow keys to turn.'}).then(s => {
+      if (!s) { host.hidden = true; $('c2rNone').hidden = false; return; }
+      st = s; const THREE = s.THREE;
+      const world = new THREE.Group(); s.scene.add(world);
+      let parts = null;
+      const X = i => (i - (R.words.length) / 2) * GAP;   // file i (0 = start) sits at X(i)
+      const tube = (pts, r, c, op = 1) => {
+        const curve = new THREE.CatmullRomCurve3(pts), g = new THREE.TubeGeometry(curve, 48, r, 8, false);
+        const m = new THREE.Mesh(g, s.toon(c, {transparent: op < 1, opacity: op})); m.userData.count = g.index.count; m.geometry.setDrawRange(0, 0); return m;
+      };
+      const arc = (xa, xb, y, lift, z) => { const pts = []; for (let q = 0; q <= 16; q++) { const u = q / 16, b = Math.sin(Math.PI * u); pts.push(new THREE.Vector3(xa + (xb - xa) * u, y + lift * b, z * b)); } return pts; };
+      rebuild = () => {
+        world.clear(); if (!R) { parts = null; s.dirty = true; return; }
+        const N = R.words.length + 1, half = N * GAP / 2 + .25;
+        // the two rows of clerks: thin glass shelves
+        const shelf = (y, c, name) => {
+          const m = new THREE.Mesh(new THREE.BoxGeometry(half * 2, .03, 1.5), s.toon(c, {transparent: true, opacity: .18, depthWrite: false})); m.position.set(0, y, 0); world.add(m);
+          const l = s.label(name, c, .19); l.position.set(-half + l.scale.x / 2 + .05, y + .2, -.8); world.add(l);
+        };
+        shelf(Y1, '--pink', 'Clerk 1 · previous-word head'); shelf(Y2, '--plum', 'Clerk 2 · induction head');
+        const files = [], cols = [], notes = [], words = ['start', ...R.words];
+        words.forEach((w, i) => {
+          const isLast = i === N - 1, isStart = i === 0;
+          const f = new THREE.Mesh(new THREE.BoxGeometry(GAP * .78, .08, .62), s.toon(isLast ? '--marigold' : isStart ? '--line' : '--card')); f.position.set(X(i), 0, 0); world.add(f);
+          const edge = new THREE.LineSegments(new THREE.EdgesGeometry(f.geometry), new THREE.LineBasicMaterial({color: s.col('--ink-soft')})); edge.position.copy(f.position); world.add(edge);
+          const lab = s.label(isStart ? 'start' : w, isStart ? '--ink-soft' : '--ink', .2, isLast ? 800 : 600); lab.position.set(X(i), .26, .25); world.add(lab); files.push(f);
+          // the file's column: what travels upward through the clerks
+          const c = new THREE.Mesh(new THREE.CylinderGeometry(.035, .035, 1, 10), s.toon(isLast ? '--marigold' : '--ink-soft', {transparent: true, opacity: isLast ? .9 : .35}));
+          c.position.set(X(i), 0, 0); world.add(c); cols.push(c);
+          if (i > 0) { const n = s.label(`← ${R.prev[i - 1]}`, i === R.best ? '--plum' : '--pink', i === R.best ? .2 : .15, i === R.best ? 800 : 600); n.position.set(X(i), Y1 + .32, 0); n.material.opacity = 0; world.add(n); notes.push(n); } else notes.push(null);
+        });
+        // Clerk 1's looks: one short arc per file, back to the previous file
+        const a1 = []; for (let i = 1; i < N; i++) { const m = tube(arc(X(i), X(i - 1), Y1 + .02, .22, .3), .022, '--pink'); world.add(m); a1.push(m); }
+        // Clerk 2's beams: from the last file to every earlier file, as thick as the attention it pays
+        const xL = X(N - 1), a2 = R.att.map((a, j) => { const span = Math.abs(xL - X(j)); const m = tube(arc(xL, X(j), Y2, .35 + span * .08, .25 + span * .12).map((p, q, A) => q === A.length - 1 ? new THREE.Vector3(X(j), Y1 + .32, 0) : p), .008 + .07 * Math.sqrt(a), j === R.best ? '--plum' : '--ink-soft', j === R.best ? 1 : .55); world.add(m); return m; });
+        // the copied word travelling back to the last file, and the guess on top
+        const packet = s.label(R.best ? R.words[R.best - 1] : '(nothing)', '--plum', .22, 800); packet.visible = false; world.add(packet);
+        const guess = s.label(`next: ${R.top[0][0]}`, '--ink', .26, 800); guess.position.set(xL - guess.scale.x / 2 - .05, Y2 + .85, 0); guess.material.opacity = 0; world.add(guess);
+        const bestCurve = new THREE.CatmullRomCurve3(arc(X(R.best), xL, Y2 + .05, .5 + Math.abs(xL - X(R.best)) * .08, .25 + Math.abs(xL - X(R.best)) * .12));
+        parts = {N, cols, notes, a1, a2, packet, guess, bestCurve, files};
+        flyCam(true);
+        s.dirty = true;
+      };
+      flyCam = instant => {
+        if (!parts) return;
+        if (cam === 'over') {
+          // wide screens see the row face on; tall phone screens look along it, so the row recedes into depth
+          const half = parts.N * GAP / 2 + .5, tall = s.camera.aspect < 1, fit = Math.tan(s.camera.fov * Math.PI / 360) * s.camera.aspect;
+          s.fly(tall ? {yaw: 1.05, pitch: .5, dist: Math.max(4.5, half * .55 / fit + 1.5), target: [0, 1.05, 0]} : {yaw: .3, pitch: .4, dist: Math.max(4.5, half / fit * .92 + 1), target: [0, 1.05, 0]}, instant ? 0 : 1300); return;
+        }
+        // sit beside Clerk 2, just behind the last file's column, looking back at the file that matched
+        const xL = X(parts.N - 1), tgt = [X(R.best), Y1 + .3, 0], eye = [xL + 2.1, Y2 + 1.25, 1.5];
+        const d = eye.map((v, q) => v - tgt[q]), dist = Math.hypot(...d);
+        s.fly({target: tgt, dist, yaw: Math.atan2(d[0], d[2]), pitch: Math.asin(d[1] / dist)}, instant ? 0 : 1600);
+      };
+      const k01 = (v, a, b) => Math.max(0, Math.min(1, (v - a) / (b - a)));
+      s.frame(dt => {
+        if (playing) { setT(T + dt * 45); if (T >= 300) { playing = false; play.textContent = 'Play again'; } }
+        if (!parts) return false;
+        const {N, cols, notes, a1, a2, packet, guess, bestCurve} = parts;
+        // columns rise as each stage is reached
+        const h = 1 + Math.min(1, T / 100) * (Y2 - 1) + k01(T, 200, 300) * .5;
+        cols.forEach((c, i) => { const hh = i === N - 1 ? h : Math.min(h, Y2); c.scale.y = hh; c.position.y = hh / 2; });
+        a1.forEach((m, q) => { const u = k01(T, q / (N - 1) * 80, q / (N - 1) * 80 + 25); m.geometry.setDrawRange(0, Math.floor(m.userData.count * u / 3) * 3); if (notes[q + 1]) notes[q + 1].material.opacity = k01(T, q / (N - 1) * 80 + 15, q / (N - 1) * 80 + 30); });
+        a2.forEach(m => { const u = k01(T, 110, 185); m.geometry.setDrawRange(0, Math.floor(m.userData.count * u / 3) * 3); });
+        const u = k01(T, 205, 270); packet.visible = u > 0 && u < 1; if (packet.visible) packet.position.copy(bestCurve.getPoint(u)).add(new THREE.Vector3(0, .12, 0));
+        guess.material.opacity = k01(T, 265, 295);
+        return playing || s.busy ? undefined : false;
+      });
+      s.theme(rebuild);
+      rebuild();
+    });
   });
   </script>
 </article>
