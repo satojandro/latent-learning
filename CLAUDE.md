@@ -30,7 +30,7 @@ Don't dumb things down to the lowest common denominator. Aim to awe and impress,
 Story hook (the puzzle researchers faced), scenes with interactive toys, "Known / Unknown" cards, a teaser for the next chapter, credits.
 
 ## Tech
-- `index.html` is a single self-contained page: inline CSS/JS, Google Fonts only, no build step. It has no `<!doctype>`/`<html>`/`<head>` tags because it's also published as a claude.ai Artifact, which adds that skeleton.
+- `index.html` is a single self-contained page: inline CSS/JS, Google Fonts, no build step. The one external library is three.js (0.160.0 from cdnjs), loaded on demand by `LL.stage(host, opts)` when a 3D toy scrolls near. `LL.stage` resolves to `null` without WebGL (or with `?no3d` in the URL), so every 3D toy must keep a 2D fallback or a message. It has no `<!doctype>`/`<html>`/`<head>` tags because it's also published as a claude.ai Artifact, which adds that skeleton.
 - Colours are theme tokens with light and dark variants. Respect `prefers-reduced-motion`. Must work at phone width.
 
 ## About the author
