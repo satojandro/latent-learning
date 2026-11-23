@@ -3214,6 +3214,14 @@ document.addEventListener('DOMContentLoaded', () => {
 <article id="untangling">
   <style>
     #untangling details.deeper{background:var(--wash);border-radius:var(--r);padding:0;font-size:1rem}
+    #untangling .c4c-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:1.5rem;align-items:center}
+    @media (max-width:720px){#untangling .c4c-grid{grid-template-columns:1fr}}
+    #untangling .c4c-resp:empty{display:none}
+    #untangling .c4c-resp{background:var(--wash);border-radius:14px;padding:12px 14px;display:grid;gap:.4rem}
+    #untangling .c4c-resp .dotrow{display:flex;flex-wrap:wrap;gap:6px}
+    #untangling .c4c-resp .dotrow i{width:22px;height:22px;border-radius:50%;display:inline-block}
+    #untangling .c4c-check{display:flex;gap:.5rem;align-items:flex-start;font-size:.92rem;line-height:1.4}
+    #untangling .c4c-check input{margin-top:.25rem;accent-color:var(--plum)}
     #untangling details.deeper > summary{cursor:pointer;list-style:none;padding:14px 18px;font-family:var(--f-display);font-weight:600;display:flex;gap:.6rem;align-items:baseline}
     #untangling details.deeper > summary::-webkit-details-marker{display:none}
     #untangling details.deeper > summary::before{content:"+";font-family:var(--f-mono);color:var(--plum);font-weight:600;width:1ch}
@@ -3403,6 +3411,32 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="toy-head"><h4>Who responds to each concept?</h4><span class="label">Live from the autoencoder above</span></div>
       <div class="resp"><table id="respTable" aria-label="How strongly each neuron and feature responds to each concept"></table></div>
       <p class="caption">Each neuron responds to several concepts at once: that's the jumble. Once the autoencoder has settled, each feature responds to just one. That's what the paper's title means. <strong>Monosemantic</strong> means "one meaning", the opposite of the polysemantic neurons from Chapter 3. Turn the rule off above and watch this table go muddy.</p>
+    </div>
+    <div class="prose" style="margin-top:2rem">
+      <p>Two desks make a flat picture. A real thinker layer has hundreds of desks, which no one can picture. Three is the most we can still see, so here is the office with one more desk and more people crowded in: <strong>eight concepts sharing three desks</strong>. Every dot is one moment's desk readings. Most moments have one concept on, so the dots line up into eight spikes, one per concept, plus a haze of moments where two overlap.</p>
+      <p>Now try reading it the way a researcher reading neurons would. "Look through" a neuron and the whole cloud collapses onto that neuron's single axis, because one neuron's reading is all it knows. Then look through one of the autoencoder's features.</p>
+    </div>
+    <div class="toy" id="c4cube">
+      <div class="toy-head"><h4>Eight concepts, three desks, in 3D</h4><span class="label" id="c4cStatus">Waiting to train…</span></div>
+      <div class="c4c-grid">
+        <div><div class="gl-host" id="c4cHost"><canvas id="c4cFallback" width="880" height="880" aria-label="Desk readings in three dimensions, with the autoencoder's learned arrows" role="img"></canvas></div><p class="gl-badge" id="c4cHint">Drag to turn it</p></div>
+        <div style="display:grid;gap:.9rem;align-content:start">
+          <div class="ctl" style="flex:none"><label for="c4cLens">Look through</label><select id="c4cLens"></select></div>
+          <p class="verdict" id="c4cVerdict" style="margin:0"></p>
+          <div class="c4c-resp" id="c4cResp" aria-live="polite"></div>
+          <label class="c4c-check"><input type="checkbox" id="c4cTruth"> Colour the dots by the hidden concept (the autoencoder never sees this)</label>
+          <div class="scores" style="margin:0">
+            <div class="score"><small>Concepts found</small><b id="c4cFound">0 of 8</b></div>
+            <div class="score"><small>Readings it fails to rebuild</small><b id="c4cErr">–</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="ctl"><label for="c4cLam">How strict is the "as few as possible" rule?</label><input type="range" id="c4cLam" min="0" max="2" step="1" value="2"><output id="c4cLamOut" for="c4cLam"></output></div>
+        <div class="btns"><button class="primary" id="c4cPlay">Pause</button><button id="c4cReset">Start from scratch</button></div>
+      </div>
+      <div class="predict"><b>Predict before you look.</b> Each neuron's axis cuts through the cloud at some angle. How many of the eight concepts do you expect one neuron to respond to? And one feature?</div>
+      <p class="caption"><strong>Live:</strong> a real sparse autoencoder, the same recipe as the toy above, with 12 dictionary entries for 8 hidden concepts, training in your browser on fresh random moments. Each concept is on 6% of the time with a random strength; the eight true directions are spread evenly round the sphere and tilted so none lines up with a desk. A neuron's view places each dot at that neuron's reading. A feature's view places each dot at that feature's strength, so every moment the feature ignores lands on zero. In our runs the strict rule found all eight concepts within a few thousand steps, leaving the four spare entries silent or doubled up; with the rule off, it rebuilt the readings perfectly and found three at most.</p>
     </div>
   </section>
 
@@ -3851,6 +3885,178 @@ document.addEventListener('DOMContentLoaded', () => {
         box.appendChild(d);
       });
     }
+  });
+  </script>
+  <script>
+  /* chapter 4: eight concepts in three desks, a live sparse autoencoder, and "look through" a neuron or a feature */
+  document.addEventListener('DOMContentLoaded', () => {
+    const LL = window.LL, $ = id => document.getElementById(id), css = LL.css;
+    const n = 8, K = 12, P_ON = .06, LR = .01, B = 96, NDOT = 1400;
+    const cols = ['--tomato', '--sky', '--teal', '--marigold', '--pink', '--plum', '--ink', '--bad'];
+    const lams = [{v: 0, l: 'Off'}, {v: .1, l: 'Gentle'}, {v: .3, l: 'Strict'}];
+    // eight directions spread evenly over the sphere (a Fibonacci spiral), tilted away from the desks
+    const TRUE = [...Array(n)].map((_, i) => { const y = 1 - 2 * (i + .5) / n, r = Math.sqrt(1 - y * y), a = i * Math.PI * (3 - Math.sqrt(5)); return [Math.cos(a) * r, y, Math.sin(a) * r]; })
+      .map(([x, y, z]) => { const c = Math.cos(.7), s = Math.sin(.7), y2 = c * y - s * z, z2 = s * y + c * z, c2 = Math.cos(.4), s2 = Math.sin(.4); return [c2 * x + s2 * z2, y2, -s2 * x + c2 * z2]; });
+    const sample = () => { const h = [0, 0, 0], x = []; for (let i = 0; i < n; i++) { x[i] = Math.random() < P_ON ? .2 + .8 * Math.random() : 0; for (let d = 0; d < 3; d++) h[d] += x[i] * TRUE[i][d]; } return {h, x}; };
+    const dots = []; while (dots.length < NDOT) { const s = sample(); if (s.x.some(v => v)) dots.push(s); }
+    dots.forEach(s => { s.j = (Math.random() - .5) * .32; }); // a little spread so dots on one axis don't pile up
+    dots.forEach(s => { let best = -1, bv = 0, on = 0; s.x.forEach((v, i) => { if (v) on++; if (v > bv) { bv = v; best = i; } }); s.top = best; s.mix = on > 1; });
+    const lamS = $('c4cLam'), lens = $('c4cLens'), truth = $('c4cTruth');
+    let We, be, Wd, m, v, t, playing = true, started = false, lensK = 'free';
+    const init = () => {
+      We = []; Wd = []; be = new Float64Array(K);
+      for (let j = 0; j < K; j++) { const r = [0, 0, 0].map(() => Math.random() * 2 - 1), L = Math.hypot(...r); Wd.push(r.map(x => x / L)); We.push(Wd[j].slice()); }
+      m = new Float64Array(7 * K); v = new Float64Array(7 * K); t = 0;
+    };
+    const enc = h => We.map((w, j) => Math.max(0, w[0] * h[0] + w[1] * h[1] + w[2] * h[2] + be[j]));
+    const step = () => {
+      const lam = lams[+lamS.value].v, g = new Float64Array(7 * K);
+      for (let b = 0; b < B; b++) {
+        const {h} = sample(), a = We.map((w, j) => w[0] * h[0] + w[1] * h[1] + w[2] * h[2] + be[j]), f = a.map(x => x > 0 ? x : 0);
+        const r = [-h[0], -h[1], -h[2]]; for (let j = 0; j < K; j++) for (let d = 0; d < 3; d++) r[d] += Wd[j][d] * f[j];
+        for (let j = 0; j < K; j++) {
+          for (let d = 0; d < 3; d++) g[4 * K + 3 * j + d] += 2 * r[d] * f[j] / B;
+          if (a[j] > 0) { const df = (2 * (r[0] * Wd[j][0] + r[1] * Wd[j][1] + r[2] * Wd[j][2]) + lam) / B; for (let d = 0; d < 3; d++) g[3 * j + d] += df * h[d]; g[3 * K + j] += df; }
+        }
+      }
+      t++;
+      const P = [...We.flat(), ...be, ...Wd.flat()];
+      for (let i = 0; i < 7 * K; i++) { m[i] = .9 * m[i] + .1 * g[i]; v[i] = .999 * v[i] + .001 * g[i] * g[i]; P[i] -= LR * (m[i] / (1 - .9 ** t)) / (Math.sqrt(v[i] / (1 - .999 ** t)) + 1e-8); }
+      for (let j = 0; j < K; j++) { We[j] = P.slice(3 * j, 3 * j + 3); be[j] = P[3 * K + j]; const d = P.slice(4 * K + 3 * j, 4 * K + 3 * j + 3), L = Math.hypot(...d) || 1; Wd[j] = d.map(x => x / L); }
+    };
+    // which true concept (if any) each dictionary entry has settled on
+    const roster = () => Wd.map((d, j) => {
+      const resp = TRUE.map(T => enc(T)[j]); if (!resp.some(r => r > .05)) return {dead: true, match: -1, resp};
+      let match = -1; TRUE.forEach((T, i) => { if (d[0] * T[0] + d[1] * T[1] + d[2] * T[2] > .95) match = i; });
+      return {dead: false, match, resp};
+    });
+    const letter = j => String.fromCharCode(65 + j);
+    const dotsHTML = list => list.length ? list.map(i => `<i style="background:var(${cols[i]})" title="concept ${i + 1}"></i>`).join('') : '<em>none</em>';
+    let R = [];
+    const fillLens = () => {
+      const keep = lens.value || 'free';
+      const opts = [['free', 'Free view: all three desks'], ...[0, 1, 2].map(d => [`n${d}`, `Neuron ${d + 1} (desk ${d + 1})`]),
+        ...R.map((r, j) => r.dead ? null : [`d${j}`, `Feature ${letter(j)}`]).filter(Boolean)];
+      const sig = opts.map(o => o[0]).join();
+      if (lens.dataset.sig !== sig) { lens.innerHTML = opts.map(([k, l]) => `<option value="${k}">${l}</option>`).join(''); lens.dataset.sig = sig; lens.value = opts.some(o => o[0] === keep) ? keep : 'free'; if (lens.value !== keep) setLens(lens.value); }
+    };
+    const respFor = k => {
+      if (k[0] === 'n') { const d = +k[1]; return TRUE.map((T, i) => [i, Math.abs(T[d])]).filter(x => x[1] > .3).map(x => x[0]); }
+      if (k[0] === 'd') { const r = R[+k.slice(1)]; return r ? r.resp.map((x, i) => [i, x]).filter(x => x[1] > .05).map(x => x[0]) : []; }
+      return [];
+    };
+    const text = () => {
+      R = roster(); fillLens();
+      const found = TRUE.filter((_, i) => R.some(r => !r.dead && r.match === i)).length;
+      $('c4cFound').textContent = `${found} of 8`;
+      let eN = 0, eD = 0; for (let q = 0; q < 300; q++) { const {h} = dots[q], f = enc(h); for (let d = 0; d < 3; d++) { let r = -h[d]; for (let j = 0; j < K; j++) r += Wd[j][d] * f[j]; eN += r * r; eD += h[d] * h[d]; } }
+      const err = 100 * eN / (eD || 1); $('c4cErr').textContent = `${err < 1 ? err.toFixed(1) : Math.round(err)}%`;
+      const box = $('c4cube'); box.dataset.found = found; box.dataset.err = err.toFixed(2); box.dataset.steps = t;
+      $('c4cStatus').textContent = !started ? 'Waiting to train…' : playing ? `Training · step ${t.toLocaleString()}` : `Paused · step ${t.toLocaleString()}`;
+      const resp = respFor(lensK);
+      if (lensK === 'free') { $('c4cVerdict').innerHTML = found === 8 ? 'All eight hidden concepts <span>found</span> from the readings alone.' : `The autoencoder has pinned down <span>${found}</span> of the eight so far.`; $('c4cResp').innerHTML = ''; }
+      else if (lensK[0] === 'n') { $('c4cVerdict').innerHTML = `Neuron ${+lensK[1] + 1} responds to <span>${resp.length} of the 8</span> concepts.`; $('c4cResp').innerHTML = `<p class="label">Concepts this neuron reads strongly</p><div class="dotrow">${dotsHTML(resp)}</div><p class="stat">Its single number can't say which of them is on. Polysemantic.</p>`; }
+      else { const j = +lensK.slice(1), r = R[j]; $('c4cVerdict').innerHTML = resp.length === 1 ? `Feature ${letter(j)} responds to <span>one concept</span>.` : `Feature ${letter(j)} responds to <span>${resp.length} concepts</span>.`; $('c4cResp').innerHTML = `<p class="label">Concepts this feature switches on for</p><div class="dotrow">${dotsHTML(resp)}</div><p class="stat">${resp.length === 1 ? 'Every other moment lands on zero. Monosemantic.' : r && r.match < 0 ? 'It hasn\'t settled on one concept yet. Try the strict rule.' : 'Still sharing. Give it time, or a stricter rule.'}</p>`; }
+    };
+    const lensDir = k => k[0] === 'n' ? [0, 1, 2].map(d => d === +k[1] ? 1 : 0) : k[0] === 'd' ? Wd[+k.slice(1)] : null;
+    // where each dot sits under the current lens
+    const posFor = (s, k) => {
+      if (k === 'free') return s.h;
+      const u = lensDir(k), b = band(u), r = k[0] === 'n' ? s.h[+k[1]] : enc(s.h)[+k.slice(1)];
+      return u.map((x, q) => x * r + b[q] * s.j);
+    };
+    // the direction across the screen, perpendicular to a lens line, used to spread its dots into a band
+    const sideOf = u => { const up = Math.abs(u[1]) > .9 ? [1, 0, 0] : [0, 1, 0]; const w = [u[1] * up[2] - u[2] * up[1], u[2] * up[0] - u[0] * up[2], u[0] * up[1] - u[1] * up[0]], L = Math.hypot(...w); return w.map(x => x / L); };
+    const band = u => { const w = sideOf(u); return [w[1] * u[2] - w[2] * u[1], w[2] * u[0] - w[0] * u[2], w[0] * u[1] - w[1] * u[0]]; };
+    let st = null, fb = null;
+    const setLens = k => {
+      lensK = k; lens.value = k; if (st) st.view.spin = k === 'free' ? .0025 : 0;
+      if (st && k !== 'free') {
+        const w = sideOf(lensDir(k));
+        st.fly({yaw: Math.atan2(w[0], w[2]), pitch: Math.asin(Math.max(-1, Math.min(1, w[1]))), dist: 4.6}, 1100);
+      }
+      text();
+    };
+    lens.addEventListener('change', () => setLens(lens.value));
+    lamS.addEventListener('input', () => { $('c4cLamOut').textContent = lams[+lamS.value].l; });
+    $('c4cLamOut').textContent = lams[+lamS.value].l;
+    $('c4cPlay').addEventListener('click', () => { playing = !playing; $('c4cPlay').textContent = playing ? 'Pause' : 'Train'; text(); });
+    $('c4cReset').addEventListener('click', () => { init(); setLens('free'); });
+    LL.shared.c4cube = {setLens, get t() { return t; }, roster: () => R, respFor, set playing(p) { playing = p; }};
+    init(); fillLens(); text();
+    // training runs while the toy is on screen
+    let visible = false, tick = 0;
+    new IntersectionObserver(es => { visible = es.some(e => e.isIntersecting); if (visible) started = true; }).observe($('c4cHost'));
+    const train = () => { requestAnimationFrame(train); if (!visible || !playing) return; for (let i = 0; i < 8; i++) step(); if (++tick % 6 === 0) text(); if (!st && fb) fb(); };
+    requestAnimationFrame(train);
+
+    LL.stage($('c4cHost'), {dist: 4.6, fov: 34, yaw: .7, pitch: .35, spin: .0025, label: 'Desk readings as a cloud of dots in three dimensions, with the autoencoder\'s learned arrows. Drag or use the arrow keys to turn.'}).then(s => {
+      if (!s) { fallback(); return; }
+      st = s; const T = s.THREE;
+      $('c4cHost').classList.add('gl-ready');
+      // round dots
+      const k = document.createElement('canvas'); k.width = k.height = 64; const x = k.getContext('2d'); x.beginPath(); x.arc(32, 32, 28, 0, 7); x.fillStyle = '#fff'; x.fill();
+      const sprite = new T.CanvasTexture(k);
+      const geo = new T.BufferGeometry(), pos = new Float32Array(NDOT * 3), colA = new Float32Array(NDOT * 3);
+      dots.forEach((d, i) => pos.set(d.h, i * 3));
+      geo.setAttribute('position', new T.BufferAttribute(pos, 3)); geo.setAttribute('color', new T.BufferAttribute(colA, 3));
+      const pts = new T.Points(geo, new T.PointsMaterial({size: .075, map: sprite, vertexColors: true, transparent: true, alphaTest: .4, depthWrite: true}));
+      s.scene.add(pts);
+      const paint = () => {
+        const grey = s.col('--ink-soft'), C = cols.map(c => s.col(c)), on = truth.checked;
+        dots.forEach((d, i) => { const c = on ? C[d.top].clone().lerp(grey, d.mix ? .55 : 0) : grey; colA.set([c.r, c.g, c.b], i * 3); });
+        geo.attributes.color.needsUpdate = true; s.dirty = true;
+      };
+      truth.addEventListener('change', paint);
+      // the three desks as axes
+      const axes = new T.Group(); s.scene.add(axes);
+      const mkAxes = () => {
+        axes.clear();
+        [0, 1, 2].forEach(d => {
+          const a = s.arrow('--line', .008), u = [0, 1, 2].map(q => q === d ? 1.35 : 0); s.aim(a, u.map(x => x * 2), u.map(x => -x)); axes.add(a);
+          const l = s.label(`neuron ${d + 1}`, '--ink-soft', .11, 600); l.position.set(...u.map(x => x * 1.05)); axes.add(l);
+        });
+      };
+      // the dictionary: one arrow per entry, coloured by the concept it found (grey while searching)
+      let arrows = [];
+      const mkArrows = () => { arrows.forEach(a => s.scene.remove(a)); arrows = [...Array(K)].map(() => { const a = s.arrow('--ink', .022); s.scene.add(a); return a; }); };
+      const lineM = new T.LineBasicMaterial({color: s.col('--ink'), transparent: true, opacity: .5});
+      const lensLine = new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(), new T.Vector3()]), lineM); s.scene.add(lensLine);
+      mkAxes(); mkArrows(); paint();
+      s.theme(() => { mkAxes(); mkArrows(); paint(); lineM.color = s.col('--ink'); });
+      const cur = Float32Array.from(pos);
+      s.frame(dt => {
+        let moving = false;
+        const a = Math.min(1, dt * 5);
+        for (let i = 0; i < NDOT; i++) { const p = posFor(dots[i], lensK); for (let d = 0; d < 3; d++) { const q = i * 3 + d, diff = p[d] - cur[q]; if (Math.abs(diff) > 1e-4) { cur[q] += diff * a; moving = true; } } }
+        if (moving) { pos.set(cur); geo.attributes.position.needsUpdate = true; }
+        const Rr = R.length ? R : roster(), C = cols.map(c => s.col(c)), g = s.col('--line');
+        arrows.forEach((ar, j) => {
+          const r = Rr[j], show = lensK === 'free' || lensK === 'd' + j;
+          ar.visible = show && !r.dead; if (!ar.visible) return;
+          s.aim(ar, Wd[j]); ar.userData.m.color.copy(r.match >= 0 ? C[r.match] : g);
+        });
+        const u = lensDir(lensK); lensLine.visible = !!u;
+        if (u) { lensLine.geometry.setFromPoints([new T.Vector3(...u.map(x => -x * 1.4)), new T.Vector3(...u.map(x => x * 1.4))]); }
+        axes.visible = lensK === 'free' || lensK[0] === 'n';
+        axes.children.forEach((o, q) => { o.visible = lensK === 'free' || lensK === 'n' + (q >> 1); });
+      });
+    });
+    // without WebGL: a plain 2D projection that slowly turns
+    const fallback = () => {
+      const cv = $('c4cFallback'), ctx = cv.getContext('2d'); let yaw = .7;
+      $('c4cHint').textContent = 'A flat view (3D unavailable)';
+      fb = () => {
+        const S = cv.width, c = S / 2, R0 = S * .3, cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(.35), sp = Math.sin(.35);
+        const pr = p => { const x1 = cy * p[0] + sy * p[2], z1 = -sy * p[0] + cy * p[2]; return [c + x1 * R0, c - (cp * p[1] - sp * z1) * R0]; };
+        ctx.clearRect(0, 0, S, S);
+        dots.forEach(d => { const p = pr(posFor(d, lensK)); ctx.fillStyle = truth.checked ? css(cols[d.top]) : LL.C.soft; ctx.globalAlpha = .55; ctx.beginPath(); ctx.arc(p[0], p[1], 5, 0, 7); ctx.fill(); });
+        ctx.globalAlpha = 1;
+        R.forEach((r, j) => { if (r.dead || !(lensK === 'free' || lensK === 'd' + j)) return; const p = pr(Wd[j]); LL.arrow(ctx, c, c, p[0], p[1], r.match >= 0 ? css(cols[r.match]) : LL.C.line, 9); });
+        if (!LL.reduce) yaw += .004;
+      };
+      LL.redrawers.push(fb); fb();
+    };
   });
   </script>
 </article>
